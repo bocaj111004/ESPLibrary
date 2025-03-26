@@ -148,6 +148,8 @@ local Library = {
     Objects[Object] = ObjectFolder
      if Library.UseBillboards == true then
          TextLabel.Parent = BillboardGui
+     else
+        TextLabel.Parent = TextFrame
      end
      local Connection = RunService.RenderStepped:Connect(function()
  
@@ -169,19 +171,22 @@ local Library = {
             local UIPosiiton = UDim2.new(NewVector.X/OtherGui.AbsoluteSize.X,0,NewVector.Y/OtherGui.AbsoluteSize.Y,0)
            
              TextFrame.Position = UIPosiiton
+             TextFrame.Visible = VisibleCheck
            end
            else
            if Object then
-            local UIPosiiton = UDim2.new(NewVector.X/OtherGui.AbsoluteSize.X,0,NewVector.Y/OtherGui.AbsoluteSize.Y,0)
             local NewVector, VisibleCheck = Camera:WorldToScreenPoint(Object.Position)
+            local UIPosiiton = UDim2.new(NewVector.X/OtherGui.AbsoluteSize.X,0,NewVector.Y/OtherGui.AbsoluteSize.Y,0)
+           
             
             TextFrame.Position = UIPosiiton
+            TextFrame.Visible = VisibleCheck
            end
         end
         
            
            
-          TextFrame.Visible = VisibleCheck
+          
      end
         end)
             table.insert(Connections,Connection)
@@ -322,4 +327,3 @@ end
     
     
     
-return Library
