@@ -207,7 +207,7 @@ function Library:AddESP(Parameters)
 		end
 	end
 	local Connection = RunService.RenderStepped:Connect(function()
-		RunService.RenderStepped:Wait()
+		task.wait(0.05)
 		if Library.Rainbow == true and Highlight then
 			Highlight.FillColor = RainbowTable.Color
 			if Library.MatchColors == true then
