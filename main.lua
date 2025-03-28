@@ -28,6 +28,7 @@ local Library = {
 	ShowDistance = false,
 	MatchColors = false,
 	TextTransparency = 0,
+	TracerOrigin = "Bottom",
 	FillTransparency = 0.75,
 	OutlineTransparency = 0,
 	TextOutlineTransparency = 0,
