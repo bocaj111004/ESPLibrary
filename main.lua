@@ -15,6 +15,7 @@ local Library = {
 	Connections = {},
 	Billboards = {},
 	ColorTable = {},
+	TextTable = {},
 	Font = Enum.Font.Oswald,
 	ConnectionsTable = {},
 	Objects = {},
@@ -24,6 +25,7 @@ local Library = {
 	Rainbow = false,
 	UseBillboards = true,
 	Tracers = false,
+	ShowDistance = false,
 	MatchColors = false,
 	TextTransparency = 0,
 	FillTransparency = 0.75,
@@ -61,6 +63,7 @@ Labels = Library.Labels
 Connections = Library.Connections
 OtherGui = Library.OtherGui 
 Elements = Library.Elements
+TextTable = Library.TextTable
 CoreGui = game:GetService("CoreGui")
 Players = game:GetService("Players")
 RunService = game:GetService("RunService")
@@ -80,7 +83,7 @@ pcall(ProtectGui,OtherGui)
 
 function Library:GenerateRandomString()
 	local Characters = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	
+
 	local RandomString = ""
 
 
@@ -119,7 +122,8 @@ function Library:AddESP(Parameters)
 		MainPart = Parameters.BasePart
 	end
 
-local ObjectTable = {}
+	local ObjectTable = {}
+	TextTable[Object] = Parameters.Text
 	local Highlight = Instance.new("Highlight")
 	Highlight.Name = Library:GenerateRandomString()
 	Highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
@@ -213,28 +217,34 @@ local ObjectTable = {}
 		elseif Highlight then
 			Highlight.FillColor = ColorTable[Object]
 			if Library.MatchColors == true then
-			Highlight.OutlineColor = ColorTable[Object]
+				Highlight.OutlineColor = ColorTable[Object]
 			else
 				Highlight.OutlineColor = Library.OutlineColor
 			end
 			TextLabel.TextColor3 = ColorTable[Object]
 		end
-		
+
 		if Library.Tracers == true then
-			
-			
+
+
 			local pos
 			if Object:IsA("Model") then
 				if Object.PrimaryPart then
 					pos = Object.PrimaryPart.Position
 				else
 					pos = Object.WorldPivot.Position
-					
+
 				end
 			else
 				if Object then
-			pos = Object.Position
+					pos = Object.Position
 				end
+			end
+			
+			if Library.ShowDistance == true then
+				TextLabel.Text = TextTable[Object] .. "\n[" .. Players.LocalPlayer:DistanceFromCharacter(pos) .. "]"
+				else
+				TextLabel.Text = TextTable[Object]
 			end
 
 
@@ -243,12 +253,12 @@ local ObjectTable = {}
 			local Character = Object
 			if not Character then return end
 			local LineOrigin = GetLineOrigin()
-			
-				local ScreenPoint, OnScreen = game.Workspace.CurrentCamera:WorldToScreenPoint(pos)
-TextLabel.Visible = OnScreen
-				if OnScreen then
-					table.insert(Targets, {Vector2.new(ScreenPoint.X, ScreenPoint.Y), ColorTable[Object]})
-					if not Highlights[Object] then
+
+			local ScreenPoint, OnScreen = game.Workspace.CurrentCamera:WorldToScreenPoint(pos)
+			TextLabel.Visible = OnScreen
+			if OnScreen then
+				table.insert(Targets, {Vector2.new(ScreenPoint.X, ScreenPoint.Y), ColorTable[Object]})
+				if not Highlights[Object] then
 					local NewHighlight = Instance.new("Highlight")
 					NewHighlight.Name = Library:GenerateRandomString()
 					NewHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
@@ -260,50 +270,50 @@ TextLabel.Visible = OnScreen
 					NewHighlight.Adornee = Object
 					Highlight = NewHighlight
 					Highlights[Object] = NewHighlight
-					end
-				else
+				end
+			else
 				if Highlights[Object] then
-				Highlights[Object]:Destroy()
-				Highlights[Object] = nil
+					Highlights[Object]:Destroy()
+					Highlights[Object] = nil
 				end
+			end
+
+			if #Targets > #Lines then
+
+				local NewLine = Instance.new("Frame")
+				NewLine.Name = "Snapline"
+				NewLine.AnchorPoint = Vector2.new(.5, .5)
+				NewLine.Parent = ScreenGui
+
+
+				local Border = Instance.new("UIStroke")
+				Border.Parent = NewLine
+				Border.Transparency = 1
+				Border.Thickness = 0.75
+				Border.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+				Library.TracerTable[Object] = NewLine
+				task.wait()		
+				if Library.Tracers == true  then
+					game:GetService("TweenService"):Create(Border,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{Transparency = 0}):Play()
 				end
 
-				if #Targets > #Lines then
 
-					local NewLine = Instance.new("Frame")
-					NewLine.Name = "Snapline"
-					NewLine.AnchorPoint = Vector2.new(.5, .5)
-					NewLine.Parent = ScreenGui
-
-
-					local Border = Instance.new("UIStroke")
-					Border.Parent = NewLine
-					Border.Transparency = 1
-					Border.Thickness = 0.75
-					Border.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-					Library.TracerTable[Object] = NewLine
-					task.wait()		
-					if Library.Tracers == true  then
-						game:GetService("TweenService"):Create(Border,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{Transparency = 0}):Play()
-					end
-
-
-					table.insert(Lines, NewLine)
+				table.insert(Lines, NewLine)
+			end
+			for i, Line in pairs(Lines) do
+				local TargetData = Targets[i]
+				if not TargetData then
+					Line:Destroy()
+					table.remove(Lines, i)
+					continue
 				end
-				for i, Line in pairs(Lines) do
-					local TargetData = Targets[i]
-					if not TargetData then
-						Line:Destroy()
-						table.remove(Lines, i)
-						continue
-					end
 				Setline(Line, 0, ColorTable[Object], LineOrigin, TargetData[1])
 
 
 
 
-				end
-			
+			end
+
 		elseif Library.Tracers == false then
 
 			for i,line in pairs(Lines) do
@@ -329,18 +339,18 @@ TextLabel.Visible = OnScreen
 			if Object:IsA("Model") then
 				if Object.PrimaryPart then
 					local NewVector, VisibleCheck = Camera:WorldToScreenPoint(Object.PrimaryPart.Position)
-					local UIPosiiton = UDim2.new(NewVector.X/OtherGui.AbsoluteSize.X,0,NewVector.Y/OtherGui.AbsoluteSize.Y,0)
+					local UIPosition = UDim2.new(NewVector.X/OtherGui.AbsoluteSize.X,0,NewVector.Y/OtherGui.AbsoluteSize.Y,0)
 
-					TextFrame.Position = UIPosiiton
+					TextFrame.Position = UIPosition
 					TextFrame.Visible = VisibleCheck
 				end
 			else
 				if Object then
 					local NewVector, VisibleCheck = Camera:WorldToScreenPoint(Object.Position)
-					local UIPosiiton = UDim2.new(NewVector.X/OtherGui.AbsoluteSize.X,0,NewVector.Y/OtherGui.AbsoluteSize.Y,0)
+					local UIPosition = UDim2.new(NewVector.X/OtherGui.AbsoluteSize.X,0,NewVector.Y/OtherGui.AbsoluteSize.Y,0)
 
 
-					TextFrame.Position = UIPosiiton
+					TextFrame.Position = UIPosition
 					TextFrame.Visible = VisibleCheck
 				end
 			end
@@ -377,7 +387,7 @@ TextLabel.Visible = OnScreen
 
 	Object:GetPropertyChangedSignal("Parent"):Connect(function()
 		Library:RemoveESP(Object)
-		
+
 	end)
 	if Object:IsA("Model") then
 		Object.PrimaryPart:GetPropertyChangedSignal("Parent"):Connect(function()
@@ -436,7 +446,7 @@ end
 
 function Library:UpdateObjectText(Object,Text)
 	if Labels[Object] then
-		Labels[Object].Text = Text
+		TextTable[Object] = Text
 	end
 end
 
@@ -449,7 +459,7 @@ end
 
 function Library:RemoveESP(Object)
 
-	
+
 
 	local Highlight = Highlights[Object]
 	local TextFrame = Frames[Object]
@@ -489,7 +499,7 @@ ConnectionsTable.RainbowConnection = RunService.RenderStepped:Connect(function(D
 		if RainbowTable.HueSetup > 1 then RainbowTable.HueSetup = 0; end;
 		RainbowTable.Hue = RainbowTable.HueSetup;
 		RainbowTable.Color = Color3.fromHSV(RainbowTable.Hue, 0.8, 1);
-		
+
 
 	end
 end)
@@ -525,6 +535,3 @@ OtherGui.Name = Library:GenerateRandomString()
 HighlightsFolder.Name = Library:GenerateRandomString()
 BillboardsFolder.Name = Library:GenerateRandomString()
 getgenv().ESPLibrary = Library
-
-
-
