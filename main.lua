@@ -207,7 +207,7 @@ function Library:AddESP(Parameters)
 		end
 	end
 	local Connection = RunService.RenderStepped:Connect(function()
-		task.wait(0.05)
+		task.wait()
 		if Library.Rainbow == true and Highlight then
 			Highlight.FillColor = RainbowTable.Color
 			if Library.MatchColors == true then
@@ -230,15 +230,19 @@ function Library:AddESP(Parameters)
 
 
 		local pos
+		
 		if Object:IsA("Model") then
 			if Object.PrimaryPart then
+				task.wait()
 				pos = Object.PrimaryPart.Position
 			else
+				task.wait()
 				pos = Object.WorldPivot.Position
 
 			end
 		else
 			if Object then
+				task.wait()
 				pos = Object.Position
 			end
 		end
@@ -249,7 +253,7 @@ function Library:AddESP(Parameters)
 			TextLabel.Text = TextTable[Object]
 		end
 
-	
+		task.wait()
 		local vector, onScreen = game.Workspace.CurrentCamera:WorldToScreenPoint(pos)
 		local Targets = {}
 		local Character = Object
@@ -280,7 +284,7 @@ function Library:AddESP(Parameters)
 				Highlights[Object] = NewHighlight
 			end
 		end
-
+		task.wait()
 		if Library.Tracers == true then
 			if #Targets > #Lines then
 
@@ -339,7 +343,7 @@ function Library:AddESP(Parameters)
 
 		
 
-
+			task.wait()
 			if Object:IsA("Model") then
 				if Object.PrimaryPart then
 					local NewVector, VisibleCheck = Camera:WorldToScreenPoint(Object.PrimaryPart.Position)
