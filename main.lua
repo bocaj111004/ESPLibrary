@@ -114,7 +114,7 @@ function Library:AddESP(Parameters)
 	local Object = Parameters.Object
 	local TransparencyEnabled = false
 
-
+if ConnectionsTable[Object] == nil then
 
 
 
@@ -432,6 +432,7 @@ end
 
 		end)
 	end
+	end
 end
 
 
@@ -502,7 +503,7 @@ end
 
 function Library:RemoveESP(Object)
 
-
+if ConnectionsTable[Object] ~= nil then
 
 	local Highlight = Highlights[Object]
 	local TextFrame = Frames[Object]
@@ -531,6 +532,7 @@ function Library:RemoveESP(Object)
 	if ConnectionsTable[Object] then
 		ConnectionsTable[Object]:Disconnect()
 		ConnectionsTable[Object] = nil
+	end
 	end
 end
 
