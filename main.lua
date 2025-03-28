@@ -226,63 +226,61 @@ function Library:AddESP(Parameters)
 			TextLabel.TextColor3 = ColorTable[Object]
 		end
 
-		
 
-RunService.RenderStepped:Wait()
-			
-			
-			local pos
-			if Object:IsA("Model") then
-				if Object.PrimaryPart then
-					pos = Object.PrimaryPart.Position
-				else
-					pos = Object.WorldPivot.Position
 
-				end
+
+		local pos
+		if Object:IsA("Model") then
+			if Object.PrimaryPart then
+				pos = Object.PrimaryPart.Position
 			else
-				if Object then
-					pos = Object.Position
-				end
+				pos = Object.WorldPivot.Position
+
 			end
-			
-			if Library.ShowDistance == true then
-				TextLabel.Text = TextTable[Object] .. "\n[" .. Players.LocalPlayer:DistanceFromCharacter(pos) .. "]"
-				else
-				TextLabel.Text = TextTable[Object]
+		else
+			if Object then
+				pos = Object.Position
 			end
+		end
+
+		if Library.ShowDistance == true then
+			TextLabel.Text = TextTable[Object] .. "\n[" .. Players.LocalPlayer:DistanceFromCharacter(pos) .. "]"
+		else
+			TextLabel.Text = TextTable[Object]
+		end
 
 
-			local vector, onScreen = game.Workspace.CurrentCamera:WorldToScreenPoint(pos)
-			local Targets = {}
-			local Character = Object
-			if not Character then return end
-			local LineOrigin = GetLineOrigin()
+		local vector, onScreen = game.Workspace.CurrentCamera:WorldToScreenPoint(pos)
+		local Targets = {}
+		local Character = Object
+		if not Character then return end
+		local LineOrigin = GetLineOrigin()
 
-			local ScreenPoint, OnScreen = game.Workspace.CurrentCamera:WorldToScreenPoint(pos)
-			TextLabel.Visible = OnScreen
-			if OnScreen then
-				table.insert(Targets, {Vector2.new(ScreenPoint.X, ScreenPoint.Y), ColorTable[Object]})
-				if not Highlights[Object] then
-					local NewHighlight = Instance.new("Highlight")
-					NewHighlight.Name = Library:GenerateRandomString()
-					NewHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-					NewHighlight.FillTransparency = 1
-					NewHighlight.OutlineTransparency = 1
-					NewHighlight.FillColor = Parameters.Color
-					NewHighlight.OutlineColor = Parameters.Color
-					NewHighlight.Parent = HighlightsFolder
-					NewHighlight.Adornee = Object
-					Highlight = NewHighlight
-					Highlights[Object] = NewHighlight
-				end
-			else
-				if Highlights[Object] then
-					Highlights[Object]:Destroy()
-					Highlights[Object] = nil
-				end
+		local ScreenPoint, OnScreen = game.Workspace.CurrentCamera:WorldToScreenPoint(pos)
+		TextLabel.Visible = OnScreen
+		if OnScreen then
+			table.insert(Targets, {Vector2.new(ScreenPoint.X, ScreenPoint.Y), ColorTable[Object]})
+			if not Highlights[Object] then
+				local NewHighlight = Instance.new("Highlight")
+				NewHighlight.Name = Library:GenerateRandomString()
+				NewHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+				NewHighlight.FillTransparency = 1
+				NewHighlight.OutlineTransparency = 1
+				NewHighlight.FillColor = Parameters.Color
+				NewHighlight.OutlineColor = Parameters.Color
+				NewHighlight.Parent = HighlightsFolder
+				NewHighlight.Adornee = Object
+				Highlight = NewHighlight
+				Highlights[Object] = NewHighlight
 			end
+		else
+			if Highlights[Object] then
+				Highlights[Object]:Destroy()
+				Highlights[Object] = nil
+			end
+		end
 
-			if Library.Tracers == true then
+		if Library.Tracers == true then
 			if #Targets > #Lines then
 
 				local NewLine = Instance.new("Frame")
@@ -394,7 +392,7 @@ RunService.RenderStepped:Wait()
 		Library:RemoveESP(Object)
 
 	end)
-	if Object:IsA("Model") then
+	if Object:IsA("Model") and Object.PrimaryPart then
 		Object.PrimaryPart:GetPropertyChangedSignal("Parent"):Connect(function()
 			Library:RemoveESP(Object)
 
@@ -476,12 +474,16 @@ function Library:RemoveESP(Object)
 	local TextFrame = Frames[Object]
 	local BillboardGui = Billboards[Object]
 	local TextLabel = Labels[Object]
+	if Highlight and TextLabel then
 	TweenService:Create(Highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = 1}):Play()
 	TweenService:Create(Highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{OutlineTransparency = 1}):Play()
 	TweenService:Create(TextLabel,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{TextTransparency = 1}):Play()
+	end
 	task.wait(Library.FadeTime)
+	if Highlight and TextLabel then
 	Highlight:Destroy()
 	TextLabel:Destroy()
+	end
 	if Library.TracerTable[Object] then
 		Library.TracerTable[Object]:Destroy()
 	end
@@ -493,8 +495,8 @@ function Library:RemoveESP(Object)
 	end
 
 	if ConnectionsTable[Object] then
-	ConnectionsTable[Object]:Disconnect()
-	ConnectionsTable[Object] = nil
+		ConnectionsTable[Object]:Disconnect()
+		ConnectionsTable[Object] = nil
 	end
 end
 
