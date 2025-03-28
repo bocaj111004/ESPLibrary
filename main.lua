@@ -488,9 +488,11 @@ function Library:RemoveESP(Object)
 	if BillboardGui then
 		BillboardGui:Destroy()
 	end
-	task.wait(Library.FadeTime)
+
+	if ConnectionsTable[Object] then
 	ConnectionsTable[Object]:Disconnect()
 	ConnectionsTable[Object] = nil
+	end
 end
 
 
