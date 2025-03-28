@@ -124,6 +124,7 @@ function Library:AddESP(Parameters)
 		MainPart = Parameters.BasePart
 	end
 
+	local Highlight
 	local ObjectTable = {}
 	TextTable[Object] = Parameters.Text
 	
@@ -398,11 +399,11 @@ function Library:AddESP(Parameters)
 	ConnectionsTable[Object] = Connection
 	Objects[Object] = ObjectTable
 	ColorTable[Object] = Parameters.Color 
-
+if Highlight then
 	TweenService:Create(TextLabel,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{TextTransparency = Library.TextTransparency}):Play()
 	TweenService:Create(Highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = Library.FillTransparency}):Play()
 	TweenService:Create(Highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{OutlineTransparency = Library.OutlineTransparency}):Play()
-
+end
 
 
 
