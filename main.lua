@@ -207,7 +207,7 @@ function Library:AddESP(Parameters)
 		end
 	end
 	local Connection = RunService.RenderStepped:Connect(function()
-
+		RunService.RenderStepped:Wait()
 		if Library.Rainbow == true and Highlight then
 			Highlight.FillColor = RainbowTable.Color
 			if Library.MatchColors == true then
@@ -249,7 +249,7 @@ function Library:AddESP(Parameters)
 			TextLabel.Text = TextTable[Object]
 		end
 
-RunService.RenderStepped:Wait()
+	
 		local vector, onScreen = game.Workspace.CurrentCamera:WorldToScreenPoint(pos)
 		local Targets = {}
 		local Character = Object
@@ -295,7 +295,7 @@ RunService.RenderStepped:Wait()
 				Border.Thickness = 0.75
 				Border.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 				Library.TracerTable[Object] = NewLine
-				task.wait()		
+					
 				if Library.Tracers == true  then
 					game:GetService("TweenService"):Create(Border,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{Transparency = 0}):Play()
 				end
@@ -336,7 +336,7 @@ RunService.RenderStepped:Wait()
 
 
 
-			task.wait()
+		
 
 
 			if Object:IsA("Model") then
@@ -475,14 +475,14 @@ function Library:RemoveESP(Object)
 	local BillboardGui = Billboards[Object]
 	local TextLabel = Labels[Object]
 	if Highlight and TextLabel then
-	TweenService:Create(Highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = 1}):Play()
-	TweenService:Create(Highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{OutlineTransparency = 1}):Play()
-	TweenService:Create(TextLabel,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{TextTransparency = 1}):Play()
+		TweenService:Create(Highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = 1}):Play()
+		TweenService:Create(Highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{OutlineTransparency = 1}):Play()
+		TweenService:Create(TextLabel,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{TextTransparency = 1}):Play()
 	end
 	task.wait(Library.FadeTime)
 	if Highlight and TextLabel then
-	Highlight:Destroy()
-	TextLabel:Destroy()
+		Highlight:Destroy()
+		TextLabel:Destroy()
 	end
 	if Library.TracerTable[Object] then
 		Library.TracerTable[Object]:Destroy()
