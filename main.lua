@@ -30,6 +30,7 @@ local Library = {
 	TextTransparency = 0,
 	FillTransparency = 0.75,
 	OutlineTransparency = 0,
+	TextOutlineTransparency = 0,
 	FadeTime = 0,
 	TextSize = 20,
 	OutlineColor = Color3.fromRGB(255,255,255)
@@ -144,7 +145,7 @@ function Library:AddESP(Parameters)
 	TextLabel.BackgroundTransparency = 1
 	TextLabel.Text = Parameters.Text
 	TextLabel.TextTransparency = 1
-	TextLabel.TextStrokeTransparency = 0
+	TextLabel.TextStrokeTransparency = Library.TextOutlineTransparency
 	TextLabel.Size = UDim2.new(1,0,1,0)
 	TextLabel.Font = Library.Font
 	TextLabel.TextSize = Library.TextSize
@@ -435,6 +436,12 @@ function Library:SetTextSize(Number)
 	Library.TextSize = Number
 	for i,Label in pairs(Labels) do
 		Label.TextSize = Number
+	end
+end
+function Library:SetTextOutlineTransparency(Number)
+	Library.TextOutlineTransparency = Number
+	for i,Label in pairs(Labels) do
+		Label.TextStrokeTransparency = Number
 	end
 end
 function Library:SetFont(Font)
