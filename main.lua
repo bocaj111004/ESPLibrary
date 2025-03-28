@@ -249,7 +249,7 @@ function Library:AddESP(Parameters)
 			TextLabel.Text = TextTable[Object]
 		end
 
-
+RunService.RenderStepped:Wait()
 		local vector, onScreen = game.Workspace.CurrentCamera:WorldToScreenPoint(pos)
 		local Targets = {}
 		local Character = Object
@@ -260,7 +260,7 @@ function Library:AddESP(Parameters)
 		TextLabel.Visible = OnScreen
 		if OnScreen then
 			table.insert(Targets, {Vector2.new(ScreenPoint.X, ScreenPoint.Y), ColorTable[Object]})
-			if not Highlights[Object] then
+			if Highlights[Object] == nil then
 				local NewHighlight = Instance.new("Highlight")
 				NewHighlight.Name = Library:GenerateRandomString()
 				NewHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
