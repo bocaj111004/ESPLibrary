@@ -226,9 +226,11 @@ function Library:AddESP(Parameters)
 			TextLabel.TextColor3 = ColorTable[Object]
 		end
 
-		if Library.Tracers == true then
+		
 
-
+RunService.RenderStepped:Wait()
+			
+			
 			local pos
 			if Object:IsA("Model") then
 				if Object.PrimaryPart then
@@ -280,6 +282,7 @@ function Library:AddESP(Parameters)
 				end
 			end
 
+			if Library.Tracers == true then
 			if #Targets > #Lines then
 
 				local NewLine = Instance.new("Frame")
