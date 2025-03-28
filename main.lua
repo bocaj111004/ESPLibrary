@@ -340,11 +340,14 @@ if ConnectionsTable[Object] == nil then
 							local NewHighlight = Instance.new("Highlight")
 							NewHighlight.Name = Library:GenerateRandomString()
 							NewHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-							if TransparencyEnabled == true then
-								NewHighlight.FillTransparency = Library.FillTransparency
-								NewHighlight.OutlineTransparency = Library.OutlineTransparency
-							end
-							NewHighlight.FillColor = Parameters.Color
+								if TransparencyEnabled == true then
+									NewHighlight.FillTransparency = Library.FillTransparency
+									NewHighlight.OutlineTransparency = Library.OutlineTransparency
+								else
+									TweenService:Create(NewHighlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = Library.FillTransparency}):Play()
+									TweenService:Create(NewHighlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{OutlineTransparency = Library.OutlineTransparency}):Play()
+								end
+NewHighlight.FillColor = Parameters.Color
 							NewHighlight.OutlineColor = Parameters.Color
 							NewHighlight.Parent = HighlightsFolder
 							NewHighlight.Adornee = Object
@@ -377,6 +380,9 @@ if ConnectionsTable[Object] == nil then
 							if TransparencyEnabled == true then
 								NewHighlight.FillTransparency = Library.FillTransparency
 								NewHighlight.OutlineTransparency = Library.OutlineTransparency
+							else
+								TweenService:Create(NewHighlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = Library.FillTransparency}):Play()
+								TweenService:Create(NewHighlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{OutlineTransparency = Library.OutlineTransparency}):Play()
 							end
 							NewHighlight.FillColor = Parameters.Color
 							NewHighlight.OutlineColor = Parameters.Color
@@ -409,9 +415,11 @@ if ConnectionsTable[Object] == nil then
 	ColorTable[Object] = Parameters.Color 
 	task.wait(0.1)
 if Highlight and TextLabel then
-	TweenService:Create(TextLabel,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{TextTransparency = Library.TextTransparency}):Play()
-	TweenService:Create(Highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = Library.FillTransparency}):Play()
-	TweenService:Create(Highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{OutlineTransparency = Library.OutlineTransparency}):Play()
+	local Tween = TweenService:Create(TextLabel,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{TextTransparency = Library.TextTransparency})
+	Tween:Play()
+	Tween.Completed:Connect(function()
+		TransparencyEnabled = true
+	end)
 end
 
 
