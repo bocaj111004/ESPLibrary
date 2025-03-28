@@ -126,15 +126,7 @@ function Library:AddESP(Parameters)
 
 	local ObjectTable = {}
 	TextTable[Object] = Parameters.Text
-	local Highlight = Instance.new("Highlight")
-	Highlight.Name = Library:GenerateRandomString()
-	Highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-	Highlight.FillTransparency = 1
-	Highlight.OutlineTransparency = 1
-	Highlight.FillColor = Parameters.Color
-	Highlight.OutlineColor = Parameters.Color
-	Highlight.Parent = HighlightsFolder
-	Highlight.Adornee = Object
+	
 	local TextFrame = Instance.new("Frame")
 	TextFrame.Name = Library:GenerateRandomString()
 	TextFrame.BackgroundTransparency = 1
@@ -159,7 +151,7 @@ function Library:AddESP(Parameters)
 	BillboardGui.Size = UDim2.new(200,0,50,0)
 	BillboardGui.AlwaysOnTop = true
 
-	Highlights[Object] = Highlight
+	
 	Billboards[Object] = BillboardGui
 	Labels[Object] = TextLabel
 	Objects[Object] = ObjectTable
@@ -197,12 +189,12 @@ function Library:AddESP(Parameters)
 		Line.Name = Library:GenerateRandomString()
 		Line.Size = UDim2.new(0, Length, 0, Width)
 		Line.Rotation = math.deg(math.atan2(Destination.Y - Origin.Y, Destination.X - Origin.X))
-		Line.BackgroundColor3 = Highlight.FillColor
-		Line.BorderColor3 = Highlight.FillColor
+		Line.BackgroundColor3 = ColorTable[Object]
+		Line.BorderColor3 = ColorTable[Object]
 		Line.BorderSizePixel = 0
 
 		if Line:FindFirstChild("UIStroke") then
-			Line.UIStroke.Color = Highlight.FillColor
+			Line.UIStroke.Color = ColorTable[Object]
 			Line.UIStroke.Thickness = 0.75
 		end
 	end
@@ -264,25 +256,8 @@ function Library:AddESP(Parameters)
 		TextLabel.Visible = OnScreen
 		if OnScreen then
 			table.insert(Targets, {Vector2.new(ScreenPoint.X, ScreenPoint.Y), ColorTable[Object]})
-			if Highlights[Object] then
-				Highlights[Object]:Destroy()
-				Highlights[Object] = nil
-			end
-		else
 			
-			if Highlights[Object] == nil then
-				local NewHighlight = Instance.new("Highlight")
-				NewHighlight.Name = Library:GenerateRandomString()
-				NewHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-				NewHighlight.FillTransparency = 1
-				NewHighlight.OutlineTransparency = 1
-				NewHighlight.FillColor = Parameters.Color
-				NewHighlight.OutlineColor = Parameters.Color
-				NewHighlight.Parent = HighlightsFolder
-				NewHighlight.Adornee = Object
-				Highlight = NewHighlight
-				Highlights[Object] = NewHighlight
-			end
+			
 		end
 		task.wait()
 		if Library.Tracers == true then
@@ -351,6 +326,28 @@ function Library:AddESP(Parameters)
 
 					TextFrame.Position = UIPosition
 					TextFrame.Visible = VisibleCheck
+					if VisibleCheck == true then
+					if Highlights[Object] then
+						Highlights[Object]:Destroy()
+						Highlights[Object] = nil
+					end
+				else
+
+					if Highlights[Object] == nil then
+						local NewHighlight = Instance.new("Highlight")
+						NewHighlight.Name = Library:GenerateRandomString()
+						NewHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+						NewHighlight.FillTransparency = 1
+						NewHighlight.OutlineTransparency = 1
+						NewHighlight.FillColor = Parameters.Color
+						NewHighlight.OutlineColor = Parameters.Color
+						NewHighlight.Parent = HighlightsFolder
+						NewHighlight.Adornee = Object
+						Highlight = NewHighlight
+					Highlights[Object] = NewHighlight
+							
+					end
+					end
 				end
 			else
 				if Object then
@@ -360,6 +357,28 @@ function Library:AddESP(Parameters)
 
 					TextFrame.Position = UIPosition
 					TextFrame.Visible = VisibleCheck
+					if VisibleCheck == true then
+						if Highlights[Object] then
+							Highlights[Object]:Destroy()
+							Highlights[Object] = nil
+						end
+					else
+
+						if Highlights[Object] == nil then
+							local NewHighlight = Instance.new("Highlight")
+							NewHighlight.Name = Library:GenerateRandomString()
+							NewHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+							NewHighlight.FillTransparency = 1
+							NewHighlight.OutlineTransparency = 1
+							NewHighlight.FillColor = Parameters.Color
+							NewHighlight.OutlineColor = Parameters.Color
+							NewHighlight.Parent = HighlightsFolder
+							NewHighlight.Adornee = Object
+							Highlight = NewHighlight
+							Highlights[Object] = NewHighlight
+						end
+					end
+				
 				end
 			end
 
@@ -387,11 +406,11 @@ function Library:AddESP(Parameters)
 
 
 
-	table.insert(Elements,Highlight)
+	
 	table.insert(Elements,TextFrame)
-	table.insert(Elements,TextLabel)
-	table.insert(Highlights,Highlight)
-	table.insert(Labels,TextLabel)
+
+	
+
 
 	Object:GetPropertyChangedSignal("Parent"):Connect(function()
 		Library:RemoveESP(Object)
