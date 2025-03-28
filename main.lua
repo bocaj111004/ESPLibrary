@@ -24,11 +24,13 @@ local Library = {
 	Rainbow = false,
 	UseBillboards = true,
 	Tracers = false,
+	MatchColors = false,
 	TextTransparency = 0,
 	FillTransparency = 0.75,
 	OutlineTransparency = 0,
 	FadeTime = 0,
-	TextSize = 20
+	TextSize = 20,
+	OutlineColor = Color3.fromRGB(255,255,255)
 }
 
 local RainbowTable = {
@@ -200,13 +202,21 @@ local ObjectTable = {}
 	end
 	local Connection = RunService.RenderStepped:Connect(function()
 
-		if Library.Rainbow == true then
+		if Library.Rainbow == true and Highlight then
 			Highlight.FillColor = RainbowTable.Color
-			Highlight.OutlineColor = RainbowTable.Color
+			if Library.MatchColors == true then
+				Highlight.OutlineColor = ColorTable[Object]
+			else
+				Highlight.OutlineColor = Library.OutlineColor
+			end
 			TextLabel.TextColor3 = RainbowTable.Color
-		else
+		elseif Highlight then
 			Highlight.FillColor = ColorTable[Object]
+			if Library.MatchColors == true then
 			Highlight.OutlineColor = ColorTable[Object]
+			else
+				Highlight.OutlineColor = Library.OutlineColor
+			end
 			TextLabel.TextColor3 = ColorTable[Object]
 		end
 		
@@ -235,9 +245,27 @@ local ObjectTable = {}
 			local LineOrigin = GetLineOrigin()
 			
 				local ScreenPoint, OnScreen = game.Workspace.CurrentCamera:WorldToScreenPoint(pos)
-
+TextLabel.Visible = OnScreen
 				if OnScreen then
 					table.insert(Targets, {Vector2.new(ScreenPoint.X, ScreenPoint.Y), ColorTable[Object]})
+					if not Highlights[Object] then
+					local NewHighlight = Instance.new("Highlight")
+					NewHighlight.Name = Library:GenerateRandomString()
+					NewHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+					NewHighlight.FillTransparency = 1
+					NewHighlight.OutlineTransparency = 1
+					NewHighlight.FillColor = Parameters.Color
+					NewHighlight.OutlineColor = Parameters.Color
+					NewHighlight.Parent = HighlightsFolder
+					NewHighlight.Adornee = Object
+					Highlight = NewHighlight
+					Highlights[Object] = NewHighlight
+					end
+				else
+				if Highlights[Object] then
+				Highlights[Object]:Destroy()
+				Highlights[Object] = nil
+				end
 				end
 
 				if #Targets > #Lines then
@@ -410,6 +438,10 @@ function Library:UpdateObjectText(Object,Text)
 	if Labels[Object] then
 		Labels[Object].Text = Text
 	end
+end
+
+function Library:SetOutlineColor(Color)
+	Library.OutlineColor = Color
 end
 
 
