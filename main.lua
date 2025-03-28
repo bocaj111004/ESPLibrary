@@ -260,6 +260,12 @@ function Library:AddESP(Parameters)
 		TextLabel.Visible = OnScreen
 		if OnScreen then
 			table.insert(Targets, {Vector2.new(ScreenPoint.X, ScreenPoint.Y), ColorTable[Object]})
+			if Highlights[Object] then
+				Highlights[Object]:Destroy()
+				Highlights[Object] = nil
+			end
+		else
+			
 			if Highlights[Object] == nil then
 				local NewHighlight = Instance.new("Highlight")
 				NewHighlight.Name = Library:GenerateRandomString()
@@ -272,11 +278,6 @@ function Library:AddESP(Parameters)
 				NewHighlight.Adornee = Object
 				Highlight = NewHighlight
 				Highlights[Object] = NewHighlight
-			end
-		else
-			if Highlights[Object] then
-				Highlights[Object]:Destroy()
-				Highlights[Object] = nil
 			end
 		end
 
