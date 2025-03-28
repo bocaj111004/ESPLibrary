@@ -331,6 +331,7 @@ function Library:AddESP(Parameters)
 					if Highlights[Object] then
 						Highlights[Object]:Destroy()
 						Highlights[Object] = nil
+							Labels[Object] = TextLabel
 					end
 				else
 
@@ -346,6 +347,7 @@ function Library:AddESP(Parameters)
 						NewHighlight.Adornee = Object
 						Highlight = NewHighlight
 					Highlights[Object] = NewHighlight
+							Labels[Object] = TextLabel
 							
 					end
 					end
@@ -362,6 +364,7 @@ function Library:AddESP(Parameters)
 						if Highlights[Object] then
 							Highlights[Object]:Destroy()
 							Highlights[Object] = nil
+							Labels[Object] = TextLabel
 						end
 					else
 
@@ -377,6 +380,7 @@ function Library:AddESP(Parameters)
 							NewHighlight.Adornee = Object
 							Highlight = NewHighlight
 							Highlights[Object] = NewHighlight
+							Labels[Object] = TextLabel
 						end
 					end
 				
@@ -399,7 +403,7 @@ function Library:AddESP(Parameters)
 	ConnectionsTable[Object] = Connection
 	Objects[Object] = ObjectTable
 	ColorTable[Object] = Parameters.Color 
-if Highlight and Textlabel then
+if Highlight then
 	TweenService:Create(TextLabel,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{TextTransparency = Library.TextTransparency}):Play()
 	TweenService:Create(Highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = Library.FillTransparency}):Play()
 	TweenService:Create(Highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{OutlineTransparency = Library.OutlineTransparency}):Play()
