@@ -112,6 +112,7 @@ end
 
 function Library:AddESP(Parameters)
 	local Object = Parameters.Object
+	local TransparencyEnabled = false
 
 
 
@@ -139,7 +140,7 @@ function Library:AddESP(Parameters)
 	TextLabel.BackgroundTransparency = 1
 	TextLabel.Text = Parameters.Text
 	TextLabel.TextTransparency = 1
-	TextLabel.TextStrokeTransparency = Library.TextOutlineTransparency
+	TextLabel.TextStrokeTransparency = 1
 	TextLabel.Size = UDim2.new(1,0,1,0)
 	TextLabel.Font = Library.Font
 	TextLabel.TextSize = Library.TextSize
@@ -339,8 +340,10 @@ function Library:AddESP(Parameters)
 						local NewHighlight = Instance.new("Highlight")
 						NewHighlight.Name = Library:GenerateRandomString()
 						NewHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-						NewHighlight.FillTransparency = 1
-						NewHighlight.OutlineTransparency = 1
+						if TransparencyEnabled == true then
+						NewHighlight.FillTransparency = Library.FillTransparency
+						NewHighlight.OutlineTransparency = Library.OutlineTransparency
+						end
 						NewHighlight.FillColor = Parameters.Color
 						NewHighlight.OutlineColor = Parameters.Color
 						NewHighlight.Parent = HighlightsFolder
@@ -372,8 +375,10 @@ function Library:AddESP(Parameters)
 							local NewHighlight = Instance.new("Highlight")
 							NewHighlight.Name = Library:GenerateRandomString()
 							NewHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-							NewHighlight.FillTransparency = 1
-							NewHighlight.OutlineTransparency = 1
+							if TransparencyEnabled == true then
+								NewHighlight.FillTransparency = Library.FillTransparency
+								NewHighlight.OutlineTransparency = Library.OutlineTransparency
+							end
 							NewHighlight.FillColor = Parameters.Color
 							NewHighlight.OutlineColor = Parameters.Color
 							NewHighlight.Parent = HighlightsFolder
