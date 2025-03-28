@@ -448,7 +448,7 @@ end
 function Library:SetFont(Font)
 	Library.Font = Font
 	for i,Label in pairs(Labels) do
-		Label.FOnt = Font
+		Label.Font = Font
 	end
 end
 
