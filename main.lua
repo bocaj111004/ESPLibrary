@@ -225,7 +225,7 @@ function Library:AddESP(Parameters)
 		local pos
 		
 		if Object:IsA("Model") then
-			if Object.PrimaryPart then
+			if Object.PrimaryPart ~= nil then
 				task.wait()
 				pos = Object.PrimaryPart.Position
 			else
