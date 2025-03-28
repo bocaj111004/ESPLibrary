@@ -543,3 +543,5 @@ OtherGui.Name = Library:GenerateRandomString()
 HighlightsFolder.Name = Library:GenerateRandomString()
 BillboardsFolder.Name = Library:GenerateRandomString()
 getgenv().ESPLibrary = Library
+
+return Library
