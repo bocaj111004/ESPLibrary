@@ -328,7 +328,7 @@ function Library:AddESP(Parameters)
 
 					TextFrame.Position = UIPosition
 					TextFrame.Visible = not VisibleCheck
-					if VisibleCheck == false then
+					if VisibleCheck == true then
 						if Highlights[Object] then
 							Highlights[Object]:Destroy()
 							Highlights[Object] = nil
@@ -362,7 +362,7 @@ function Library:AddESP(Parameters)
 
 					TextFrame.Position = UIPosition
 					TextFrame.Visible = not VisibleCheck
-					if VisibleCheck == false then
+					if VisibleCheck == true then
 						if Highlights[Object] then
 							Highlights[Object]:Destroy()
 							Highlights[Object] = nil
