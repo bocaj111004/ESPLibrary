@@ -327,32 +327,31 @@ function Library:AddESP(Parameters)
 					local UIPosition = UDim2.new(NewVector.X/OtherGui.AbsoluteSize.X,0,NewVector.Y/OtherGui.AbsoluteSize.Y,0)
 
 					TextFrame.Position = UIPosition
-					TextFrame.Visible = VisibleCheck
-					if VisibleCheck == true then
-					if Highlights[Object] then
-						Highlights[Object]:Destroy()
-						Highlights[Object] = nil
+					TextFrame.Visible = not VisibleCheck
+					if VisibleCheck == false then
+						if Highlights[Object] then
+							Highlights[Object]:Destroy()
+							Highlights[Object] = nil
 							Labels[Object] = TextLabel
-					end
-				else
-
-					if Highlights[Object] == nil then
-						local NewHighlight = Instance.new("Highlight")
-						NewHighlight.Name = Library:GenerateRandomString()
-						NewHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-						if TransparencyEnabled == true then
-						NewHighlight.FillTransparency = Library.FillTransparency
-						NewHighlight.OutlineTransparency = Library.OutlineTransparency
 						end
-						NewHighlight.FillColor = Parameters.Color
-						NewHighlight.OutlineColor = Parameters.Color
-						NewHighlight.Parent = HighlightsFolder
-						NewHighlight.Adornee = Object
-						Highlight = NewHighlight
-					Highlights[Object] = NewHighlight
+					else
+
+						if Highlights[Object] == nil then
+							local NewHighlight = Instance.new("Highlight")
+							NewHighlight.Name = Library:GenerateRandomString()
+							NewHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+							if TransparencyEnabled == true then
+								NewHighlight.FillTransparency = Library.FillTransparency
+								NewHighlight.OutlineTransparency = Library.OutlineTransparency
+							end
+							NewHighlight.FillColor = Parameters.Color
+							NewHighlight.OutlineColor = Parameters.Color
+							NewHighlight.Parent = HighlightsFolder
+							NewHighlight.Adornee = Object
+							Highlight = NewHighlight
+							Highlights[Object] = NewHighlight
 							Labels[Object] = TextLabel
-							
-					end
+						end
 					end
 				end
 			else
@@ -362,8 +361,8 @@ function Library:AddESP(Parameters)
 
 
 					TextFrame.Position = UIPosition
-					TextFrame.Visible = VisibleCheck
-					if VisibleCheck == true then
+					TextFrame.Visible = not VisibleCheck
+					if VisibleCheck == false then
 						if Highlights[Object] then
 							Highlights[Object]:Destroy()
 							Highlights[Object] = nil
