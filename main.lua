@@ -403,6 +403,7 @@ function Library:AddESP(Parameters)
 	ConnectionsTable[Object] = Connection
 	Objects[Object] = ObjectTable
 	ColorTable[Object] = Parameters.Color 
+	task.wait(0.1)
 if Highlight and TextLabel then
 	TweenService:Create(TextLabel,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{TextTransparency = Library.TextTransparency}):Play()
 	TweenService:Create(Highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = Library.FillTransparency}):Play()
