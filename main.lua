@@ -204,6 +204,7 @@ function Library:AddESP(Parameters)
 		local ConnectionCooldown = false
 		local Connection = RunService.RenderStepped:Connect(function()
 			Camera = workspace.CurrentCamera
+			if Camera == nil then return end
 			if Library.Rainbow == true and Highlight ~= nil then
 				Highlight.FillColor = RainbowTable.Color
 				if Library.MatchColors == true then
