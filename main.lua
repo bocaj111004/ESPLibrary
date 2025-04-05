@@ -196,8 +196,8 @@ function Library:AddESP(Parameters)
 			Line.BorderSizePixel = 0
 
 			if Line:FindFirstChild("UIStroke") then
-				Line.UIStroke.Color = ColorTable[Object]
-				Line.UIStroke.Thickness = 0.75
+				Line.UIStroke.Color = Highlight.FillColor
+				Line.UIStroke.Thickness = Library.TracerThickness
 			end
 			end
 		end
