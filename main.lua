@@ -185,25 +185,25 @@ function Library:AddESP(Parameters)
 		end
 		local function Setline(Line, Width, ColorToSet, Origin, Destination)
 			if Highlight then
-			local Position = (Origin + Destination) / 2
-			Line.Position = UDim2.new(0, Position.X, 0, Position.Y)
-			local Length = (Origin - Destination).Magnitude
+				local Position = (Origin + Destination) / 2
+				Line.Position = UDim2.new(0, Position.X, 0, Position.Y)
+				local Length = (Origin - Destination).Magnitude
 
-			Line.Size = UDim2.new(0, Length, 0, Width)
-			Line.Rotation = math.deg(math.atan2(Destination.Y - Origin.Y, Destination.X - Origin.X))
-			Line.BackgroundColor3 = Highlight.FillColor
-			Line.BorderColor3 = Highlight.FillColor
-			Line.BorderSizePixel = 0
+				Line.Size = UDim2.new(0, Length, 0, Width)
+				Line.Rotation = math.deg(math.atan2(Destination.Y - Origin.Y, Destination.X - Origin.X))
+				Line.BackgroundColor3 = Highlight.FillColor
+				Line.BorderColor3 = Highlight.FillColor
+				Line.BorderSizePixel = 0
 
-			if Line:FindFirstChild("UIStroke") then
-				Line.UIStroke.Color = Highlight.FillColor
-				Line.UIStroke.Thickness = Library.TracerThickness
-			end
+				if Line:FindFirstChild("UIStroke") then
+					Line.UIStroke.Color = Highlight.FillColor
+					Line.UIStroke.Thickness = Library.TracerThickness
+				end
 			end
 		end
 		local ConnectionCooldown = false
 		local Connection = RunService.RenderStepped:Connect(function()
-			
+			Camera = workspace.CurrentCamera
 			if Library.Rainbow == true and Highlight ~= nil then
 				Highlight.FillColor = RainbowTable.Color
 				if Library.MatchColors == true then
@@ -221,38 +221,38 @@ function Library:AddESP(Parameters)
 				end
 				TextLabel.TextColor3 = ColorTable[Object]
 			end
-			
+
 			if Library.Bold == true then
-			TextLabel.FontFace.Weight = Enum.FontWeight.Bold
+				TextLabel.FontFace.Weight = Enum.FontWeight.Bold
 			else
 				TextLabel.FontFace.Weight = Enum.FontWeight.Regular
 			end
 
 
-	
+
 			task.wait()
 
 			local pos
 
 			if Object:IsA("Model") then
-				
+
 				if Object.PrimaryPart ~= nil then
-					
+
 					pos = Object.PrimaryPart.Position
 				else
-					
+
 					pos = Object.WorldPivot.Position
 
 				end
 			else
-				
+
 				if Object then
-				
+
 					pos = Object.Position
 				end
 			end
 
-			
+
 			if Library.ShowDistance == true then
 				TextLabel.Text = TextTable[Object] .. "\n[" .. math.round(Players.LocalPlayer:DistanceFromCharacter(pos)) .. "]"
 			else
@@ -269,7 +269,7 @@ function Library:AddESP(Parameters)
 			TextLabel.Visible = OnScreen
 			if OnScreen then
 				table.insert(Targets, {Vector2.new(ScreenPoint.X, ScreenPoint.Y), ColorTable[Object]})
-			
+
 
 
 			end
@@ -298,14 +298,14 @@ function Library:AddESP(Parameters)
 					table.insert(Lines, NewLine)
 				end
 				if ConnectionCooldown == false then
-				for i, Line in pairs(Lines) do
-					local TargetData = Targets[i]
-					if not TargetData then
-						Line:Destroy()
-						table.remove(Lines, i)
-						
-					end
-					Setline(Line, 0, ColorTable[Object], LineOrigin, TargetData[1])
+					for i, Line in pairs(Lines) do
+						local TargetData = Targets[i]
+						if not TargetData then
+							Line:Destroy()
+							table.remove(Lines, i)
+
+						end
+						Setline(Line, 0, ColorTable[Object], LineOrigin, TargetData[1])
 					end
 
 
@@ -315,13 +315,13 @@ function Library:AddESP(Parameters)
 
 			elseif Library.Tracers == false then
 				if ConnectionCooldown == false then
-					
-				for i,line in pairs(Lines) do
+
+					for i,line in pairs(Lines) do
 
 
-					line:Destroy()
+						line:Destroy()
 
-				end
+					end
 				end
 			end	
 
@@ -345,36 +345,36 @@ function Library:AddESP(Parameters)
 						TextFrame.Position = UIPosition
 						TextFrame.Visible = VisibleCheck
 						if ConnectionCooldown == false then
-						if VisibleCheck == false then
-							if Highlights[Object] then
-								Highlights[Object]:Destroy()
-								Highlights[Object] = nil
-								Labels[Object] = TextLabel
-							end
-						else
-
-							if Highlights[Object] == nil then
-								local NewHighlight = Instance.new("Highlight")
-								NewHighlight.FillTransparency = 1
-								NewHighlight.OutlineTransparency = 1
-								NewHighlight.Name = Library:GenerateRandomString()
-								NewHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-								if TransparencyEnabled == true then
-									NewHighlight.FillTransparency = Library.FillTransparency
-									NewHighlight.OutlineTransparency = Library.OutlineTransparency
-								else
-									TweenService:Create(NewHighlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = Library.FillTransparency}):Play()
-									TweenService:Create(NewHighlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{OutlineTransparency = Library.OutlineTransparency}):Play()
+							if VisibleCheck == false then
+								if Highlights[Object] then
+									Highlights[Object]:Destroy()
+									Highlights[Object] = nil
+									Labels[Object] = TextLabel
 								end
-								NewHighlight.FillColor = Parameters.Color
-								NewHighlight.OutlineColor = Parameters.Color
-								NewHighlight.Parent = HighlightsFolder
-								NewHighlight.Adornee = Object
-								Highlight = NewHighlight
-								Highlights[Object] = NewHighlight
-								Labels[Object] = TextLabel
+							else
+
+								if Highlights[Object] == nil then
+									local NewHighlight = Instance.new("Highlight")
+									NewHighlight.FillTransparency = 1
+									NewHighlight.OutlineTransparency = 1
+									NewHighlight.Name = Library:GenerateRandomString()
+									NewHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+									if TransparencyEnabled == true then
+										NewHighlight.FillTransparency = Library.FillTransparency
+										NewHighlight.OutlineTransparency = Library.OutlineTransparency
+									else
+										TweenService:Create(NewHighlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = Library.FillTransparency}):Play()
+										TweenService:Create(NewHighlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{OutlineTransparency = Library.OutlineTransparency}):Play()
+									end
+									NewHighlight.FillColor = Parameters.Color
+									NewHighlight.OutlineColor = Parameters.Color
+									NewHighlight.Parent = HighlightsFolder
+									NewHighlight.Adornee = Object
+									Highlight = NewHighlight
+									Highlights[Object] = NewHighlight
+									Labels[Object] = TextLabel
+								end
 							end
-						end
 						end
 					end
 				else
@@ -386,45 +386,45 @@ function Library:AddESP(Parameters)
 						TextFrame.Position = UIPosition
 						TextFrame.Visible =  VisibleCheck
 						if ConnectionCooldown == false then
-						if VisibleCheck == false then
-							if Highlights[Object] then
-								Highlights[Object]:Destroy()
-								Highlights[Object] = nil
-								Labels[Object] = TextLabel
-							end
-						else
-
-							if Highlights[Object] == nil then
-								local NewHighlight = Instance.new("Highlight")
-								NewHighlight.FillTransparency = 1
-								NewHighlight.OutlineTransparency = 1
-								NewHighlight.Name = Library:GenerateRandomString()
-								NewHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-								if TransparencyEnabled == true then
-									NewHighlight.FillTransparency = Library.FillTransparency
-									NewHighlight.OutlineTransparency = Library.OutlineTransparency
-								else
-									TweenService:Create(NewHighlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = Library.FillTransparency}):Play()
-									TweenService:Create(NewHighlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{OutlineTransparency = Library.OutlineTransparency}):Play()
+							if VisibleCheck == false then
+								if Highlights[Object] then
+									Highlights[Object]:Destroy()
+									Highlights[Object] = nil
+									Labels[Object] = TextLabel
 								end
-								NewHighlight.FillColor = Parameters.Color
-								NewHighlight.OutlineColor = Parameters.Color
-								NewHighlight.Parent = HighlightsFolder
-								NewHighlight.Adornee = Object
-								Highlight = NewHighlight
-								Highlights[Object] = NewHighlight
-								Labels[Object] = TextLabel
+							else
+
+								if Highlights[Object] == nil then
+									local NewHighlight = Instance.new("Highlight")
+									NewHighlight.FillTransparency = 1
+									NewHighlight.OutlineTransparency = 1
+									NewHighlight.Name = Library:GenerateRandomString()
+									NewHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+									if TransparencyEnabled == true then
+										NewHighlight.FillTransparency = Library.FillTransparency
+										NewHighlight.OutlineTransparency = Library.OutlineTransparency
+									else
+										TweenService:Create(NewHighlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = Library.FillTransparency}):Play()
+										TweenService:Create(NewHighlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{OutlineTransparency = Library.OutlineTransparency}):Play()
+									end
+									NewHighlight.FillColor = Parameters.Color
+									NewHighlight.OutlineColor = Parameters.Color
+									NewHighlight.Parent = HighlightsFolder
+									NewHighlight.Adornee = Object
+									Highlight = NewHighlight
+									Highlights[Object] = NewHighlight
+									Labels[Object] = TextLabel
+								end
 							end
-						end
 
 						end
-						end
+					end
 				end
 
 
 				ConnectionCooldown = true
-task.wait(0.1)
-ConnectionCooldown = false
+				task.wait(0.1)
+				ConnectionCooldown = false
 
 			end
 		end)
@@ -542,7 +542,7 @@ end
 
 
 function Library:RemoveESP(Object)
-if Objects[Object] == nil then return end
+	if Objects[Object] == nil then return end
 	if ConnectionsTable[Object] ~= nil then
 
 		local Highlight = Highlights[Object]
@@ -553,7 +553,7 @@ if Objects[Object] == nil then return end
 			Library.TracerTable[Object]:Destroy()
 		end
 		Objects[Object] = nil
-		
+
 		if Highlight and TextLabel then
 			TweenService:Create(Highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = 1}):Play()
 			TweenService:Create(Highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{OutlineTransparency = 1}):Play()
@@ -561,8 +561,8 @@ if Objects[Object] == nil then return end
 			task.wait(Library.FadeTime)	
 		end
 
-		
-		
+
+
 		if TextFrame then
 			TextFrame:Destroy()
 		end
@@ -617,7 +617,7 @@ function Library:Unload()
 	for i,Connection in pairs(ConnectionsTable) do
 		Connection:Disconnect()
 	end
-	
+
 	ScreenGui:Destroy()
 	OtherGui:Destroy()
 	Library = nil
