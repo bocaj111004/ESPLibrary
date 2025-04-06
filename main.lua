@@ -52,7 +52,6 @@ ObjectsFolder = Library.ObjectsFolder
 HttpService = game:GetService("HttpService")
 HighlightedObjects = Library.HighlightedObjects
 Highlights = Library.Highlights
-Camera = workspace.CurrentCamera
 ConnectionsTable = Library.ConnectionsTable
 Objects = Library.Objects
 Billboards = Library.Billboards
@@ -163,23 +162,23 @@ function Library:AddESP(Parameters)
 		end
 		local Lines = {}
 
-		local Camera = workspace.CurrentCamera
+	
 		local function GetLineOrigin()
 
 			if Library.TracerOrigin == "Center" then
 				local mousePos = game:GetService("UserInputService"):GetMouseLocation();
-				return Vector2.new(Camera.ViewportSize.X/2,Camera.ViewportSize.Y/2.25)
+				return Vector2.new(game.Workspace.CurrentCamera.ViewportSize.X/2,game.Workspace.CurrentCamera.ViewportSize.Y/2.25)
 
 			elseif Library.TracerOrigin == "Top" then
-				return Vector2.new(Camera.ViewportSize.X/2, -Camera.ViewportSize.Y/18)	
+				return Vector2.new(game.Workspace.CurrentCamera.ViewportSize.X/2, -game.Workspace.CurrentCamera.ViewportSize.Y/18)	
 			elseif Library.TracerOrigin == "Mouse" then
 				return Vector2.new(game.Players.LocalPlayer:GetMouse().X,game.Players.LocalPlayer:GetMouse().Y)
 
 			else
 				if game.UserInputService.TouchEnabled and not game.UserInputService.KeyboardEnabled then
-					return Vector2.new(Camera.ViewportSize.X/2, Camera.ViewportSize.Y*0.94)
+					return Vector2.new(game.Workspace.CurrentCamera.ViewportSize.X/2, Camera.ViewportSize.Y*0.94)
 				else
-					return Vector2.new(Camera.ViewportSize.X/2, Camera.ViewportSize.Y*0.9475)
+					return Vector2.new(game.Workspace.CurrentCamera.ViewportSize.X/2, game.Workspace.CurrentCamera.ViewportSize.Y*0.9475)
 				end
 			end
 		end
@@ -203,8 +202,8 @@ function Library:AddESP(Parameters)
 		end
 		local ConnectionCooldown = false
 		local Connection = RunService.RenderStepped:Connect(function()
-			Camera = workspace.CurrentCamera
-			if Camera == nil then return end
+			
+			if game.Workspace.Current == nil then return end
 			if Library.Rainbow == true and Highlight ~= nil then
 				Highlight.FillColor = RainbowTable.Color
 				if Library.MatchColors == true then
@@ -340,7 +339,7 @@ function Library:AddESP(Parameters)
 
 				if Object:IsA("Model") then
 					if Object.PrimaryPart then
-						local NewVector, VisibleCheck = Camera:WorldToScreenPoint(Object.PrimaryPart.Position)
+						local NewVector, VisibleCheck = game.Workspace.Current:WorldToScreenPoint(Object.PrimaryPart.Position)
 						local UIPosition = UDim2.new(NewVector.X/OtherGui.AbsoluteSize.X,0,NewVector.Y/OtherGui.AbsoluteSize.Y,0)
 
 						TextFrame.Position = UIPosition
@@ -380,7 +379,7 @@ function Library:AddESP(Parameters)
 					end
 				else
 					if Object then
-						local NewVector, VisibleCheck = Camera:WorldToScreenPoint(Object.Position)
+						local NewVector, VisibleCheck = game.Workspace.Current:WorldToScreenPoint(Object.Position)
 						local UIPosition = UDim2.new(NewVector.X/OtherGui.AbsoluteSize.X,0,NewVector.Y/OtherGui.AbsoluteSize.Y,0)
 
 
