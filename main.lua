@@ -203,7 +203,7 @@ function Library:AddESP(Parameters)
 		local ConnectionCooldown = false
 		local Connection = RunService.RenderStepped:Connect(function()
 			
-			if game.Workspace.Current == nil then return end
+			if game.Workspace.CurrentCamera == nil then return end
 			if Library.Rainbow == true and Highlight ~= nil then
 				Highlight.FillColor = RainbowTable.Color
 				if Library.MatchColors == true then
@@ -339,7 +339,7 @@ function Library:AddESP(Parameters)
 
 				if Object:IsA("Model") then
 					if Object.PrimaryPart then
-						local NewVector, VisibleCheck = game.Workspace.Current:WorldToScreenPoint(Object.PrimaryPart.Position)
+						local NewVector, VisibleCheck = game.Workspace.CurrentCamera:WorldToScreenPoint(Object.PrimaryPart.Position)
 						local UIPosition = UDim2.new(NewVector.X/OtherGui.AbsoluteSize.X,0,NewVector.Y/OtherGui.AbsoluteSize.Y,0)
 
 						TextFrame.Position = UIPosition
@@ -379,7 +379,7 @@ function Library:AddESP(Parameters)
 					end
 				else
 					if Object then
-						local NewVector, VisibleCheck = game.Workspace.Current:WorldToScreenPoint(Object.Position)
+						local NewVector, VisibleCheck = game.Workspace.CurrentCamera:WorldToScreenPoint(Object.Position)
 						local UIPosition = UDim2.new(NewVector.X/OtherGui.AbsoluteSize.X,0,NewVector.Y/OtherGui.AbsoluteSize.Y,0)
 
 
