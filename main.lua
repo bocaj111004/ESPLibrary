@@ -1,5 +1,5 @@
 local Library = {
-	MainFolder = Instance.new("Folder"),
+	
 	ObjectsFolder = Instance.new("Folder"),
 	ScreenGui = Instance.new("ScreenGui"),
 	OtherGui = Instance.new("ScreenGui"),
@@ -47,7 +47,7 @@ local RainbowTable = {
 }
 
 
-MainFolder = Library.MainFolder
+
 ObjectsFolder = Library.ObjectsFolder
 HttpService = game:GetService("HttpService")
 HighlightedObjects = Library.HighlightedObjects
@@ -70,11 +70,12 @@ RunService = game:GetService("RunService")
 TweenService = game:GetService("TweenService")
 ProtectGui = protectgui or (function() end);
 ColorTable = Library.ColorTable
-ScreenGui.Parent = MainFolder
+ScreenGui.Parent = CoreGui
 OtherGui.Parent = ScreenGui
-HighlightsFolder.Parent = MainFolder
-BillboardsFolder.Parent = MainFolder
-MainFolder.Parent = CoreGui
+HighlightsFolder.Parent = ScreenGui
+BillboardsFolder.Parent = ScreenGui
+ScreenGui.ResetOnSpawn = false
+
 
 pcall(ProtectGui,ScreenGui)
 pcall(ProtectGui,OtherGui)
@@ -162,7 +163,7 @@ function Library:AddESP(Parameters)
 		end
 		local Lines = {}
 
-	
+
 		local function GetLineOrigin()
 
 			if Library.TracerOrigin == "Center" then
@@ -176,7 +177,7 @@ function Library:AddESP(Parameters)
 
 			else
 				if game.UserInputService.TouchEnabled and not game.UserInputService.KeyboardEnabled then
-					return Vector2.new(game.Workspace.CurrentCamera.ViewportSize.X/2, Camera.ViewportSize.Y*0.94)
+					return Vector2.new(game.Workspace.CurrentCamera.ViewportSize.X/2, game.Workspace.CurrentCamera.ViewportSize.Y*0.94)
 				else
 					return Vector2.new(game.Workspace.CurrentCamera.ViewportSize.X/2, game.Workspace.CurrentCamera.ViewportSize.Y*0.9475)
 				end
@@ -202,7 +203,7 @@ function Library:AddESP(Parameters)
 		end
 		local ConnectionCooldown = false
 		local Connection = RunService.RenderStepped:Connect(function()
-			
+
 			if game.Workspace.CurrentCamera == nil then return end
 			if Library.Rainbow == true and Highlight ~= nil then
 				Highlight.FillColor = RainbowTable.Color
@@ -626,7 +627,6 @@ end
 -- Finishing Touches --
 
 ObjectsFolder.Name = Library:GenerateRandomString()
-MainFolder.Name = Library:GenerateRandomString()
 ScreenGui.Name = Library:GenerateRandomString()
 OtherGui.Name = Library:GenerateRandomString()
 HighlightsFolder.Name = Library:GenerateRandomString()
