@@ -67,7 +67,7 @@ Connections = Library.Connections
 OtherGui = Library.OtherGui 
 Elements = Library.Elements
 TextTable = Library.TextTable
-CoreGui = game:GetService("CoreGui")
+CoreGui = game:GetService("CoreGui") or Players.LocalPlayer.PlayerGui
 Players = game:GetService("Players")
 RunService = game:GetService("RunService")
 TweenService = game:GetService("TweenService")
@@ -92,7 +92,7 @@ pcall(ProtectGui,OtherGui)
 -- Functions --
 
 function Library:GenerateRandomString()
-	local Characters = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	local Characters = "abcdef1234567890"
 
 	local RandomString = ""
 
@@ -100,7 +100,7 @@ function Library:GenerateRandomString()
 	local function GenerateSegment()
 
 		local Result = {}
-		local RandomNumber = math.random(6,11)
+		local RandomNumber = math.random(9,11)
 		for i = 1, RandomNumber do
 
 			local RandomIndex = math.random(1, #Characters)
@@ -108,11 +108,11 @@ function Library:GenerateRandomString()
 		end
 		return table.concat(Result)
 	end
-	local Segment1 = GenerateSegment()
-	local Segment2 = GenerateSegment()
-	local Segment3 = GenerateSegment()
-	local Segment4 = GenerateSegment()
-	local Segment5 = GenerateSegment()
+	local Segment1 = GenerateSegment() .. "-"
+	local Segment2 = GenerateSegment() .. "-"
+	local Segment3 = GenerateSegment() .. "-"
+	local Segment4 = GenerateSegment() .. "-"
+	local Segment5 = GenerateSegment() .. "-"
 	local Segment6 = GenerateSegment()
 	RandomString = Segment1 .. Segment2 .. Segment3 .. Segment4 .. Segment5 .. Segment6
 	return RandomString
