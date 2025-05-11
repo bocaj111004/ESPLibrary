@@ -154,10 +154,10 @@ function Library:AddESP(Parameters)
 		TextLabel.TextSize = Library.TextSize
 		TextLabel.Parent = TextFrame
 		TextLabel.TextColor3 = Parameters.Color
-		
+
 		Labels[Object] = TextLabel
 		Objects[Object] = ObjectTable
-		
+
 		local Lines = {}
 
 
@@ -316,7 +316,6 @@ function Library:AddESP(Parameters)
 
 
 
-		
 
 
 
@@ -328,96 +327,97 @@ function Library:AddESP(Parameters)
 
 
 
-				if Object:IsA("Model") then
-					if Object.PrimaryPart then
-						local NewVector, VisibleCheck = game.Workspace.CurrentCamera:WorldToScreenPoint(Object.PrimaryPart.Position+Vector3.new(0,Library.TextOffset,0))
-						local UIPosition = UDim2.new(NewVector.X/OtherGui.AbsoluteSize.X,0,NewVector.Y/OtherGui.AbsoluteSize.Y,0)
 
-						TextFrame.Position = UIPosition
-						TextFrame.Visible = VisibleCheck
-						if ConnectionCooldown == false then
-							if VisibleCheck == false then
-								if Highlights[Object] then
-									Highlights[Object]:Destroy()
-									Highlights[Object] = nil
-									Labels[Object] = TextLabel
+			if Object:IsA("Model") then
+				if Object.PrimaryPart then
+					local NewVector, VisibleCheck = game.Workspace.CurrentCamera:WorldToScreenPoint(Object.PrimaryPart.Position+Vector3.new(0,Library.TextOffset,0))
+					local UIPosition = UDim2.new(NewVector.X/OtherGui.AbsoluteSize.X,0,NewVector.Y/OtherGui.AbsoluteSize.Y,0)
+
+					TextFrame.Position = UIPosition
+					TextFrame.Visible = VisibleCheck
+					if ConnectionCooldown == false then
+						if VisibleCheck == false then
+							if Highlights[Object] then
+								Highlights[Object]:Destroy()
+								Highlights[Object] = nil
+								Labels[Object] = TextLabel
+							end
+						else
+
+							if Highlights[Object] == nil then
+								local NewHighlight = Instance.new("Highlight")
+								NewHighlight.FillTransparency = 1
+								NewHighlight.OutlineTransparency = 1
+								NewHighlight.Name = Library:GenerateRandomString()
+								NewHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+								if TransparencyEnabled == true then
+									NewHighlight.FillTransparency = Library.FillTransparency
+									NewHighlight.OutlineTransparency = Library.OutlineTransparency
+								else
+									TweenService:Create(NewHighlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = Library.FillTransparency}):Play()
+									TweenService:Create(NewHighlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{OutlineTransparency = Library.OutlineTransparency}):Play()
 								end
-							else
-
-								if Highlights[Object] == nil then
-									local NewHighlight = Instance.new("Highlight")
-									NewHighlight.FillTransparency = 1
-									NewHighlight.OutlineTransparency = 1
-									NewHighlight.Name = Library:GenerateRandomString()
-									NewHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-									if TransparencyEnabled == true then
-										NewHighlight.FillTransparency = Library.FillTransparency
-										NewHighlight.OutlineTransparency = Library.OutlineTransparency
-									else
-										TweenService:Create(NewHighlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = Library.FillTransparency}):Play()
-										TweenService:Create(NewHighlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{OutlineTransparency = Library.OutlineTransparency}):Play()
-									end
-									NewHighlight.FillColor = Parameters.Color
-									NewHighlight.OutlineColor = Parameters.Color
-									NewHighlight.Parent = HighlightsFolder
-									NewHighlight.Adornee = Object
-									Highlight = NewHighlight
-									Highlights[Object] = NewHighlight
-									Labels[Object] = TextLabel
-								end
+								NewHighlight.FillColor = Parameters.Color
+								NewHighlight.OutlineColor = Parameters.Color
+								NewHighlight.Parent = HighlightsFolder
+								NewHighlight.Adornee = Object
+								Highlight = NewHighlight
+								Highlights[Object] = NewHighlight
+								Labels[Object] = TextLabel
 							end
 						end
 					end
-				else
-					if Object then
-						local NewVector, VisibleCheck = game.Workspace.CurrentCamera:WorldToScreenPoint(Object.Position+Vector3.new(0,Library.TextOffset,0))
-						local UIPosition = UDim2.new(NewVector.X/OtherGui.AbsoluteSize.X,0,NewVector.Y/OtherGui.AbsoluteSize.Y,0)
+				end
+			else
+				if Object then
+					local NewVector, VisibleCheck = game.Workspace.CurrentCamera:WorldToScreenPoint(Object.Position+Vector3.new(0,Library.TextOffset,0))
+					local UIPosition = UDim2.new(NewVector.X/OtherGui.AbsoluteSize.X,0,NewVector.Y/OtherGui.AbsoluteSize.Y,0)
 
 
-						TextFrame.Position = UIPosition
-						TextFrame.Visible =  VisibleCheck
-						if ConnectionCooldown == false then
-							if VisibleCheck == false then
-								if Highlights[Object] then
-									Highlights[Object]:Destroy()
-									Highlights[Object] = nil
-									Labels[Object] = TextLabel
-								end
-							else
-
-								if Highlights[Object] == nil then
-									local NewHighlight = Instance.new("Highlight")
-									NewHighlight.FillTransparency = 1
-									NewHighlight.OutlineTransparency = 1
-									NewHighlight.Name = Library:GenerateRandomString()
-									NewHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-									if TransparencyEnabled == true then
-										NewHighlight.FillTransparency = Library.FillTransparency
-										NewHighlight.OutlineTransparency = Library.OutlineTransparency
-									else
-										TweenService:Create(NewHighlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = Library.FillTransparency}):Play()
-										TweenService:Create(NewHighlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{OutlineTransparency = Library.OutlineTransparency}):Play()
-									end
-									NewHighlight.FillColor = Parameters.Color
-									NewHighlight.OutlineColor = Parameters.Color
-									NewHighlight.Parent = HighlightsFolder
-									NewHighlight.Adornee = Object
-									Highlight = NewHighlight
-									Highlights[Object] = NewHighlight
-									Labels[Object] = TextLabel
-								end
+					TextFrame.Position = UIPosition
+					TextFrame.Visible =  VisibleCheck
+					if ConnectionCooldown == false then
+						if VisibleCheck == false then
+							if Highlights[Object] then
+								Highlights[Object]:Destroy()
+								Highlights[Object] = nil
+								Labels[Object] = TextLabel
 							end
+						else
 
+							if Highlights[Object] == nil then
+								local NewHighlight = Instance.new("Highlight")
+								NewHighlight.FillTransparency = 1
+								NewHighlight.OutlineTransparency = 1
+								NewHighlight.Name = Library:GenerateRandomString()
+								NewHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+								if TransparencyEnabled == true then
+									NewHighlight.FillTransparency = Library.FillTransparency
+									NewHighlight.OutlineTransparency = Library.OutlineTransparency
+								else
+									TweenService:Create(NewHighlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = Library.FillTransparency}):Play()
+									TweenService:Create(NewHighlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{OutlineTransparency = Library.OutlineTransparency}):Play()
+								end
+								NewHighlight.FillColor = Parameters.Color
+								NewHighlight.OutlineColor = Parameters.Color
+								NewHighlight.Parent = HighlightsFolder
+								NewHighlight.Adornee = Object
+								Highlight = NewHighlight
+								Highlights[Object] = NewHighlight
+								Labels[Object] = TextLabel
+							end
 						end
 
 					end
 
 				end
 
+			end
 
 
 
-			
+
+
 		end)
 		table.insert(Connections,Connection)
 
@@ -535,6 +535,14 @@ function Library:SetOutlineColor(Color)
 	Library.OutlineColor = Color
 end
 
+function Library:SetRainbow(Value)
+	Library.Rainbow = Value
+end
+
+function Library:SetShowDistance(Value)
+	Library.ShowDistance = Value
+end
+
 
 
 
@@ -544,7 +552,7 @@ function Library:RemoveESP(Object)
 
 		local Highlight = Highlights[Object]
 		local TextFrame = Frames[Object]
-	
+
 		local TextLabel = Labels[Object]
 
 		Objects[Object] = nil
@@ -569,7 +577,7 @@ function Library:RemoveESP(Object)
 		if TextFrame then
 			TextFrame:Destroy()
 		end
-	
+
 		if Library.TracerTable[Object] ~= nil then
 			Library.TracerTable[Object]:Destroy()
 
@@ -642,5 +650,3 @@ HighlightsFolder.Name = Library:GenerateRandomString()
 BillboardsFolder.Name = Library:GenerateRandomString()
 TracersFrame.Name = Library:GenerateRandomString()
 getgenv().ESPLibrary = Library
-
-return Library
