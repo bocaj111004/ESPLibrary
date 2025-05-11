@@ -642,3 +642,5 @@ HighlightsFolder.Name = Library:GenerateRandomString()
 BillboardsFolder.Name = Library:GenerateRandomString()
 TracersFrame.Name = Library:GenerateRandomString()
 getgenv().ESPLibrary = Library
+
+return Library
