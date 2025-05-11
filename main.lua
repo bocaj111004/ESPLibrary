@@ -543,6 +543,9 @@ function Library:SetShowDistance(Value)
 	Library.ShowDistance = Value
 end
 
+function Library:SetMatchColors(Value)
+	Library.MatchColors = Value
+end
 
 
 
