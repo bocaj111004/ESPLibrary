@@ -67,8 +67,9 @@ Connections = Library.Connections
 OtherGui = Library.OtherGui 
 Elements = Library.Elements
 TextTable = Library.TextTable
-CoreGui = game:GetService("CoreGui") or Players.LocalPlayer.PlayerGui
 Players = game:GetService("Players")
+CoreGui = (identifyexecutor ~= nil and game:GetService("CoreGui") or Players.LocalPlayer.PlayerGui)
+
 RunService = game:GetService("RunService")
 TweenService = game:GetService("TweenService")
 ProtectGui = protectgui or (function() end);
