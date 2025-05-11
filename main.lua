@@ -61,7 +61,6 @@ Billboards = Library.Billboards
 Frames = Library.Frames
 ScreenGui = Library.ScreenGui
 HighlightsFolder = Library.HighlightsFolder
-BillboardsFolder = Library.BillboardsFolder
 Labels = Library.Labels
 Connections = Library.Connections
 OtherGui = Library.OtherGui 
@@ -78,7 +77,7 @@ ScreenGui.Parent = CoreGui
 OtherGui.Parent = ScreenGui
 TracersFrame = Library.TracersFrame
 HighlightsFolder.Parent = ScreenGui
-BillboardsFolder.Parent = ScreenGui
+
 ScreenGui.ResetOnSpawn = false
 
 TracersFrame.Size = UDim2.new(1,0,1,0)
@@ -549,6 +548,14 @@ function Library:SetMatchColors(Value)
 	Library.MatchColors = Value
 end
 
+function Library:SetTracers(Value)
+	Library.Tracers = Value
+end
+
+function Library:SetTracerOrigin(Value)
+	Library.TracerOrigin = Value
+end
+
 
 
 function Library:RemoveESP(Object)
@@ -654,7 +661,6 @@ ObjectsFolder.Name = Library:GenerateRandomString()
 ScreenGui.Name = Library:GenerateRandomString()
 OtherGui.Name = Library:GenerateRandomString()
 HighlightsFolder.Name = Library:GenerateRandomString()
-BillboardsFolder.Name = Library:GenerateRandomString()
 TracersFrame.Name = Library:GenerateRandomString()
 if getgenv ~= nil then
 	getgenv().ESPLibrary = Library
