@@ -1,10 +1,11 @@
 local Library = {
-	
+
 	ObjectsFolder = Instance.new("Folder"),
 	ScreenGui = Instance.new("ScreenGui"),
 	OtherGui = Instance.new("ScreenGui"),
 	HighlightsFolder = Instance.new("Folder"),
 	BillboardsFolder = Instance.new("Folder"),
+	TracersFrame = Instance.new("Frame"),
 	Highlights = {},
 	Labels = {},
 	Elements = {},
@@ -20,15 +21,17 @@ local Library = {
 	HighlightedObjects = {},
 	RemoveIfNotVisible = true,
 	Rainbow = false,
-	UseBillboards = true,
+	UseBillboards = false,
 	Tracers = false,
 	Bold = false,
+	Unloaded = false,
 	ShowDistance = false,
 	MatchColors = true,
 	TextTransparency = 0,
 	TracerOrigin = "Bottom",
 	FillTransparency = 0.75,
 	OutlineTransparency = 0,
+	TextOffset = 0,
 	TextOutlineTransparency = 0,
 	FadeTime = 0,
 	TracerThickness = 0.85,
@@ -72,9 +75,15 @@ ProtectGui = protectgui or (function() end);
 ColorTable = Library.ColorTable
 ScreenGui.Parent = CoreGui
 OtherGui.Parent = ScreenGui
+TracersFrame = Library.TracersFrame
 HighlightsFolder.Parent = ScreenGui
 BillboardsFolder.Parent = ScreenGui
 ScreenGui.ResetOnSpawn = false
+
+TracersFrame.Size = UDim2.new(1,0,1,0)
+TracersFrame.BackgroundTransparency = 1
+
+TracersFrame.Parent = ScreenGui
 
 
 pcall(ProtectGui,ScreenGui)
@@ -112,7 +121,7 @@ end
 function Library:AddESP(Parameters)
 	local Object = Parameters.Object
 	local TransparencyEnabled = false
-	if Objects[Object] ~= nil then return end
+	if Objects[Object] ~= nil or Library.Unloaded == true then return end
 	if ConnectionsTable[Object] == nil then
 
 
@@ -145,22 +154,10 @@ function Library:AddESP(Parameters)
 		TextLabel.TextSize = Library.TextSize
 		TextLabel.Parent = TextFrame
 		TextLabel.TextColor3 = Parameters.Color
-		local BillboardGui = Instance.new("BillboardGui")
-		BillboardGui.Name = Library:GenerateRandomString()
-		BillboardGui.Parent = BillboardsFolder
-		BillboardGui.Adornee = Object
-		BillboardGui.Size = UDim2.new(200,0,50,0)
-		BillboardGui.AlwaysOnTop = true
-
-
-		Billboards[Object] = BillboardGui
+		
 		Labels[Object] = TextLabel
 		Objects[Object] = ObjectTable
-		if Library.UseBillboards == true then
-			TextLabel.Parent = BillboardGui
-		else
-			TextLabel.Parent = TextFrame
-		end
+		
 		local Lines = {}
 
 
@@ -202,9 +199,9 @@ function Library:AddESP(Parameters)
 			end
 		end
 		local ConnectionCooldown = false
-		local Connection = RunService.RenderStepped:Connect(function()
+		local Connection = RunService.Heartbeat:Connect(function()
 
-			if game.Workspace.CurrentCamera == nil then return end
+
 			if Library.Rainbow == true and Highlight ~= nil then
 				Highlight.FillColor = RainbowTable.Color
 				if Library.MatchColors == true then
@@ -254,6 +251,8 @@ function Library:AddESP(Parameters)
 			end
 
 
+
+
 			if Library.ShowDistance == true then
 				TextLabel.Text = TextTable[Object] .. "\n[" .. math.round(Players.LocalPlayer:DistanceFromCharacter(pos)) .. "]"
 			else
@@ -275,59 +274,50 @@ function Library:AddESP(Parameters)
 
 			end
 
-			if Library.Tracers == true then
-				if #Targets > #Lines then
 
-					local NewLine = Instance.new("Frame")
-					NewLine.Name = Library:GenerateRandomString()
-					NewLine.AnchorPoint = Vector2.new(.5, .5)
-					NewLine.Parent = ScreenGui
+			if #Targets > #Lines then
+
+				local NewLine = Instance.new("Frame")
+				NewLine.Name = Library:GenerateRandomString()
+				NewLine.AnchorPoint = Vector2.new(.5, .5)
+				NewLine.Parent = TracersFrame
 
 
-					local Border = Instance.new("UIStroke")
-					Border.Parent = NewLine
-					Border.Transparency = 1
-					Border.Thickness = Library.TracerThickness
-					Border.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-					Library.TracerTable[Object] = NewLine
+				local Border = Instance.new("UIStroke")
+				Border.Parent = NewLine
+				Border.Transparency = 0
+				Border.Thickness = Library.TracerThickness
+				Border.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+				Library.TracerTable[Object] = NewLine
 
-					if Library.Tracers == true  then
-						game:GetService("TweenService"):Create(Border,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{Transparency = 0}):Play()
+
+
+				table.insert(Lines, NewLine)
+			end
+			if ConnectionCooldown == false then
+				for i, Line in pairs(Lines) do
+					local TargetData = Targets[i]
+					if not TargetData then
+						Line:Destroy()
+						table.remove(Lines, i)
+
 					end
-
-
-					table.insert(Lines, NewLine)
-				end
-				if ConnectionCooldown == false then
-					for i, Line in pairs(Lines) do
-						local TargetData = Targets[i]
-						if not TargetData then
-							Line:Destroy()
-							table.remove(Lines, i)
-
-						end
+					if TargetData ~= nil then
 						Setline(Line, 0, ColorTable[Object], LineOrigin, TargetData[1])
 					end
-
-
-
-
 				end
 
-			elseif Library.Tracers == false then
-				if ConnectionCooldown == false then
-
-					for i,line in pairs(Lines) do
 
 
-						line:Destroy()
 
-					end
-				end
-			end	
+			end
 
-			if Library.UseBillboards == false then
-				local Position = Vector3.new(0,0,0)
+
+
+
+
+		
+
 
 
 
@@ -340,7 +330,7 @@ function Library:AddESP(Parameters)
 
 				if Object:IsA("Model") then
 					if Object.PrimaryPart then
-						local NewVector, VisibleCheck = game.Workspace.CurrentCamera:WorldToScreenPoint(Object.PrimaryPart.Position)
+						local NewVector, VisibleCheck = game.Workspace.CurrentCamera:WorldToScreenPoint(Object.PrimaryPart.Position+Vector3.new(0,Library.TextOffset,0))
 						local UIPosition = UDim2.new(NewVector.X/OtherGui.AbsoluteSize.X,0,NewVector.Y/OtherGui.AbsoluteSize.Y,0)
 
 						TextFrame.Position = UIPosition
@@ -380,7 +370,7 @@ function Library:AddESP(Parameters)
 					end
 				else
 					if Object then
-						local NewVector, VisibleCheck = game.Workspace.CurrentCamera:WorldToScreenPoint(Object.Position)
+						local NewVector, VisibleCheck = game.Workspace.CurrentCamera:WorldToScreenPoint(Object.Position+Vector3.new(0,Library.TextOffset,0))
 						local UIPosition = UDim2.new(NewVector.X/OtherGui.AbsoluteSize.X,0,NewVector.Y/OtherGui.AbsoluteSize.Y,0)
 
 
@@ -419,15 +409,15 @@ function Library:AddESP(Parameters)
 							end
 
 						end
+
 					end
+
 				end
 
 
-				ConnectionCooldown = true
-				task.wait(0.1)
-				ConnectionCooldown = false
 
-			end
+
+			
 		end)
 		table.insert(Connections,Connection)
 
@@ -475,7 +465,6 @@ function Library:AddESP(Parameters)
 		end
 	end
 end
-
 
 function Library:SetColorTable(Name,Color)
 	ColorTable[Name] = Color
@@ -534,6 +523,13 @@ function Library:UpdateObjectText(Object,Text)
 		TextTable[Object] = Text
 	end
 end
+function Library:UpdateObjectColor(Object,Color)
+	ColorTable[Object] = Color
+	if Labels[Object] then
+		Labels[Object].TextColor3 = Color
+	end
+
+end
 
 function Library:SetOutlineColor(Color)
 	Library.OutlineColor = Color
@@ -548,12 +544,15 @@ function Library:RemoveESP(Object)
 
 		local Highlight = Highlights[Object]
 		local TextFrame = Frames[Object]
-		local BillboardGui = Billboards[Object]
+	
 		local TextLabel = Labels[Object]
+
+		Objects[Object] = nil
+
 		if Library.TracerTable[Object] ~= nil then
 			Library.TracerTable[Object]:Destroy()
+
 		end
-		Objects[Object] = nil
 
 		if Highlight and TextLabel then
 			TweenService:Create(Highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = 1}):Play()
@@ -561,20 +560,25 @@ function Library:RemoveESP(Object)
 			TweenService:Create(TextLabel,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{TextTransparency = 1}):Play()
 			task.wait(Library.FadeTime)	
 		end
-
+		if Highlight and TextLabel then
+			Highlight:Destroy()
+			TextLabel:Destroy()
+		end
 
 
 		if TextFrame then
 			TextFrame:Destroy()
 		end
-		if BillboardGui then
-			BillboardGui:Destroy()
-		end
+	
+		if Library.TracerTable[Object] ~= nil then
+			Library.TracerTable[Object]:Destroy()
 
+		end
 		if ConnectionsTable[Object] and Objects[Object] == nil then
 			ConnectionsTable[Object]:Disconnect()
 			ConnectionsTable[Object] = nil
 		end
+		task.wait(Library.FadeTime)	
 		if Highlight and TextLabel then
 			Highlight:Destroy()
 			TextLabel:Destroy()
@@ -601,6 +605,10 @@ ConnectionsTable.RainbowConnection = RunService.RenderStepped:Connect(function(D
 	end
 end)
 
+ConnectionsTable.TracerConnection = RunService.RenderStepped:Connect(function()
+	TracersFrame.Visible = Library.Tracers
+end)
+
 
 
 
@@ -621,6 +629,7 @@ function Library:Unload()
 
 	ScreenGui:Destroy()
 	OtherGui:Destroy()
+	Library.Unloaded = true
 	Library = nil
 	getgenv().ESPLibrary = nil
 end
@@ -631,6 +640,5 @@ ScreenGui.Name = Library:GenerateRandomString()
 OtherGui.Name = Library:GenerateRandomString()
 HighlightsFolder.Name = Library:GenerateRandomString()
 BillboardsFolder.Name = Library:GenerateRandomString()
+TracersFrame.Name = Library:GenerateRandomString()
 getgenv().ESPLibrary = Library
-
-return Library
