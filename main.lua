@@ -289,6 +289,7 @@ function Library:AddESP(Parameters)
 				Border.Transparency = 0
 				Border.Thickness = Library.TracerThickness
 				Border.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+				Border.Name = Library:GenerateRandomString()
 				Library.TracerTable[Object] = NewLine
 
 
