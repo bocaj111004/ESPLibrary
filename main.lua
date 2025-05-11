@@ -643,7 +643,9 @@ function Library:Unload()
 	OtherGui:Destroy()
 	Library.Unloaded = true
 	Library = nil
+	if getgenv ~= nil then
 	getgenv().ESPLibrary = nil
+	end
 end
 -- Finishing Touches --
 
@@ -653,6 +655,8 @@ OtherGui.Name = Library:GenerateRandomString()
 HighlightsFolder.Name = Library:GenerateRandomString()
 BillboardsFolder.Name = Library:GenerateRandomString()
 TracersFrame.Name = Library:GenerateRandomString()
-getgenv().ESPLibrary = Library
+if getgenv ~= nil then
+	getgenv().ESPLibrary = Library
+end
 
 return Library
