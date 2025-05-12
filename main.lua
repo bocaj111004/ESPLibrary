@@ -180,7 +180,7 @@ function Library:AddESP(Parameters)
 				end
 			end
 		end
-		local function Setline(Line, Width, ColorToSet, Origin, Destination)
+		local function Setline(Line, Width, ColorToSet, Origin, Destination, Border)
 			if Highlight then
 				local Position = (Origin + Destination) / 2
 				Line.Position = UDim2.new(0, Position.X, 0, Position.Y)
@@ -192,10 +192,10 @@ function Library:AddESP(Parameters)
 				Line.BorderColor3 = Highlight.FillColor
 				Line.BorderSizePixel = 0
 
-				if Line:FindFirstChild("UIStroke") then
-					Line.UIStroke.Color = Highlight.FillColor
-					Line.UIStroke.Thickness = Library.TracerThickness
-				end
+				
+					Border.Color = Highlight.FillColor
+				Border.Thickness = Library.TracerThickness
+				
 			end
 		end
 		local ConnectionCooldown = false
@@ -289,22 +289,24 @@ function Library:AddESP(Parameters)
 				Border.Thickness = Library.TracerThickness
 				Border.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 				Border.Name = Library:GenerateRandomString()
+				
 				Library.TracerTable[Object] = NewLine
 
 
 
-				table.insert(Lines, NewLine)
+				table.insert(Lines, {NewLine, Border})
 			end
 			if ConnectionCooldown == false then
 				for i, Line in pairs(Lines) do
 					local TargetData = Targets[i]
 					if not TargetData then
-						Line:Destroy()
+						Line[1]:Destroy()
+						Line[2]:Destroy()
 						table.remove(Lines, i)
 
 					end
 					if TargetData ~= nil then
-						Setline(Line, 0, ColorTable[Object], LineOrigin, TargetData[1])
+						Setline(Line[1], 0, ColorTable[Object], LineOrigin, TargetData[1], Line[2])
 					end
 				end
 
