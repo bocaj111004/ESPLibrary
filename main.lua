@@ -92,6 +92,7 @@ pcall(ProtectGui,OtherGui)
 -- Functions --
 
 function Library:GenerateRandomString()
+
 	local Characters = "abcdef1234567890"
 
 	local RandomString = ""
@@ -118,6 +119,8 @@ function Library:GenerateRandomString()
 	return RandomString
 end
 
+
+if Library.Unloaded == true then return end
 function Library:AddESP(Parameters)
 	local Object = Parameters.Object
 	local TransparencyEnabled = false
@@ -158,7 +161,7 @@ function Library:AddESP(Parameters)
 		Labels[Object] = TextLabel
 		Objects[Object] = ObjectTable
 
-		local Lines = {}
+		local Line = {}
 
 
 		local function GetLineOrigin()
@@ -192,10 +195,10 @@ function Library:AddESP(Parameters)
 				Line.BorderColor3 = Highlight.FillColor
 				Line.BorderSizePixel = 0
 
-				
-					Border.Color = Highlight.FillColor
+
+				Border.Color = Highlight.FillColor
 				Border.Thickness = Library.TracerThickness
-				
+
 			end
 		end
 		local ConnectionCooldown = false
@@ -275,7 +278,7 @@ function Library:AddESP(Parameters)
 			end
 
 
-			if #Targets > #Lines then
+			if	Line[1] == nil and OnScreen then
 
 				local NewLine = Instance.new("Frame")
 				NewLine.Name = Library:GenerateRandomString()
@@ -289,26 +292,26 @@ function Library:AddESP(Parameters)
 				Border.Thickness = Library.TracerThickness
 				Border.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 				Border.Name = Library:GenerateRandomString()
-				
+
 				Library.TracerTable[Object] = NewLine
 
 
 
-				table.insert(Lines, {NewLine, Border})
+				Line = {NewLine, Border}
 			end
 			if ConnectionCooldown == false then
-				for i, Line in pairs(Lines) do
-					local TargetData = Targets[i]
+			
+					local TargetData = Targets[1]
 					if not TargetData then
 						Line[1]:Destroy()
 						Line[2]:Destroy()
-						table.remove(Lines, i)
+						Line = {}
 
 					end
 					if TargetData ~= nil then
 						Setline(Line[1], 0, ColorTable[Object], LineOrigin, TargetData[1], Line[2])
 					end
-				end
+				
 
 
 
@@ -561,7 +564,7 @@ end
 
 
 function Library:RemoveESP(Object)
-	if Objects[Object] == nil then return end
+	if Objects[Object] == nil or Library.Unloaded == true then return end
 	if ConnectionsTable[Object] ~= nil then
 
 		local Highlight = Highlights[Object]
@@ -649,13 +652,10 @@ function Library:Unload()
 		Connection:Disconnect()
 	end
 
-	ScreenGui:Destroy()
-	OtherGui:Destroy()
+	ScreenGui.Enabled = false
 	Library.Unloaded = true
-	Library = nil
-	if getgenv ~= nil then
-	getgenv().ESPLibrary = nil
-	end
+
+	
 end
 -- Finishing Touches --
 
