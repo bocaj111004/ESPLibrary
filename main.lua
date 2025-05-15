@@ -137,7 +137,7 @@ function Library:AddESP(Parameters)
 		end
 
 		local Highlight
-		local ObjectTable = {}
+		local ObjectTable = {Object}
 		TextTable[Object] = Parameters.Text
 
 		local TextFrame = Instance.new("Frame")
@@ -434,7 +434,7 @@ function Library:AddESP(Parameters)
 		Frames[Object] = TextFrame
 		Labels[Object] = TextLabel
 		ConnectionsTable[Object] = Connection
-		Objects[Object] = ObjectTable
+		Objects[Object] = Object
 		ColorTable[Object] = Parameters.Color 
 
 		if TextLabel then
@@ -638,20 +638,17 @@ end)
 
 
 function Library:Unload()
-	for i,Element in pairs(Elements) do
-
-		Element:Destroy()
-
+	for i,Object in pairs(Library.Objects) do
+		
+		Library:RemoveESP(Object)
 	end
-	for i,Element in pairs(Library.TracerTable) do
-
-		Element:Destroy()
-
-	end
+	
 	for i,Connection in pairs(ConnectionsTable) do
 		Connection:Disconnect()
 	end
 
+
+	
 	ScreenGui.Enabled = false
 	Library.Unloaded = true
 
