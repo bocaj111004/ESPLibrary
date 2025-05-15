@@ -302,7 +302,7 @@ function Library:AddESP(Parameters)
 			if ConnectionCooldown == false then
 			
 					local TargetData = Targets[1]
-					if not TargetData then
+					if not TargetData and Line[1] ~= nil then
 						Line[1]:Destroy()
 						Line[2]:Destroy()
 						Line = {}
