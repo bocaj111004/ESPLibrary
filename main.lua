@@ -147,6 +147,7 @@ function Library:AddESP(Parameters)
 		TextFrame.AnchorPoint = Vector2.new(0.5,0.5)
 		TextFrame.Parent = ScreenGui
 		local TextLabel = Instance.new("TextLabel")
+		TextLabel.Visible = false
 		TextLabel.Name = Library:GenerateRandomString()
 		TextLabel.BackgroundTransparency = 1
 		TextLabel.Text = Parameters.Text
