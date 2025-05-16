@@ -204,7 +204,41 @@ function Library:AddESP(Parameters)
 		local ConnectionCooldown = false
 		local Connection = RunService.Heartbeat:Connect(function()
 
+			local pos
 
+			if Object:IsA("Model") then
+
+				if Object.PrimaryPart ~= nil then
+
+					pos = Object.PrimaryPart.Position
+				else
+
+					pos = Object.WorldPivot.Position
+
+				end
+			else
+
+				if Object then
+
+					pos = Object.Position
+				end
+			end
+			local ScreenPoint, OnScreen = game.Workspace.CurrentCamera:WorldToScreenPoint(pos)
+			
+			if OnScreen == false then 
+				if Highlights[Object] then
+					if Line[1] ~= nil then
+					Line[1]:Destroy()
+					Line[2]:Destroy()
+					Line = {}
+					end
+					Highlights[Object]:Destroy()
+					Highlights[Object] = nil
+					Labels[Object] = TextLabel
+				end
+				return end
+			
+			
 			if Library.Rainbow == true and Highlight ~= nil then
 				Highlight.FillColor = RainbowTable.Color
 				if Library.MatchColors == true then
@@ -233,25 +267,7 @@ function Library:AddESP(Parameters)
 
 			task.wait()
 
-			local pos
-
-			if Object:IsA("Model") then
-
-				if Object.PrimaryPart ~= nil then
-
-					pos = Object.PrimaryPart.Position
-				else
-
-					pos = Object.WorldPivot.Position
-
-				end
-			else
-
-				if Object then
-
-					pos = Object.Position
-				end
-			end
+			
 
 
 
@@ -268,7 +284,7 @@ function Library:AddESP(Parameters)
 			if not Character then return end
 			local LineOrigin = GetLineOrigin()
 
-			local ScreenPoint, OnScreen = game.Workspace.CurrentCamera:WorldToScreenPoint(pos)
+			
 			TextLabel.Visible = OnScreen
 			if OnScreen then
 				table.insert(Targets, {Vector2.new(ScreenPoint.X, ScreenPoint.Y), ColorTable[Object]})
@@ -342,13 +358,8 @@ function Library:AddESP(Parameters)
 					TextFrame.Position = UIPosition
 					TextFrame.Visible = VisibleCheck
 					if ConnectionCooldown == false then
-						if VisibleCheck == false then
-							if Highlights[Object] then
-								Highlights[Object]:Destroy()
-								Highlights[Object] = nil
-								Labels[Object] = TextLabel
-							end
-						else
+						if VisibleCheck == true then
+							
 
 							if Highlights[Object] == nil then
 								local NewHighlight = Instance.new("Highlight")
@@ -383,13 +394,8 @@ function Library:AddESP(Parameters)
 					TextFrame.Position = UIPosition
 					TextFrame.Visible =  VisibleCheck
 					if ConnectionCooldown == false then
-						if VisibleCheck == false then
-							if Highlights[Object] then
-								Highlights[Object]:Destroy()
-								Highlights[Object] = nil
-								Labels[Object] = TextLabel
-							end
-						else
+						if VisibleCheck == true then
+							
 
 							if Highlights[Object] == nil then
 								local NewHighlight = Instance.new("Highlight")
