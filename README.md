@@ -61,6 +61,6 @@ Color = Color3.fromRGB(0,255,0)
 
 task.wait(10)
 
-ESPLibrary:Unload() -- Unload the library after 10 seconds.
+ESPLibrary:RemoveESP(game.Players.LocalPlayer.Character) -- Removes esp from the player's character after 10 seconds.
 
 ```
