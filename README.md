@@ -1,4 +1,6 @@
-ESP library by @bocaj11104 (discord):
+This is a system which allows you to highlight any object within the workspace.
+
+List of functions:
 
 ```
 
