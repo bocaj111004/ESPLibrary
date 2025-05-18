@@ -48,6 +48,5 @@ ESPLibrary:AddESP({
 Object = game.Players.LocalPlayerCharacter,
 Text = game.Players.LocalPlayerCharacter.Name,
 Color = Color3.fromRGB(0,255,0)
-})```
+})
 
-Dm me if there's any bugs with it
