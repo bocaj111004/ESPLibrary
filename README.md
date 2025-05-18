@@ -1,6 +1,8 @@
 ESP library by @bocaj11104 (discord):
 
-```local ESPLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/bocaj111004/ESPLibrary/refs/heads/main/main.lua"))() -- Loading the library
+```
+
+local ESPLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/bocaj111004/ESPLibrary/refs/heads/main/main.lua"))() -- Loading the library
 
 ESPLibrary:AddESP({
 Object = Instance, -- The object you want to highlight
