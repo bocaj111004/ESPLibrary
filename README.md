@@ -44,7 +44,7 @@ ESPLibrary:SetTracers(Boolean) -- Sets whether tracers are currently visible
 
 ESPLibrary:SetTracerOrigin(string) -- Sets where the tracers come from on the screen (Can only be either "Bottom, "Top", "Center" or "Mouse")
 
-ESPLibrary:Unload() -- Unloads the library
+ESPLibrary:Unload() -- Unloads the library, removing all highlights and preventing any more objects being highlighted
 
 ```
 
