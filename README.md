@@ -14,7 +14,7 @@ ESPLibrary:SetTextSize(number) -- Sets the text size
 
 ESPLibrary:SetFillTransparency(number) -- Sets the highlight's fill transparency
 
-ESPLibrary:SetOutlineTransparency(number) -- Sets the outlineTransparency
+ESPLibrary:SetOutlineTransparency(number) -- Sets the outline transparency
 
 ESPLibrary:SetTextTransparency(number) -- Sets the text transparency
 
