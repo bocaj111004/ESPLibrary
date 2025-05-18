@@ -47,8 +47,8 @@ ESPLibrary:Unload() -- Unloads the library
 Example Usage:
 
 ESPLibrary:AddESP({
-Object = game.Players.LocalPlayerCharacter,
-Text = game.Players.LocalPlayerCharacter.Name,
+Object = game.Players.LocalPlayer.Character,
+Text = game.Players.LocalPlayer.Character.Name,
 Color = Color3.fromRGB(0,255,0)
 })
 
