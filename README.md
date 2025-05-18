@@ -73,3 +73,12 @@ task.wait(5)
 ESPLibrary:RemoveESP(Character) -- Removes esp from the player's character after 10 seconds.
 
 ```
+
+You can also edit the settings of the esp even if the script you are using doesn't have esp settings built-in:
+
+```
+local ESPLibrary = getgenv().ESPLibrary
+
+ESPLibrary:SetRainbow(true)
+
+```
