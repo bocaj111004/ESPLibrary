@@ -59,4 +59,8 @@ Text = game.Players.LocalPlayer.Character.Name,
 Color = Color3.fromRGB(0,255,0)
 })
 
+task.wait(10)
+
+ESPLibrary:Unload() -- Unload the library after 10 seconds.
+
 ```
