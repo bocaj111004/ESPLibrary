@@ -51,18 +51,24 @@ ESPLibrary:Unload() -- Unloads the library, removing all highlights and preventi
 Example Usage:
 
 ```
-local ESPLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/bocaj111004/ESPLibrary/refs/heads/main/main.lua"))() 
+local ESPLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/bocaj111004/ESPLibrary/refs/heads/main/main.lua"))()
+local Character = game.Players.LocalPlayer.Character
 
 ESPLibrary:SetTextSize(20)
 
 ESPLibrary:AddESP({
-Object = game.Players.LocalPlayer.Character,
-Text = game.Players.LocalPlayer.Character.Name,
+Object = Character,
+Text = Character.Name,
 Color = Color3.fromRGB(0,255,0)
 })
 
-task.wait(10)
+task.wait(5)
 
-ESPLibrary:RemoveESP(game.Players.LocalPlayer.Character) -- Removes esp from the player's character after 10 seconds.
+ESPLibrary:UpdateObjectColor(Character, Color3.fromRGB(255,0,0))
+ESPLibrary:UpdateObjectText(Character, Character.Name .. " [Removing Soon]") -- Change the text of the highlight
+
+task.wait(5)
+
+ESPLibrary:RemoveESP(Character) -- Removes esp from the player's character after 10 seconds.
 
 ```
