@@ -54,7 +54,8 @@ Example Usage:
 local ESPLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/bocaj111004/ESPLibrary/refs/heads/main/main.lua"))()
 local Character = game.Players.LocalPlayer.Character
 
-ESPLibrary:SetTextSize(20)
+ESPLibrary:SetTextSize(22)
+ESPLibrary:SetFadeTime(0.5)
 
 ESPLibrary:AddESP({
 Object = Character,
