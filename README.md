@@ -44,7 +44,14 @@ ESPLibrary:SetTracerOrigin(string) -- Sets where the tracers come from on the sc
 
 ESPLibrary:Unload() -- Unloads the library
 
+```
+
 Example Usage:
+
+```
+local ESPLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/bocaj111004/ESPLibrary/refs/heads/main/main.lua"))() 
+
+ESPLibrary:SetTextSize(20)
 
 ESPLibrary:AddESP({
 Object = game.Players.LocalPlayer.Character,
@@ -52,3 +59,4 @@ Text = game.Players.LocalPlayer.Character.Name,
 Color = Color3.fromRGB(0,255,0)
 })
 
+```
