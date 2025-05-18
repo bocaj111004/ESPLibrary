@@ -1,7 +1,6 @@
 This is a system which allows you to highlight any object within the workspace.
 
 List of functions:
-
 ```
 
 local ESPLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/bocaj111004/ESPLibrary/refs/heads/main/main.lua"))() -- Loading the library
@@ -45,7 +44,6 @@ ESPLibrary:SetTracers(Boolean) -- Sets whether tracers are currently visible
 ESPLibrary:SetTracerOrigin(string) -- Sets where the tracers come from on the screen (Can only be either "Bottom, "Top", "Center" or "Mouse")
 
 ESPLibrary:Unload() -- Unloads the library, removing all highlights and preventing any more objects being highlighted
-
 ```
 
 Example Usage:
@@ -71,7 +69,6 @@ ESPLibrary:UpdateObjectText(Character, Character.Name .. " [Removing Soon]") -- 
 task.wait(5)
 
 ESPLibrary:RemoveESP(Character) -- Removes esp from the player's character after 10 seconds.
-
 ```
 
 You can also edit the settings of the esp even if the script you are using doesn't have esp settings built-in:
@@ -80,5 +77,4 @@ You can also edit the settings of the esp even if the script you are using doesn
 local ESPLibrary = getgenv().ESPLibrary
 
 ESPLibrary:SetRainbow(true)
-
 ```
