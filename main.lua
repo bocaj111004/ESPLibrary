@@ -206,26 +206,26 @@ function Library:AddESP(Parameters)
 
 			local pos = (Object:IsA("Model") and Object.WorldPivot.Position or Object.Position)
 
-			
+
 			local ScreenPoint, OnScreen = game.Workspace.CurrentCamera:WorldToScreenPoint(pos)
-			
+
 			if OnScreen == false then 
 				TextLabel.Visible = false
 				if Line[1] ~= nil then
 					Line[1]:Destroy()
 					Line[2]:Destroy()
 					Line = {}
-					end
-					if Highlights[Object] then
-					
-				
+				end
+				if Highlights[Object] then
+
+
 					Highlights[Object]:Destroy()
 					Highlights[Object] = nil
 					Labels[Object] = TextLabel
 				end
 				return end
-			
-			
+
+
 			if Library.Rainbow == true and Highlight ~= nil then
 				Highlight.FillColor = RainbowTable.Color
 				if Library.MatchColors == true then
@@ -254,7 +254,7 @@ function Library:AddESP(Parameters)
 
 			task.wait()
 
-			
+
 
 
 
@@ -271,7 +271,7 @@ function Library:AddESP(Parameters)
 			if not Character then return end
 			local LineOrigin = GetLineOrigin()
 
-			
+
 			TextLabel.Visible = OnScreen
 			if OnScreen then
 				table.insert(Targets, {Vector2.new(ScreenPoint.X, ScreenPoint.Y), ColorTable[Object]})
@@ -303,18 +303,18 @@ function Library:AddESP(Parameters)
 				Line = {NewLine, Border}
 			end
 			if ConnectionCooldown == false then
-			
-					local TargetData = Targets[1]
-					if not TargetData and Line[1] ~= nil then
-						Line[1]:Destroy()
-						Line[2]:Destroy()
-						Line = {}
 
-					end
-					if TargetData ~= nil then
-						Setline(Line[1], 0, ColorTable[Object], LineOrigin, TargetData[1], Line[2])
-					end
-				
+				local TargetData = Targets[1]
+				if not TargetData and Line[1] ~= nil then
+					Line[1]:Destroy()
+					Line[2]:Destroy()
+					Line = {}
+
+				end
+				if TargetData ~= nil then
+					Setline(Line[1], 0, ColorTable[Object], LineOrigin, TargetData[1], Line[2])
+				end
+
 
 
 
@@ -346,7 +346,7 @@ function Library:AddESP(Parameters)
 					TextFrame.Visible = VisibleCheck
 					if ConnectionCooldown == false then
 						if VisibleCheck == true then
-							
+
 
 							if Highlights[Object] == nil then
 								local NewHighlight = Instance.new("Highlight")
@@ -382,7 +382,7 @@ function Library:AddESP(Parameters)
 					TextFrame.Visible =  VisibleCheck
 					if ConnectionCooldown == false then
 						if VisibleCheck == true then
-							
+
 
 							if Highlights[Object] == nil then
 								local NewHighlight = Instance.new("Highlight")
@@ -572,12 +572,16 @@ function Library:RemoveESP(Object)
 
 		end
 
-		if Highlight and TextLabel then
+		local DestroyTween = TweenService:Create(TextLabel,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{TextTransparency = 1})
+		DestroyTween:Play()
+		
+		if Highlight then
 			TweenService:Create(Highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = 1}):Play()
 			TweenService:Create(Highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{OutlineTransparency = 1}):Play()
 			TweenService:Create(TextLabel,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{TextTransparency = 1}):Play()
-			task.wait(Library.FadeTime)	
+		
 		end
+		DestroyTween.Completed:Connect(function()
 		if Highlight and TextLabel then
 			Highlight:Destroy()
 			TextLabel:Destroy()
@@ -596,11 +600,7 @@ function Library:RemoveESP(Object)
 			ConnectionsTable[Object]:Disconnect()
 			ConnectionsTable[Object] = nil
 		end
-		task.wait(Library.FadeTime)	
-		if Highlight and TextLabel then
-			Highlight:Destroy()
-			TextLabel:Destroy()
-		end
+		end)
 	end
 end
 
@@ -630,20 +630,20 @@ end)
 
 function Library:Unload()
 	for i,Object in pairs(Library.Objects) do
-		
+
 		Library:RemoveESP(Object)
 	end
-	
+
 	for i,Connection in pairs(ConnectionsTable) do
 		Connection:Disconnect()
 	end
 
 
-	
+
 	ScreenGui.Enabled = false
 	Library.Unloaded = true
 
-	
+
 end
 -- Finishing Touches --
 
