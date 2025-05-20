@@ -139,7 +139,7 @@ function Library:AddESP(Parameters)
 			MainPart = Parameters.BasePart
 		end
 
-		local Highlight = Highlights[Object] or nil
+		local Highlight
 		local ObjectTable = {Object}
 		TextTable[Object] = Parameters.Text
 
@@ -167,10 +167,7 @@ function Library:AddESP(Parameters)
 		local Line = {}
 
 
-	if Highlight then
-		TweenService:Create(Highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = Library.FillTransparency}):Play()
-		TweenService:Create(Highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{OutlineTransparency = Library.OutlineTransparency}):Play()
-	end
+	
 
 		local function GetLineOrigin()
 
@@ -617,7 +614,7 @@ function Library:RemoveESP(Object)
 				ConnectionsTable[Object] = nil
 			end
 
-			if Highlights[Object] and Objects[Object] == nil then
+			if Highlights[Object] then
 				Highlights[Object]:Destroy()
 
 			end
