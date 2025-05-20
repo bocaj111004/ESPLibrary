@@ -593,7 +593,7 @@ Objects[Object] = nil
 
 	end
 	
-	if Library.Lines[Object] ~= nil then
+	if Library.Lines[Object] ~= nil and Library.Lines[Object][1] ~= nil then
 		Library.Lines[Object][1]:Destroy()
 		Library.Lines[Object][2]:Destroy()
 		Library.Lines[Object] = {}
