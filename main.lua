@@ -125,7 +125,7 @@ if Library.Unloaded == true then return end
 function Library:AddESP(Parameters)
 	local Object = Parameters.Object
 	local TransparencyEnabled = false
-	if  Library.Unloaded == true then return end
+	if Frames[Object] ~= nil or Library.Unloaded == true then return end
 	
 	Library.ElementsActive[Object] = true
 	
@@ -575,6 +575,8 @@ function Library:RemoveESP(Object)
 
 		
 		local TextFrame = Frames[Object]
+		
+		Frames[Object] = nil
 
 		local TextLabel = Labels[Object]
 
@@ -604,8 +606,8 @@ function Library:RemoveESP(Object)
 		DestroyTween.Completed:Connect(function()
 
 
-			if Frames[Object] then
-				Frames[Object]:Destroy()
+			if TextFrame then
+				TextFrame:Destroy()
 			end
 
 			if Library.TracerTable[Object] ~= nil then
