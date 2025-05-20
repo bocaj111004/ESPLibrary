@@ -147,7 +147,6 @@ function Library:AddESP(Parameters)
 		TextFrame.AnchorPoint = Vector2.new(0.5,0.5)
 		TextFrame.Parent = ScreenGui
 		local TextLabel = Instance.new("TextLabel")
-		TextLabel.Visible = false
 		TextLabel.Name = Library:GenerateRandomString()
 		TextLabel.BackgroundTransparency = 1
 		TextLabel.Text = Parameters.Text
@@ -205,34 +204,21 @@ function Library:AddESP(Parameters)
 		local ConnectionCooldown = false
 		local Connection = RunService.Heartbeat:Connect(function()
 
-			local pos
+			local pos = (Object:IsA("Model") and Object.WorldPivot.Position or Object.Position)
 
-			if Object:IsA("Model") then
-
-				if Object.PrimaryPart ~= nil then
-
-					pos = Object.PrimaryPart.Position
-				else
-
-					pos = Object.WorldPivot.Position
-
-				end
-			else
-
-				if Object then
-
-					pos = Object.Position
-				end
-			end
+			
 			local ScreenPoint, OnScreen = game.Workspace.CurrentCamera:WorldToScreenPoint(pos)
 			
 			if OnScreen == false then 
-				if Highlights[Object] then
-					if Line[1] ~= nil then
+				TextLabel.Visible = false
+				if Line[1] ~= nil then
 					Line[1]:Destroy()
 					Line[2]:Destroy()
 					Line = {}
 					end
+					if Highlights[Object] then
+					
+				
 					Highlights[Object]:Destroy()
 					Highlights[Object] = nil
 					Labels[Object] = TextLabel
@@ -617,8 +603,6 @@ function Library:RemoveESP(Object)
 		end
 	end
 end
-
-
 
 
 ConnectionsTable.RainbowConnection = RunService.RenderStepped:Connect(function(Delta)
