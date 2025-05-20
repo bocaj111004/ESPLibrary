@@ -9,11 +9,13 @@ local Library = {
 	Highlights = {},
 	Labels = {},
 	Elements = {},
+	ElementsEnabled = {},
 	Frames = {},
 	Connections = {},
 	Billboards = {},
 	ColorTable = {},
 	TextTable = {},
+	Lines = {},
 	Font = Enum.Font.Oswald,
 	ConnectionsTable = {},
 	Objects = {},
@@ -164,8 +166,9 @@ function Library:AddESP(Parameters)
 		Labels[Object] = TextLabel
 		Objects[Object] = ObjectTable
 
-		local Line = {}
-
+	
+	Library.Lines[Object] = {}
+	Library.ElementsEnabled[Object] = true
 
 	
 
@@ -216,15 +219,16 @@ function Library:AddESP(Parameters)
 
 			if OnScreen == false then 
 				TextLabel.Visible = false
-				if Line[1] ~= nil then
-					Line[1]:Destroy()
-					Line[2]:Destroy()
-					Line = {}
+				if Library.Lines[Object][1] ~= nil then
+				Library.Lines[Object][1]:Destroy()
+				Library.Lines[Object][2]:Destroy()
+					
+				Library.Lines[Object] = {}
 				end
 				if Highlights[Object] then
-
-
-					Highlights[Object]:Destroy()
+				Highlights[Object]:Destroy()
+Highlights[Object] = nil
+					
 					
 					Labels[Object] = TextLabel
 				end
@@ -288,7 +292,7 @@ function Library:AddESP(Parameters)
 
 			
 			
-			if	Line[1] == nil and OnScreen then
+		if	Library.Lines[Object][1] == nil and OnScreen then
 
 				local NewLine = Instance.new("Frame")
 				NewLine.Name = Library:GenerateRandomString()
@@ -307,19 +311,21 @@ function Library:AddESP(Parameters)
 
 
 
-				Line = {NewLine, Border}
+				
+			Library.Lines[Object] = {NewLine, Border}
 			end
 			if ConnectionCooldown == false then
 
 				local TargetData = Targets[1]
-				if not TargetData and Line[1] ~= nil then
-					Line[1]:Destroy()
-					Line[2]:Destroy()
-					Line = {}
+			if not TargetData and Library.Lines[Object][1] ~= nil then
+				Library.Lines[Object][1]:Destroy()
+				Library.Lines[Object][2]:Destroy()
+					
+					Library.Lines[Object] = {}
 
 				end
 				if TargetData ~= nil then
-					Setline(Line[1], 0, ColorTable[Object], LineOrigin, TargetData[1], Line[2])
+				Setline(Library.Lines[Object][1], 0, ColorTable[Object], LineOrigin, TargetData[1], Library.Lines[Object][2])
 				end
 
 
@@ -355,7 +361,7 @@ function Library:AddESP(Parameters)
 						if VisibleCheck == true then
 
 
-							if Highlights[Object] == nil then
+						if Highlights[Object] == nil and Library.ElementsEnabled[Object] == true then
 								local NewHighlight = Instance.new("Highlight")
 								NewHighlight.FillTransparency = 1
 								NewHighlight.OutlineTransparency = 1
@@ -391,7 +397,7 @@ function Library:AddESP(Parameters)
 						if VisibleCheck == true then
 
 
-							if Highlights[Object] == nil then
+						if Highlights[Object] == nil and Library.ElementsEnabled[Object] == true then
 								local NewHighlight = Instance.new("Highlight")
 								NewHighlight.FillTransparency = 1
 								NewHighlight.OutlineTransparency = 1
@@ -412,12 +418,12 @@ function Library:AddESP(Parameters)
 								Highlights[Object] = NewHighlight
 								Labels[Object] = TextLabel
 							end
-						end
+						
 
 					end
 
 				end
-			
+			end
 end
 
 
@@ -428,7 +434,7 @@ end
 
 
 
-		Highlights[Object] = Highlight
+		
 		Frames[Object] = TextFrame
 		Labels[Object] = TextLabel
 		ConnectionsTable[Object] = Connection
@@ -564,6 +570,15 @@ end
 function Library:RemoveESP(Object)
 	if Library.Unloaded == true or Frames[Object] == nil then return end
 	
+	Library.ElementsEnabled[Object] = false
+	if Highlights[Object] then
+		Highlights[Object]:Destroy()
+		Highlights[Object] = nil
+
+
+		
+	end
+	
 Objects[Object] = nil
 
 		local Value = Instance.new("NumberValue")
@@ -571,10 +586,18 @@ Objects[Object] = nil
 		
 		local TextFrame = Frames[Object]
 		
+	
+		
 		Frames[Object] = nil
 
 		local TextLabel = Labels[Object]
 
+	if Library.Lines[Object] ~= nil then
+		Library.Lines[Object][1]:Destroy()
+		Library.Lines[Object][2]:Destroy()
+		Library.Lines[Object] = {}
+	end
+	
 	local Highlight = Highlights[Object]
 	if Highlight then
 
@@ -597,7 +620,8 @@ Objects[Object] = nil
 		
 		end
 
-		
+
+	
 		DestroyTween.Completed:Connect(function()
 
 
@@ -615,7 +639,8 @@ Objects[Object] = nil
 			end
 
 			if Highlights[Object] then
-				Highlights[Object]:Destroy()
+			Highlights[Object]:Destroy()
+			Highlights[Object] = nil
 
 			end
 
