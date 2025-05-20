@@ -571,13 +571,7 @@ function Library:RemoveESP(Object)
 	if Library.Unloaded == true or Frames[Object] == nil then return end
 	
 	Library.ElementsEnabled[Object] = false
-	if Highlights[Object] then
-		Highlights[Object]:Destroy()
-		Highlights[Object] = nil
-
-
-		
-	end
+	
 	
 Objects[Object] = nil
 
@@ -586,12 +580,19 @@ Objects[Object] = nil
 		
 		local TextFrame = Frames[Object]
 		
+		
+		
 	
 		
 		Frames[Object] = nil
 
 		local TextLabel = Labels[Object]
 
+	if TextLabel then
+		TweenService:Create(TextLabel,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{TextTransparency = 1}):Play()
+
+	end
+	
 	if Library.Lines[Object] ~= nil then
 		Library.Lines[Object][1]:Destroy()
 		Library.Lines[Object][2]:Destroy()
@@ -599,10 +600,10 @@ Objects[Object] = nil
 	end
 	
 	local Highlight = Highlights[Object]
-	if Highlight then
+	if Highlights[Object] then
 
-		TweenService:Create(Highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = 1}):Play()
-		TweenService:Create(Highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{OutlineTransparency = 1}):Play()
+		TweenService:Create(Highlights[Object],TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = 1}):Play()
+		TweenService:Create(Highlights[Object],TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{OutlineTransparency = 1}):Play()
 
 
 	end
@@ -615,10 +616,7 @@ Objects[Object] = nil
 		local DestroyTween = TweenService:Create(Value,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{Value = 100})
 		DestroyTween:Play()
 
-		if TextLabel then
-			TweenService:Create(TextLabel,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{TextTransparency = 1}):Play()
-		
-		end
+	
 
 
 	
