@@ -12,6 +12,7 @@ local Library = {
 	Frames = {},
 	Connections = {},
 	Billboards = {},
+	ElementsActive = {},
 	ColorTable = {},
 	TextTable = {},
 	Font = Enum.Font.Oswald,
@@ -124,8 +125,11 @@ if Library.Unloaded == true then return end
 function Library:AddESP(Parameters)
 	local Object = Parameters.Object
 	local TransparencyEnabled = false
-	if Objects[Object] ~= nil or Library.Unloaded == true then return end
-	if ConnectionsTable[Object] == nil then
+	if  Library.Unloaded == true then return end
+	
+	Library.ElementsActive[Object] = true
+	
+	
 
 
 
@@ -136,7 +140,7 @@ function Library:AddESP(Parameters)
 			MainPart = Parameters.BasePart
 		end
 
-		local Highlight
+		local Highlight = Highlights[Object]
 		local ObjectTable = {Object}
 		TextTable[Object] = Parameters.Text
 
@@ -163,6 +167,11 @@ function Library:AddESP(Parameters)
 
 		local Line = {}
 
+
+	if Highlight then
+		TweenService:Create(Highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = Library.FillTransparency}):Play()
+		TweenService:Create(Highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{OutlineTransparency = Library.OutlineTransparency}):Play()
+	end
 
 		local function GetLineOrigin()
 
@@ -220,7 +229,7 @@ function Library:AddESP(Parameters)
 
 
 					Highlights[Object]:Destroy()
-					Highlights[Object] = nil
+					
 					Labels[Object] = TextLabel
 				end
 				return end
@@ -281,7 +290,9 @@ function Library:AddESP(Parameters)
 			end
 
 
-			if	Line[1] == nil and OnScreen then
+			
+			
+			if	Line[1] == nil and OnScreen and Library.ElementsActive[Object] == true then
 
 				local NewLine = Instance.new("Frame")
 				NewLine.Name = Library:GenerateRandomString()
@@ -336,7 +347,7 @@ function Library:AddESP(Parameters)
 
 
 
-
+		if Library.ElementsActive[Object] == true then
 			if Object:IsA("Model") then
 				if Object.PrimaryPart then
 					local NewVector, VisibleCheck = game.Workspace.CurrentCamera:WorldToScreenPoint(Object.PrimaryPart.Position+Vector3.new(0,Library.TextOffset,0))
@@ -410,10 +421,9 @@ function Library:AddESP(Parameters)
 					end
 
 				end
-
 			end
 
-
+end
 
 
 
@@ -462,7 +472,7 @@ function Library:AddESP(Parameters)
 
 			end)
 		end
-	end
+	
 end
 
 function Library:SetColorTable(Name,Color)
@@ -557,17 +567,25 @@ end
 
 
 function Library:RemoveESP(Object)
-	if Objects[Object] == nil or Library.Unloaded == true then return end
-	if ConnectionsTable[Object] ~= nil then
+	if Library.Unloaded == true or Frames[Object] == nil then return end
+	
+	Library.ElementsActive[Object] = false
 
 		local Value = Instance.new("NumberValue")
+
 		
-		local Highlight = Highlights[Object]
 		local TextFrame = Frames[Object]
 
 		local TextLabel = Labels[Object]
 
-		Objects[Object] = nil
+	local Highlight = Highlights[Object]
+	if Highlight then
+
+		TweenService:Create(Highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = 1}):Play()
+		TweenService:Create(Highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{OutlineTransparency = 1}):Play()
+
+
+	end
 
 		if Library.TracerTable[Object] ~= nil then
 			Library.TracerTable[Object]:Destroy()
@@ -576,46 +594,40 @@ function Library:RemoveESP(Object)
 
 		local DestroyTween = TweenService:Create(Value,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{Value = 100})
 		DestroyTween:Play()
-		
+
 		if TextLabel then
 			TweenService:Create(TextLabel,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{TextTransparency = 1}):Play()
-		end
-		
-		if Highlight then
-			TweenService:Create(Highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = 1}):Play()
-			TweenService:Create(Highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{OutlineTransparency = 1}):Play()
-		
 		
 		end
+
+		
 		DestroyTween.Completed:Connect(function()
-		
 
-		if TextFrame then
-			TextFrame:Destroy()
-		end
 
-		if Library.TracerTable[Object] ~= nil then
-			Library.TracerTable[Object]:Destroy()
+			if Frames[Object] then
+				Frames[Object]:Destroy()
+			end
 
-		end
-		if ConnectionsTable[Object] and Objects[Object] == nil then
-			ConnectionsTable[Object]:Disconnect()
-			ConnectionsTable[Object] = nil
-		end
-		
-			if Highlight then
-				Highlight:Destroy()
+			if Library.TracerTable[Object] ~= nil then
+				Library.TracerTable[Object]:Destroy()
+
+			end
+			if ConnectionsTable[Object] ~= nil then
+				ConnectionsTable[Object]:Disconnect()
+				ConnectionsTable[Object] = nil
+			end
+
+			if Highlights[Object] and Objects[Object] == nil then
+				Highlights[Object]:Destroy()
 
 			end
 
-			if TextLabel then
-				TextLabel:Destroy()
+			if Labels[Object] then
+				Labels[Object]:Destroy()
 			end
 
 		end)
 	end
-end
-
 
 ConnectionsTable.RainbowConnection = RunService.RenderStepped:Connect(function(Delta)
 
