@@ -204,7 +204,7 @@ function Library:AddESP(Parameters)
 		local ConnectionCooldown = false
 		local Connection = RunService.Heartbeat:Connect(function()
 
-			local pos = (Object:IsA("Model") and Object.WorldPivot.Position or Object.Position)
+			local pos = (Object:IsA("Model") and Object.PrimaryPart and Object.PrimaryPart.Position or Object:IsA("Model") and Object.WorldPivot.Position or Object.Position)
 
 
 			local ScreenPoint, OnScreen = game.Workspace.CurrentCamera:WorldToScreenPoint(pos)
@@ -560,6 +560,8 @@ function Library:RemoveESP(Object)
 	if Objects[Object] == nil or Library.Unloaded == true then return end
 	if ConnectionsTable[Object] ~= nil then
 
+		local Value = Instance.new("NumberValue")
+		
 		local Highlight = Highlights[Object]
 		local TextFrame = Frames[Object]
 
@@ -572,13 +574,17 @@ function Library:RemoveESP(Object)
 
 		end
 
-		local DestroyTween = TweenService:Create(TextLabel,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{TextTransparency = 1})
+		local DestroyTween = TweenService:Create(Value,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{Value = 100})
 		DestroyTween:Play()
+		
+		if TextLabel then
+			TweenService:Create(TextLabel,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{TextTransparency = 1}):Play()
+		end
 		
 		if Highlight then
 			TweenService:Create(Highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = 1}):Play()
 			TweenService:Create(Highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{OutlineTransparency = 1}):Play()
-			TweenService:Create(TextLabel,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{TextTransparency = 1}):Play()
+		
 		
 		end
 		DestroyTween.Completed:Connect(function()
