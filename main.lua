@@ -12,7 +12,6 @@ local Library = {
 	Frames = {},
 	Connections = {},
 	Billboards = {},
-	ElementsActive = {},
 	ColorTable = {},
 	TextTable = {},
 	Font = Enum.Font.Oswald,
@@ -127,7 +126,7 @@ function Library:AddESP(Parameters)
 	local TransparencyEnabled = false
 	if Frames[Object] ~= nil or Library.Unloaded == true then return end
 	
-	Library.ElementsActive[Object] = true
+
 	
 	
 
@@ -140,7 +139,7 @@ function Library:AddESP(Parameters)
 			MainPart = Parameters.BasePart
 		end
 
-		local Highlight = Highlights[Object]
+		local Highlight = Highlights[Object] or nil
 		local ObjectTable = {Object}
 		TextTable[Object] = Parameters.Text
 
@@ -193,7 +192,7 @@ function Library:AddESP(Parameters)
 			end
 		end
 		local function Setline(Line, Width, ColorToSet, Origin, Destination, Border)
-			if Highlight and pos ~= nil then
+			if Highlight and Origin ~= nil then
 				local Position = (Origin + Destination) / 2
 				Line.Position = UDim2.new(0, Position.X, 0, Position.Y)
 				local Length = (Origin - Destination).Magnitude
@@ -292,7 +291,7 @@ function Library:AddESP(Parameters)
 
 			
 			
-			if	Line[1] == nil and OnScreen and Library.ElementsActive[Object] == true then
+			if	Line[1] == nil and OnScreen then
 
 				local NewLine = Instance.new("Frame")
 				NewLine.Name = Library:GenerateRandomString()
@@ -347,7 +346,7 @@ function Library:AddESP(Parameters)
 
 
 
-		if Library.ElementsActive[Object] == true then
+		
 			if Object:IsA("Model") then
 				if Object.PrimaryPart then
 					local NewVector, VisibleCheck = game.Workspace.CurrentCamera:WorldToScreenPoint(Object.PrimaryPart.Position+Vector3.new(0,Library.TextOffset,0))
@@ -421,8 +420,7 @@ function Library:AddESP(Parameters)
 					end
 
 				end
-			end
-
+			
 end
 
 
@@ -569,7 +567,7 @@ end
 function Library:RemoveESP(Object)
 	if Library.Unloaded == true or Frames[Object] == nil then return end
 	
-	Library.ElementsActive[Object] = false
+
 
 		local Value = Instance.new("NumberValue")
 
