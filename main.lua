@@ -38,6 +38,7 @@ local Library = {
 	FadeTime = 0,
 	TracerThickness = 0.85,
 	TextSize = 20,
+	DistanceSizeRatio = 1,
 	OutlineColor = Color3.fromRGB(255,255,255)
 }
 
@@ -151,7 +152,7 @@ function Library:AddESP(Parameters)
 		local TextFrame = Instance.new("Frame")
 		TextFrame.Name = Library:GenerateRandomString()
 		TextFrame.BackgroundTransparency = 1
-		TextFrame.Size = UDim2.new(1,0,1,0)
+		TextFrame.Size = UDim2.new(0.25,0,0.25,0)
 		TextFrame.AnchorPoint = Vector2.new(0.5,0.5)
 		TextFrame.Parent = BillboardsFolder
 		local TextLabel = Instance.new("TextLabel")
@@ -163,6 +164,7 @@ function Library:AddESP(Parameters)
 		TextLabel.Size = UDim2.new(1,0,1,0)
 		TextLabel.Font = Library.Font
 		TextLabel.TextSize = Library.TextSize
+		TextLabel.RichText = true
 		TextLabel.Parent = TextFrame
 		TextLabel.TextColor3 = Parameters.Color
 
@@ -277,7 +279,12 @@ Highlights[Object] = nil
 
 
 			if Library.ShowDistance == true then
-				TextLabel.Text = TextTable[Object] .. "\n[" .. math.round(Players.LocalPlayer:DistanceFromCharacter(pos)) .. "]"
+			local TextRatio = math.round(Library.TextSize * Library.DistanceSizeRatio)
+			local Distance = math.round(Players.LocalPlayer:DistanceFromCharacter(pos))
+			local DistanceText = '[' .. Distance .. ']'
+			local Text = TextTable[Object]
+			TextLabel.Text = Text .. '\n<font size="' .. TextRatio .. '">' .. DistanceText .. '</font>'
+				
 			else
 				TextLabel.Text = TextTable[Object]
 			end
@@ -300,7 +307,7 @@ Highlights[Object] = nil
 
 			
 			
-		if	Library.Lines[Object][1] == nil and OnScreen then
+		if	Library.Lines[Object][1] == nil and OnScreen and Library.ElementsEnabled[Object] == true then
 
 				local NewLine = Instance.new("Frame")
 				NewLine.Name = Library:GenerateRandomString()
@@ -365,7 +372,7 @@ Highlights[Object] = nil
 
 					TextFrame.Position = UIPosition
 					TextFrame.Visible = VisibleCheck
-					if ConnectionCooldown == false then
+				
 						if VisibleCheck == true then
 
 
@@ -395,7 +402,6 @@ Highlights[Object] = nil
 				
 			
 			
-end
 
 
 
@@ -536,6 +542,14 @@ function Library:SetTracerOrigin(Value)
 	Library.TracerOrigin = Value
 end
 
+function Library:SetDistanceSizeRatio(Value)
+	Library.DistanceSizeRatio = Value
+end
+
+function Library:SetTracerSize(Value)
+	Library.TracerThickness = 0.85 * Value
+end
+
 
 
 function Library:RemoveESP(Object)
@@ -546,7 +560,8 @@ function Library:RemoveESP(Object)
 	
 Objects[Object] = nil
 
-		local Value = Instance.new("NumberValue", game.ReplicatedStorage)
+		local Value = Instance.new("Frame", game.ReplicatedStorage)
+		Value.BackgroundTransparency = 0
 		Value.Name = Library:GenerateRandomString()
 
 		
@@ -567,12 +582,12 @@ Objects[Object] = nil
 	
 	if Library.Lines[Object] ~= nil then
 		if Library.Lines[Object][1] ~= nil  then
-		Library.Lines[Object][1]:Destroy()
+			TweenService:Create(Library.Lines[Object][1],TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{BackgroundTransparency = 1}):Play()
 		end
 		if Library.Lines[Object][2] ~= nil  then
-			Library.Lines[Object][2]:Destroy()
+			TweenService:Create(Library.Lines[Object][2],TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{Transparency = 1}):Play()
 		end
-		Library.Lines[Object] = {}
+		
 	end
 	
 	local Highlight
@@ -584,19 +599,15 @@ Objects[Object] = nil
 
 	end
 
-		if Library.TracerTable[Object] ~= nil then
-			Library.TracerTable[Object]:Destroy()
-
-		end
-
-		local DestroyTween = TweenService:Create(Value,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{Value = 100})
-		DestroyTween:Play()
-
-	if Highlight then
-		Highlight:Destroy()
-		Highlights[Object] = nil
+	if Library.TracerTable[Object] ~= nil then
+		Library.TracerTable[Object]:Destroy()
 
 	end
+
+		local DestroyTween = TweenService:Create(Value,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{BackgroundTransparency = 1})
+		DestroyTween:Play()
+
+
 
 
 	
@@ -612,6 +623,16 @@ Objects[Object] = nil
 				TextFrame:Destroy()
 			end
 
+		if Library.Lines[Object] ~= nil then
+			if Library.Lines[Object][1] ~= nil  then
+				Library.Lines[Object][1]:Destroy()
+			end
+			if Library.Lines[Object][2] ~= nil  then
+				Library.Lines[Object][2]:Destroy()
+			end
+			Library.Lines[Object] = {}
+		end
+			
 			if Library.TracerTable[Object] ~= nil then
 				Library.TracerTable[Object]:Destroy()
 
