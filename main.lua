@@ -223,7 +223,7 @@ function Library:AddESP(Parameters)
 
 
 			local NewVector, OnScreen = game.Workspace.CurrentCamera:WorldToScreenPoint(pos)
-
+		TextFrame.Visible = OnScreen
 			if OnScreen == false then 
 				TextFrame.Visible = false
 				if Library.Lines[Object][1] ~= nil then
@@ -250,8 +250,8 @@ Highlights[Object] = nil
 		local UIPosition = UDim2.new(NewVector.X/OtherGui.AbsoluteSize.X,0,NewVector.Y/OtherGui.AbsoluteSize.Y,0)
 
 		TextFrame.Position = UIPosition
+	
 		
-		TextFrame.Visible = true
 
 
 			if Library.Rainbow == true and Highlight ~= nil then
@@ -377,8 +377,8 @@ Highlights[Object] = nil
 					
 				
 
-					TextFrame.Position = UIPosition
-					TextFrame.Visible = OnScreen
+					
+				
 				
 						if OnScreen== true then
 
