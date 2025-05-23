@@ -130,7 +130,7 @@ if Library.Unloaded == true then return end
 function Library:AddESP(Parameters)
 	local Object = Parameters.Object
 	local TransparencyEnabled = false
-	if Objects[Object] ~= nil or Library.Unloaded == true then return end
+	if Library.ElementsEnabled[Object] ~= false or Library.Unloaded == true then return end
 	
 
 	
@@ -565,7 +565,7 @@ end
 
 
 function Library:RemoveESP(Object)
-	if Library.Unloaded == true or Frames[Object] == nil then return end
+	if Library.Unloaded == true or Library.ElementsEnabled[Object] ~= true then return end
 	
 	Library.ElementsEnabled[Object] = false
 	
