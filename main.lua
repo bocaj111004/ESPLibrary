@@ -79,6 +79,8 @@ ScreenGui.Parent = CoreGui
 OtherGui.Parent = ScreenGui
 TracersFrame = Library.TracersFrame
 HighlightsFolder.Parent = ScreenGui
+BillboardsFolder = Library.BillboardsFolder
+BillboardsFolder.Parent = ScreenGui
 
 ScreenGui.ResetOnSpawn = false
 
@@ -95,8 +97,7 @@ pcall(ProtectGui,OtherGui)
 
 function Library:GenerateRandomString()
 
-	local Characters = "abcdef1234567890"
-
+	local Characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890{}[]<>/#@?!()"
 	local RandomString = ""
 
 
@@ -111,14 +112,16 @@ function Library:GenerateRandomString()
 		end
 		return table.concat(Result)
 	end
-	local Segment1 = GenerateSegment() .. "-"
-	local Segment2 = GenerateSegment() .. "-"
-	local Segment3 = GenerateSegment() .. "-"
-	local Segment4 = GenerateSegment() .. "-"
-	local Segment5 = GenerateSegment() .. "-"
+	
+	local Segment1 = GenerateSegment()
+	local Segment2 = GenerateSegment()
+	local Segment3 = GenerateSegment()
+	local Segment4 = GenerateSegment()
+	local Segment5 = GenerateSegment()
 	local Segment6 = GenerateSegment()
 	RandomString = Segment1 .. Segment2 .. Segment3 .. Segment4 .. Segment5 .. Segment6
 	return RandomString
+	
 end
 
 
@@ -150,7 +153,7 @@ function Library:AddESP(Parameters)
 		TextFrame.BackgroundTransparency = 1
 		TextFrame.Size = UDim2.new(1,0,1,0)
 		TextFrame.AnchorPoint = Vector2.new(0.5,0.5)
-		TextFrame.Parent = ScreenGui
+		TextFrame.Parent = BillboardsFolder
 		local TextLabel = Instance.new("TextLabel")
 		TextLabel.Name = Library:GenerateRandomString()
 		TextLabel.BackgroundTransparency = 1
@@ -218,19 +221,24 @@ function Library:AddESP(Parameters)
 			local ScreenPoint, OnScreen = game.Workspace.CurrentCamera:WorldToScreenPoint(pos)
 
 			if OnScreen == false then 
-				TextLabel.Visible = false
+				TextFrame.Visible = false
 				if Library.Lines[Object][1] ~= nil then
 				Library.Lines[Object][1]:Destroy()
-				Library.Lines[Object][2]:Destroy()
-					
-				Library.Lines[Object] = {}
 				end
-				if Highlights[Object] then
-				Highlights[Object]:Destroy()
+			if Library.Lines[Object][2] ~= nil then
+				Library.Lines[Object][2]:Destroy()
+			end
+					
+			if Library.Lines[Object] ~= nil then
+				Library.Lines[Object] = {}
+			end
+				
+				if Highlight then
+			Highlight:Destroy()
 Highlights[Object] = nil
 					
 					
-					Labels[Object] = TextLabel
+				
 				end
 				return end
 
@@ -350,9 +358,9 @@ Highlights[Object] = nil
 
 
 		
-			if Object:IsA("Model") then
-				if Object.PrimaryPart then
-					local NewVector, VisibleCheck = game.Workspace.CurrentCamera:WorldToScreenPoint(Object.PrimaryPart.Position+Vector3.new(0,Library.TextOffset,0))
+			
+					
+					local NewVector, VisibleCheck = game.Workspace.CurrentCamera:WorldToScreenPoint(pos+Vector3.new(0,Library.TextOffset,0))
 					local UIPosition = UDim2.new(NewVector.X/OtherGui.AbsoluteSize.X,0,NewVector.Y/OtherGui.AbsoluteSize.Y,0)
 
 					TextFrame.Position = UIPosition
@@ -383,47 +391,10 @@ Highlights[Object] = nil
 								Labels[Object] = TextLabel
 							end
 						end
-					end
-				end
-			else
-				if Object then
-					local NewVector, VisibleCheck = game.Workspace.CurrentCamera:WorldToScreenPoint(Object.Position+Vector3.new(0,Library.TextOffset,0))
-					local UIPosition = UDim2.new(NewVector.X/OtherGui.AbsoluteSize.X,0,NewVector.Y/OtherGui.AbsoluteSize.Y,0)
-
-
-					TextFrame.Position = UIPosition
-					TextFrame.Visible =  VisibleCheck
-					if ConnectionCooldown == false then
-						if VisibleCheck == true then
-
-
-						if Highlights[Object] == nil and Library.ElementsEnabled[Object] == true then
-								local NewHighlight = Instance.new("Highlight")
-								NewHighlight.FillTransparency = 1
-								NewHighlight.OutlineTransparency = 1
-								NewHighlight.Name = Library:GenerateRandomString()
-								NewHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-								if TransparencyEnabled == true then
-									NewHighlight.FillTransparency = Library.FillTransparency
-									NewHighlight.OutlineTransparency = Library.OutlineTransparency
-								else
-									TweenService:Create(NewHighlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = Library.FillTransparency}):Play()
-									TweenService:Create(NewHighlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{OutlineTransparency = Library.OutlineTransparency}):Play()
-								end
-								NewHighlight.FillColor = Parameters.Color
-								NewHighlight.OutlineColor = Parameters.Color
-								NewHighlight.Parent = HighlightsFolder
-								NewHighlight.Adornee = Object
-								Highlight = NewHighlight
-								Highlights[Object] = NewHighlight
-								Labels[Object] = TextLabel
-							end
-						
-
-					end
-
-				end
-			end
+					
+				
+			
+			
 end
 
 
@@ -575,7 +546,8 @@ function Library:RemoveESP(Object)
 	
 Objects[Object] = nil
 
-		local Value = Instance.new("NumberValue")
+		local Value = Instance.new("NumberValue", game.ReplicatedStorage)
+		Value.Name = Library:GenerateRandomString()
 
 		
 		local TextFrame = Frames[Object]
@@ -603,12 +575,12 @@ Objects[Object] = nil
 		Library.Lines[Object] = {}
 	end
 	
-	local Highlight = Highlights[Object]
+	local Highlight
 	if Highlights[Object] then
 
 		TweenService:Create(Highlights[Object],TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = 1}):Play()
 		TweenService:Create(Highlights[Object],TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{OutlineTransparency = 1}):Play()
-
+		Highlight = Highlights[Object]
 
 	end
 
@@ -620,13 +592,22 @@ Objects[Object] = nil
 		local DestroyTween = TweenService:Create(Value,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{Value = 100})
 		DestroyTween:Play()
 
-	
+	if Highlight then
+		Highlight:Destroy()
+		Highlights[Object] = nil
+
+	end
 
 
 	
 		DestroyTween.Completed:Connect(function()
 
+		if Highlight then
+			Highlight:Destroy()
+			Highlights[Object] = nil
 
+		end
+		
 			if TextFrame then
 				TextFrame:Destroy()
 			end
@@ -640,15 +621,9 @@ Objects[Object] = nil
 				ConnectionsTable[Object] = nil
 			end
 
-			if Highlights[Object] then
-			Highlights[Object]:Destroy()
-			Highlights[Object] = nil
-
-			end
-
-			if Labels[Object] then
-				Labels[Object]:Destroy()
-			end
+		
+Value:Destroy()
+			
 
 		end)
 	end
@@ -700,6 +675,7 @@ ScreenGui.Name = Library:GenerateRandomString()
 OtherGui.Name = Library:GenerateRandomString()
 HighlightsFolder.Name = Library:GenerateRandomString()
 TracersFrame.Name = Library:GenerateRandomString()
+BillboardsFolder.Name = Library:GenerateRandomString()
 if getgenv ~= nil then
 	getgenv().ESPLibrary = Library
 end
