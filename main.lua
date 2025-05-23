@@ -217,10 +217,12 @@ function Library:AddESP(Parameters)
 		local ConnectionCooldown = false
 		local Connection = RunService.Heartbeat:Connect(function()
 
-			local pos = (Object:IsA("Model") and Object.WorldPivot.Position or Object:IsA("BasePart") and Object.Position)
+		local pos
+		
+		if Object:IsA("Model") then  if Object.PrimaryPart then pos = Object.PrimaryPart.Position else pos = Object.WorldPivot.Position end elseif Object:IsA("BasePart") then pos =  Object.Position end
 
 
-			local ScreenPoint, OnScreen = game.Workspace.CurrentCamera:WorldToScreenPoint(pos)
+			local NewVector, OnScreen = game.Workspace.CurrentCamera:WorldToScreenPoint(pos)
 
 			if OnScreen == false then 
 				TextFrame.Visible = false
@@ -243,6 +245,13 @@ Highlights[Object] = nil
 				
 				end
 				return end
+			
+
+		local UIPosition = UDim2.new(NewVector.X/OtherGui.AbsoluteSize.X,0,NewVector.Y/OtherGui.AbsoluteSize.Y,0)
+
+		TextFrame.Position = UIPosition
+		
+		TextFrame.Visible = true
 
 
 			if Library.Rainbow == true and Highlight ~= nil then
@@ -277,7 +286,6 @@ Highlights[Object] = nil
 
 
 
-
 			if Library.ShowDistance == true then
 			local TextRatio = math.round(Library.TextSize * Library.DistanceSizeRatio)
 			local Distance = math.round(Players.LocalPlayer:DistanceFromCharacter(pos))
@@ -298,7 +306,7 @@ Highlights[Object] = nil
 
 			TextLabel.Visible = OnScreen
 			if OnScreen then
-				table.insert(Targets, {Vector2.new(ScreenPoint.X, ScreenPoint.Y), ColorTable[Object]})
+				table.insert(Targets, {Vector2.new(NewVector.X, NewVector.Y), ColorTable[Object]})
 
 
 
@@ -367,13 +375,12 @@ Highlights[Object] = nil
 		
 			
 					
-					local NewVector, VisibleCheck = game.Workspace.CurrentCamera:WorldToScreenPoint(pos+Vector3.new(0,Library.TextOffset,0))
-					local UIPosition = UDim2.new(NewVector.X/OtherGui.AbsoluteSize.X,0,NewVector.Y/OtherGui.AbsoluteSize.Y,0)
+				
 
 					TextFrame.Position = UIPosition
-					TextFrame.Visible = VisibleCheck
+					TextFrame.Visible = OnScreen
 				
-						if VisibleCheck == true then
+						if OnScreen== true then
 
 
 						if Highlights[Object] == nil and Library.ElementsEnabled[Object] == true then
