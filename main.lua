@@ -197,7 +197,7 @@ function Library:AddESP(Parameters)
 			end
 		end
 		local function Setline(Line, Width, ColorToSet, Origin, Destination, Border)
-			if Highlight and Origin ~= nil then
+			if Highlight and Origin ~= nil and Line then
 				local Position = (Origin + Destination) / 2
 				Line.Position = UDim2.new(0, Position.X, 0, Position.Y)
 				local Length = (Origin - Destination).Magnitude
@@ -217,7 +217,7 @@ function Library:AddESP(Parameters)
 		local ConnectionCooldown = false
 		local Connection = RunService.Heartbeat:Connect(function()
 
-			local pos = (Object:IsA("Model") and Object.PrimaryPart ~= nil and Object.PrimaryPart.Position or Object:IsA("Model") and Object.WorldPivot.Position or Object.Position)
+			local pos = (Object:IsA("Model") and Object.WorldPivot.Position or Object:IsA("BasePart") and Object.Position)
 
 
 			local ScreenPoint, OnScreen = game.Workspace.CurrentCamera:WorldToScreenPoint(pos)
