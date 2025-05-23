@@ -627,7 +627,7 @@ Objects[Object] = nil
 
 	
 		DestroyTween.Completed:Connect(function()
-
+		if Library.ElementsEnabled[Object] == false then
 		if Highlight then
 			Highlight:Destroy()
 			Highlights[Object] = nil
@@ -659,8 +659,13 @@ Objects[Object] = nil
 
 		
 Value:Destroy()
+		else
+			if Highlight then
+			TweenService:Create(Highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = Library.FillTransparency}):Play()
+			TweenService:Create(Highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{OutlineTransparency = Library.OutlineTransparency}):Play()
+			end
 			
-
+end
 		end)
 	end
 
