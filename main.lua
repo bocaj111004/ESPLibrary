@@ -214,6 +214,11 @@ function Library:AddESP(Parameters)
 
 			end
 		end
+	
+	Labels[Object] = TextLabel
+	
+	task.wait()
+		
 		local ConnectionCooldown = false
 		local Connection = RunService.Heartbeat:Connect(function()
 
@@ -402,7 +407,7 @@ Highlights[Object] = nil
 								NewHighlight.Adornee = Object
 								Highlight = NewHighlight
 								Highlights[Object] = NewHighlight
-								Labels[Object] = TextLabel
+								
 							end
 						end
 					
