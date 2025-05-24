@@ -235,6 +235,12 @@ function Library:AddESP(Parameters)
 
 			TextFrame.Position = UIPosition
 			
+			if Library.Rainbow == true then
+				TextLabel.TextColor3 = RainbowTable.Color
+			else
+				TextLabel.TextColor3 = ColorTable[Object]
+			end
+			
 			elseif OnScreen == false then 
 				TextFrame.Visible = false
 				if Library.Lines[Object][1] ~= nil then
@@ -264,14 +270,16 @@ Highlights[Object] = nil
 
 			if Library.Rainbow == true and Highlight ~= nil then
 				Highlight.FillColor = RainbowTable.Color
+		
 				if Library.MatchColors == true then
 					Highlight.OutlineColor = Highlight.FillColor
 				else
 					Highlight.OutlineColor = Library.OutlineColor
 				end
-				TextLabel.TextColor3 = RainbowTable.Color
+				
 			elseif Library.Rainbow == false and Highlight ~= nil then
 				Highlight.FillColor = ColorTable[Object]
+		
 				if Library.MatchColors == true then
 					Highlight.OutlineColor = Highlight.FillColor
 				else
