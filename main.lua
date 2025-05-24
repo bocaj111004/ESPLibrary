@@ -636,15 +636,18 @@ Objects[Object] = nil
 	
 		DestroyTween.Completed:Connect(function()
 		if Library.ElementsEnabled[Object] == false then
+			if ConnectionsTable[Object] ~= nil then
+				ConnectionsTable[Object]:Disconnect()
+				ConnectionsTable[Object] = nil
+			end
+		
 		if Highlight then
 			Highlight:Destroy()
 			Highlights[Object] = nil
 
 		end
 		
-			if TextFrame then
-				TextFrame:Destroy()
-			end
+			
 
 		if Library.Lines[Object] ~= nil then
 			if Library.Lines[Object][1] ~= nil  then
@@ -660,9 +663,10 @@ Objects[Object] = nil
 				Library.TracerTable[Object]:Destroy()
 
 			end
-			if ConnectionsTable[Object] ~= nil then
-				ConnectionsTable[Object]:Disconnect()
-				ConnectionsTable[Object] = nil
+			
+			
+			if TextFrame then
+				TextFrame:Destroy()
 			end
 
 		
