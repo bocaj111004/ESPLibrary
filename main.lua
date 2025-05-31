@@ -727,7 +727,12 @@ ElementsConnection = RunService.Heartbeat:Connect(function()
 			Highlights[Object] = NewHighlight
 
 		end
+	else	
+TextFrame.Visible = false
+
 	end
+
+
 	end
 end)
 
