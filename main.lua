@@ -455,7 +455,7 @@ function Library:RemoveESP(Object)
 
 		end
 		
-			
+				TotalObjects[Object] = nil
 
 		if Library.Lines[Object] ~= nil then
 			if Library.Lines[Object][1] ~= nil  then
