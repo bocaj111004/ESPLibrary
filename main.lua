@@ -503,7 +503,7 @@ Value:Destroy()
 end
 
 ElementsConnection = RunService.RenderStepped:Connect(function()
-	RunService.RenderStepped:Wait()
+	RunService.Heartbeat:Wait()
 	for i,Object in pairs(TotalObjects) do
 	if Objects[Object] ~= nil then
 	local pos
