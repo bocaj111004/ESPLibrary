@@ -332,11 +332,25 @@ function Library:SetTracerSize(Value)
 end
 
 
+function removeObjectFromTables(object)
+	for index, obj in pairs(TotalObjects) do
+
+		if obj == object then
+			print("Removed " .. obj.Name .. "from table")
+			TotalObjects[object] = nil
+		
+			break
+		end
+
+	end
+end
+
 
 function Library:RemoveESP(Object)
 	if Library.Unloaded == true or Library.ElementsEnabled[Object] ~= true then return end
 	
 	Library.ElementsEnabled[Object] = false
+	
 	
 	
 
@@ -401,7 +415,7 @@ function Library:RemoveESP(Object)
 
 			end
 
-
+			removeObjectFromTables(Object)
 
 			if Library.Lines[Object] ~= nil then
 				if Library.Lines[Object][1] ~= nil  then
@@ -455,7 +469,7 @@ function Library:RemoveESP(Object)
 
 		end
 		
-				TotalObjects[Object] = nil
+				removeObjectFromTables(Object)
 
 		if Library.Lines[Object] ~= nil then
 			if Library.Lines[Object][1] ~= nil  then
@@ -488,9 +502,10 @@ Value:Destroy()
 		end
 end
 
-ElementsConnection = RunService.Heartbeat:Connect(function()
-	RunService.Heartbeat:Wait()
+ElementsConnection = RunService.RenderStepped:Connect(function()
+	RunService.RenderStepped:Wait()
 	for i,Object in pairs(TotalObjects) do
+	if Objects[Object] ~= nil then
 	local pos
 
 	local TextFrame = Frames[Object] or Instance.new("Frame")
@@ -746,7 +761,7 @@ end
 		
 	end
 end
-
+end
 	end
 end)
 
