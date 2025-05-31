@@ -502,7 +502,28 @@ ElementsConnection = RunService.Heartbeat:Connect(function()
 
 	local NewVector, OnScreen = game.Workspace.CurrentCamera:WorldToScreenPoint(pos)
 	TextFrame.Visible = OnScreen
-	if OnScreen == true then
+		if OnScreen == false then 
+			TextFrame.Visible = false
+			if Library.Lines[Object][1] ~= nil then
+				Library.Lines[Object][1]:Destroy()
+			end
+			if Library.Lines[Object][2] ~= nil then
+				Library.Lines[Object][2]:Destroy()
+			end
+
+			if Library.Lines[Object] ~= nil then
+				Library.Lines[Object] = {}
+			end
+
+			if Highlight then
+				Highlight:Destroy()
+				Highlights[Object] = nil
+
+
+
+			end
+	
+	elseif OnScreen == true then
 
 		local UIPosition = UDim2.new(NewVector.X/OtherGui.AbsoluteSize.X,0,NewVector.Y/OtherGui.AbsoluteSize.Y,0)
 
@@ -514,27 +535,7 @@ ElementsConnection = RunService.Heartbeat:Connect(function()
 			TextLabel.TextColor3 = ColorTable[Object]
 		end
 
-	elseif OnScreen == false then 
-		TextFrame.Visible = false
-		if Library.Lines[Object][1] ~= nil then
-			Library.Lines[Object][1]:Destroy()
-		end
-		if Library.Lines[Object][2] ~= nil then
-			Library.Lines[Object][2]:Destroy()
-		end
-
-		if Library.Lines[Object] ~= nil then
-			Library.Lines[Object] = {}
-		end
-
-		if Highlight then
-			Highlight:Destroy()
-			Highlights[Object] = nil
-
-
-
-		end
-		return end
+	
 
 
 
@@ -625,7 +626,7 @@ ElementsConnection = RunService.Heartbeat:Connect(function()
 	local vector, onScreen = game.Workspace.CurrentCamera:WorldToScreenPoint(pos)
 	local Targets = {}
 	local Character = Object
-	if not Character then return end
+
 	local LineOrigin = GetLineOrigin()
 
 
@@ -699,13 +700,13 @@ ElementsConnection = RunService.Heartbeat:Connect(function()
 
 
 
+end
 
 
 
 
 
-
-	if OnScreen== true then
+	if OnScreen == true then
 
 
 		if Highlights[Object] == nil and Library.ElementsEnabled[Object] == true then
