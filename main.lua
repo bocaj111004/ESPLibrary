@@ -490,7 +490,7 @@ end
 
 ElementsConnection = RunService.Heartbeat:Connect(function()
 	RunService.Heartbeat:Wait()
-	for i,Object in pairs(Library.Objects) do
+	for i,Object in pairs(TotalObjects) do
 	local pos
 
 	local TextFrame = Frames[Object] or Instance.new("Frame")
