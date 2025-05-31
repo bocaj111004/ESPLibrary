@@ -491,8 +491,8 @@ ElementsConnection = RunService.Heartbeat:Connect(function()
 	for i,Object in pairs(Library.Objects) do
 	local pos
 
-	local TextFrame = Frames[Object]
-	local TextLabel = Labels[Object]
+	local TextFrame = Frames[Object] or Instance.new("Frame")
+	local TextLabel = Labels[Object] or Instance.new("TextLabel")
 	local Highlight = Highlights[Object]
 	
 	if Object:IsA("Model") then  if Object.PrimaryPart then pos = Object.PrimaryPart.Position else pos = Object.WorldPivot.Position end elseif Object:IsA("BasePart") then pos =  Object.Position end
@@ -727,9 +727,7 @@ ElementsConnection = RunService.Heartbeat:Connect(function()
 			Highlights[Object] = NewHighlight
 
 		end
-	else	
-TextFrame.Visible = false
-
+		
 	end
 
 
