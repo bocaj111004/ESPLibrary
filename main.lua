@@ -77,7 +77,7 @@ CoreGui = (identifyexecutor ~= nil and game:GetService("CoreGui") or Players.Loc
 
 RunService = game:GetService("RunService")
 TweenService = game:GetService("TweenService")
-GetHUI = (gethui and gethui())or (CoreGui);
+GetHUI = (gethui ~= nil and gethui()) or (CoreGui);
 ColorTable = Library.ColorTable
 ScreenGui.Parent = GetHUI
 OtherGui.Parent = ScreenGui
