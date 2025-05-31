@@ -497,7 +497,20 @@ ElementsConnection = RunService.Heartbeat:Connect(function()
 	local TextLabel = Labels[Object] or Instance.new("TextLabel")
 	local Highlight = Highlights[Object]
 	
-	if Object:IsA("Model") then  if Object.PrimaryPart then pos = Object.PrimaryPart.Position else pos = Object.WorldPivot.Position end elseif Object:IsA("BasePart") then pos =  Object.Position end
+		if Object:IsA("BasePart") then 
+	pos =  Object.Position 
+	elseif Object:IsA("Model") then 
+		
+			pos = Object.WorldPivot.Position 
+			if Object.PrimaryPart ~= nil then 
+				pos = Object.PrimaryPart.Position 
+			else 
+	
+		
+			end
+	end
+	
+	if pos ~= nil then
 
 
 	local NewVector, OnScreen = game.Workspace.CurrentCamera:WorldToScreenPoint(pos)
@@ -732,7 +745,7 @@ end
 		end
 		
 	end
-
+end
 
 	end
 end)
