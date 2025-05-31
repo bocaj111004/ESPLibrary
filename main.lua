@@ -11,6 +11,7 @@ local Library = {
 	Elements = {},
 	ElementsEnabled = {},
 	Frames = {},
+	TotalObjects = {},
 	TransparencyEnabled = {},
 	Connections = {},
 	Billboards = {},
@@ -61,6 +62,7 @@ HighlightedObjects = Library.HighlightedObjects
 Highlights = Library.Highlights
 ConnectionsTable = Library.ConnectionsTable
 Objects = Library.Objects
+TotalObjects = Library.TotalObjects
 Billboards = Library.Billboards
 Frames = Library.Frames
 ScreenGui = Library.ScreenGui
@@ -75,9 +77,9 @@ CoreGui = (identifyexecutor ~= nil and game:GetService("CoreGui") or Players.Loc
 
 RunService = game:GetService("RunService")
 TweenService = game:GetService("TweenService")
-ProtectGui = protectgui or (function() end);
+GetHUI = gethui or (CoreGui);
 ColorTable = Library.ColorTable
-ScreenGui.Parent = CoreGui
+ScreenGui.Parent = GetHUI
 OtherGui.Parent = ScreenGui
 TracersFrame = Library.TracersFrame
 HighlightsFolder.Parent = ScreenGui
@@ -92,8 +94,6 @@ TracersFrame.BackgroundTransparency = 1
 TracersFrame.Parent = ScreenGui
 
 
-pcall(ProtectGui,ScreenGui)
-pcall(ProtectGui,OtherGui)
 
 -- Functions --
 
@@ -171,6 +171,7 @@ Library.TransparencyEnabled[Object] = false
 
 		Labels[Object] = TextLabel
 		Objects[Object] = ObjectTable
+		TotalObjects[Object] = Object
 
 	
 	Library.Lines[Object] = {}
