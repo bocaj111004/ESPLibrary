@@ -489,6 +489,7 @@ Value:Destroy()
 end
 
 ElementsConnection = RunService.Heartbeat:Connect(function()
+	RunService.Heartbeat:Wait()
 	for i,Object in pairs(Library.Objects) do
 	local pos
 
