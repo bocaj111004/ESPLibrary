@@ -151,6 +151,7 @@ Library.TransparencyEnabled[Object] = false
 		TextTable[Object] = Parameters.Text
 
 		local TextFrame = Instance.new("Frame")
+		TextFrame.Visible = false
 		TextFrame.Name = Library:GenerateRandomString()
 		TextFrame.BackgroundTransparency = 1
 		TextFrame.Size = UDim2.new(0.25,0,0.25,0)
@@ -183,7 +184,7 @@ Library.TransparencyEnabled[Object] = false
 	
 	Labels[Object] = TextLabel
 	
-	task.wait()
+	
 		
 		
 	
@@ -401,8 +402,8 @@ function Library:RemoveESP(Object)
 		if Object.Parent == nil then
 		if Library.ElementsEnabled[Object] == false then
 			
-			if TextFrame then
-				TextFrame:Destroy()
+			if Frames[Object] then
+				Frames[Object]:Destroy()
 				Frames[Object] = nil
 			end
 			Objects[Object] = nil
@@ -456,8 +457,8 @@ function Library:RemoveESP(Object)
 		DestroyTween.Completed:Connect(function()
 		if Library.ElementsEnabled[Object] == false then
 			
-				if TextFrame then
-					TextFrame:Destroy()
+				if Frames[Object] then
+					Frames[Object]:Destroy()
 					Frames[Object] = nil
 				end
 				
@@ -502,8 +503,12 @@ Value:Destroy()
 		end
 end
 
-ElementsConnection = RunService.Heartbeat:Connect(function()
-	task.wait()
+local ElementsCooldown = false
+
+ElementsConnection = RunService.RenderStepped:Connect(function()
+	RunService.RenderStepped:Wait()
+	if ElementsCooldown == false then
+		ElementsCooldown = true
 	for i,Object in pairs(TotalObjects) do
 	if Objects[Object] ~= nil then
 	local pos
@@ -551,7 +556,7 @@ ElementsConnection = RunService.Heartbeat:Connect(function()
 
 			end
 	
-	elseif OnScreen == true then
+	elseif OnScreen == true  then
 
 		local UIPosition = UDim2.new(NewVector.X/OtherGui.AbsoluteSize.X,0,NewVector.Y/OtherGui.AbsoluteSize.Y,0)
 
@@ -560,7 +565,7 @@ ElementsConnection = RunService.Heartbeat:Connect(function()
 		if Library.Rainbow == true then
 			TextLabel.TextColor3 = RainbowTable.Color
 		else
-			TextLabel.TextColor3 = ColorTable[Object]
+							TextLabel.TextColor3 = ColorTable[Object] or Color3.fromRGB(255,255,255)
 		end
 
 	
@@ -580,14 +585,14 @@ ElementsConnection = RunService.Heartbeat:Connect(function()
 		end
 
 	elseif Library.Rainbow == false and Highlight ~= nil then
-		Highlight.FillColor = ColorTable[Object]
+							Highlight.FillColor = ColorTable[Object] or Color3.fromRGB(255,255,255)
 
 		if Library.MatchColors == true then
 			Highlight.OutlineColor = Highlight.FillColor
 		else
 			Highlight.OutlineColor = Library.OutlineColor
 		end
-		TextLabel.TextColor3 = ColorTable[Object]
+							TextLabel.TextColor3 = ColorTable[Object] or Color3.fromRGB(255,255,255)
 	end
 
 	if Library.Bold == true then
@@ -598,7 +603,7 @@ ElementsConnection = RunService.Heartbeat:Connect(function()
 
 
 
-	task.wait()
+	
 
 
 		local function GetLineOrigin()
@@ -750,8 +755,8 @@ end
 				TweenService:Create(NewHighlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = Library.FillTransparency}):Play()
 				TweenService:Create(NewHighlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{OutlineTransparency = Library.OutlineTransparency}):Play()
 			end
-			NewHighlight.FillColor = ColorTable[Object]
-			NewHighlight.OutlineColor = ColorTable[Object]
+							NewHighlight.FillColor = ColorTable[Object] or Color3.fromRGB(255,255,255)
+							NewHighlight.OutlineColor = ColorTable[Object] or Color3.fromRGB(255,255,255)
 			NewHighlight.Parent = HighlightsFolder
 			NewHighlight.Adornee = Object
 			Highlight = NewHighlight
@@ -762,6 +767,9 @@ end
 	end
 end
 end
+	end
+	task.wait(0.01)
+	ElementsCooldown = false
 	end
 end)
 
