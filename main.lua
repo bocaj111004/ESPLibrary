@@ -506,9 +506,11 @@ end
 local ElementsCooldown = false
 
 ElementsConnection = RunService.RenderStepped:Connect(function()
-	RunService.RenderStepped:Wait()
 	if ElementsCooldown == false then
+
 		ElementsCooldown = true
+		
+		task.wait(0.01)
 	for i,Object in pairs(TotalObjects) do
 	if Objects[Object] ~= nil then
 	local pos
@@ -768,7 +770,7 @@ end
 end
 end
 	end
-	task.wait(0.01)
+
 	ElementsCooldown = false
 	end
 end)
