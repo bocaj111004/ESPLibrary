@@ -337,7 +337,7 @@ function removeObjectFromTables(object)
 	for index, obj in pairs(TotalObjects) do
 
 		if obj == object then
-			print("Removed " .. obj.Name .. "from table")
+			
 			TotalObjects[object] = nil
 
 			break
