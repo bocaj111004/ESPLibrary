@@ -130,14 +130,14 @@ end
 if Library.Unloaded == true then return end
 function Library:AddESP(Parameters)
 	local Object = Parameters.Object
-	Library.TransparencyEnabled[Object] = false
+	
 	if Library.ElementsEnabled[Object] == true or Library.Unloaded == true then return end
 
 
 
 
 
-
+	Library.TransparencyEnabled[Object] = false
 
 
 
@@ -150,13 +150,13 @@ function Library:AddESP(Parameters)
 	local ObjectTable = {Object}
 	TextTable[Object] = Parameters.Text
 
-	local TextFrame = Instance.new("Frame")
-	TextFrame.Visible = false
+	local TextFrame = Instance.new("BillboardGui")
+	TextFrame.Enabled = false
+	TextFrame.Adornee = Object
 	TextFrame.Name = Library:GenerateRandomString()
-	TextFrame.BackgroundTransparency = 1
-	TextFrame.Size = UDim2.new(0.25,0,0.25,0)
-	TextFrame.AnchorPoint = Vector2.new(0.5,0.5)
+	TextFrame.Size = UDim2.new(0,250,0,250)
 	TextFrame.Parent = BillboardsFolder
+	TextFrame.AlwaysOnTop = true
 	local TextLabel = Instance.new("TextLabel")
 	TextLabel.Name = Library:GenerateRandomString()
 	TextLabel.BackgroundTransparency = 1
@@ -537,9 +537,9 @@ ElementsConnection = RunService.Heartbeat:Connect(function()
 
 
 					local NewVector, OnScreen = game.Workspace.CurrentCamera:WorldToScreenPoint(pos)
-					TextFrame.Visible = OnScreen
+					TextFrame.Enabled = OnScreen
 					if OnScreen == false then 
-						TextFrame.Visible = false
+						
 						if Library.Lines[Object][1] ~= nil then
 							Library.Lines[Object][1]:Destroy()
 						end
@@ -561,9 +561,9 @@ ElementsConnection = RunService.Heartbeat:Connect(function()
 
 					elseif OnScreen == true  then
 
-						local UIPosition = UDim2.new(NewVector.X/OtherGui.AbsoluteSize.X,0,NewVector.Y/OtherGui.AbsoluteSize.Y,0)
+						
 
-						TextFrame.Position = UIPosition
+						
 
 						if Library.Rainbow == true then
 							TextLabel.TextColor3 = RainbowTable.Color
@@ -659,14 +659,14 @@ ElementsConnection = RunService.Heartbeat:Connect(function()
 							TextLabel.Text = TextTable[Object]
 						end
 
-						local vector, onScreen = game.Workspace.CurrentCamera:WorldToScreenPoint(pos)
+						
 						local Targets = {}
 						local Character = Object
 
-						local LineOrigin = GetLineOrigin()
+					
 
 
-						TextLabel.Visible = OnScreen
+						
 						if OnScreen then
 							table.insert(Targets, {Vector2.new(NewVector.X, NewVector.Y), ColorTable[Object]})
 
@@ -678,7 +678,6 @@ ElementsConnection = RunService.Heartbeat:Connect(function()
 
 
 						if	Library.Lines[Object][1] == nil and OnScreen and Library.ElementsEnabled[Object] == true then
-
 							local NewLine = Instance.new("Frame")
 							NewLine.Name = Library:GenerateRandomString()
 							NewLine.AnchorPoint = Vector2.new(.5, .5)
@@ -710,7 +709,10 @@ ElementsConnection = RunService.Heartbeat:Connect(function()
 
 						end
 						if TargetData ~= nil then
+							if Library.Tracers == true then
+							local LineOrigin = GetLineOrigin()
 							Setline(Library.Lines[Object][1], 0, ColorTable[Object], LineOrigin, TargetData[1], Library.Lines[Object][2])
+							end
 						end
 
 
