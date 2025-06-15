@@ -512,13 +512,16 @@ ElementsConnection = RunService.Heartbeat:Connect(function()
 
 	task.wait(0.01)
 	
+	
 		for i,Object in pairs(TotalObjects) do
 			if Objects[Object] ~= nil then
 				local pos
 
-				local TextFrame = Frames[Object] or Instance.new("Frame")
+				local TextFrame = Frames[Object] or Instance.new("BillboardGui")
 				local TextLabel = Labels[Object] or Instance.new("TextLabel")
 				local Highlight = Highlights[Object]
+				
+				TextFrame.Size = UDim2.new(0,workspace.CurrentCamera.ViewportSize.X,0,workspace.CurrentCamera.ViewportSize.Y)
 
 				if Object:IsA("BasePart") then 
 					pos =  Object.Position 
