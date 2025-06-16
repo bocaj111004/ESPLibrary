@@ -150,13 +150,13 @@ function Library:AddESP(Parameters)
 	local ObjectTable = {Object}
 	TextTable[Object] = Parameters.Text
 
-	local TextFrame = Instance.new("BillboardGui")
-	TextFrame.Enabled = false
-	TextFrame.Adornee = Object
+	local TextFrame = Instance.new("Frame")
+	TextFrame.Visible = false
+	TextFrame.BackgroundTransparency = 1
 	TextFrame.Name = Library:GenerateRandomString()
 	TextFrame.Size = UDim2.new(1,0,1,0)
+	TextFrame.AnchorPoint = Vector2.new(0.5,0.5)
 	TextFrame.Parent = BillboardsFolder
-	TextFrame.AlwaysOnTop = true
 	local TextLabel = Instance.new("TextLabel")
 	TextLabel.Name = Library:GenerateRandomString()
 	TextLabel.BackgroundTransparency = 1
@@ -517,7 +517,7 @@ ElementsConnection = RunService.Heartbeat:Connect(function()
 			if Objects[Object] ~= nil then
 				local pos
 
-				local TextFrame = Frames[Object] or Instance.new("BillboardGui")
+				local TextFrame = Frames[Object] or Instance.new("Frame")
 				local TextLabel = Labels[Object] or Instance.new("TextLabel")
 				local Highlight = Highlights[Object]
 				
@@ -540,7 +540,8 @@ ElementsConnection = RunService.Heartbeat:Connect(function()
 
 
 					local NewVector, OnScreen = game.Workspace.CurrentCamera:WorldToScreenPoint(pos)
-					TextFrame.Enabled = OnScreen
+					TextFrame.Visible = OnScreen
+					
 					if OnScreen == false then 
 						
 						if Library.Lines[Object][1] ~= nil then
@@ -566,7 +567,7 @@ ElementsConnection = RunService.Heartbeat:Connect(function()
 
 						
 
-						
+						TextFrame.Position = UDim2.new(0, NewVector.X, 0, NewVector.Y)
 
 						if Library.Rainbow == true then
 							TextLabel.TextColor3 = RainbowTable.Color
