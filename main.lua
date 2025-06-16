@@ -154,7 +154,7 @@ function Library:AddESP(Parameters)
 	TextFrame.Enabled = false
 	TextFrame.Adornee = Object
 	TextFrame.Name = Library:GenerateRandomString()
-	TextFrame.Size = UDim2.new(0,99999,0,99999)
+	TextFrame.Size = UDim2.new(1,0,1,0)
 	TextFrame.Parent = BillboardsFolder
 	TextFrame.AlwaysOnTop = true
 	local TextLabel = Instance.new("TextLabel")
