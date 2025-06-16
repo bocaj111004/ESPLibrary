@@ -77,7 +77,7 @@ CoreGui = (identifyexecutor ~= nil and game:GetService("CoreGui") or Players.Loc
 
 RunService = game:GetService("RunService")
 TweenService = game:GetService("TweenService")
-GetHUI = (gethui ~= nil and gethui()) or (CoreGui);
+GetHUI = (CoreGui:FindFirstChild("RobloxGui") or CoreGui);
 ColorTable = Library.ColorTable
 ScreenGui.Parent = GetHUI
 OtherGui.Parent = ScreenGui
@@ -154,7 +154,7 @@ function Library:AddESP(Parameters)
 	TextFrame.Enabled = false
 	TextFrame.Adornee = Object
 	TextFrame.Name = Library:GenerateRandomString()
-	TextFrame.Size = UDim2.new(0,250,0,250)
+	TextFrame.Size = UDim2.new(0,99999,0,99999)
 	TextFrame.Parent = BillboardsFolder
 	TextFrame.AlwaysOnTop = true
 	local TextLabel = Instance.new("TextLabel")
@@ -521,7 +521,7 @@ ElementsConnection = RunService.Heartbeat:Connect(function()
 				local TextLabel = Labels[Object] or Instance.new("TextLabel")
 				local Highlight = Highlights[Object]
 				
-				TextFrame.Size = UDim2.new(0,workspace.CurrentCamera.ViewportSize.X,0,workspace.CurrentCamera.ViewportSize.Y)
+			
 
 				if Object:IsA("BasePart") then 
 					pos =  Object.Position 
