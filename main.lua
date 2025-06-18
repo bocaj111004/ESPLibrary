@@ -353,7 +353,7 @@ function Library:RemoveESP(Object)
 	Library.ElementsEnabled[Object] = false
 
 
-
+	Library.TransparencyEnabled[Object] = false
 
 
 	local Value = Instance.new("Frame", game.ReplicatedStorage)
