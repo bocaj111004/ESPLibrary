@@ -354,6 +354,8 @@ function Library:RemoveESP(Object)
 
 
 	Library.TransparencyEnabled[Object] = false
+	
+	
 
 
 	local Value = Instance.new("Frame", game.ReplicatedStorage)
@@ -506,12 +508,7 @@ end
 local ElementsCooldown = false
 
 ElementsConnection = RunService.Heartbeat:Connect(function()
-	if ElementsCooldown == false then
-
-		ElementsCooldown = true
-
-	task.wait(0.01)
-	
+	RunService.Heartbeat:Wait()
 	
 		for i,Object in pairs(TotalObjects) do
 			if Objects[Object] ~= nil then
@@ -776,9 +773,6 @@ end
 				end
 			end
 			
-		end
-
-		ElementsCooldown = false
 	end
 end)
 
