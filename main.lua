@@ -582,31 +582,7 @@ ElementsConnection = RunService.Heartbeat:Connect(function()
 
 
 
-						if Library.Rainbow == true and Highlight ~= nil then
-							Highlight.FillColor = RainbowTable.Color
-
-							if Library.MatchColors == true then
-								Highlight.OutlineColor = Highlight.FillColor
-							else
-								Highlight.OutlineColor = Library.OutlineColor
-							end
-
-						elseif Library.Rainbow == false and Highlight ~= nil then
-							Highlight.FillColor = ColorTable[Object] or Color3.fromRGB(255,255,255)
-
-							if Library.MatchColors == true then
-								Highlight.OutlineColor = Highlight.FillColor
-							else
-								Highlight.OutlineColor = Library.OutlineColor
-							end
-							TextLabel.TextColor3 = ColorTable[Object] or Color3.fromRGB(255,255,255)
-						end
-
-						if Library.Bold == true then
-							TextLabel.FontFace.Weight = Enum.FontWeight.Bold
-						else
-							TextLabel.FontFace.Weight = Enum.FontWeight.Regular
-						end
+						
 
 
 
@@ -751,6 +727,24 @@ ElementsConnection = RunService.Heartbeat:Connect(function()
 					if OnScreen == true then
 
 
+						if Highlight then
+							if Library.TransparencyEnabled[Object] == true then
+							Highlight:Destroy()
+							Highlights[Object] = nil
+						else
+							Highlight.FillColor = (Library.Rainbow == true and RainbowTable.Color or ColorTable[Object] or Color3.fromRGB(255,255,255))
+
+							if Library.MatchColors == true then
+								Highlight.OutlineColor = Highlight.FillColor
+							else
+								Highlight.OutlineColor = Library.OutlineColor
+							end
+
+end
+
+						end
+
+						
 						if Highlights[Object] == nil and Library.ElementsEnabled[Object] == true then
 							local NewHighlight = Instance.new("Highlight")
 							NewHighlight.FillTransparency = 1
@@ -764,8 +758,13 @@ ElementsConnection = RunService.Heartbeat:Connect(function()
 								TweenService:Create(NewHighlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = Library.FillTransparency}):Play()
 								TweenService:Create(NewHighlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{OutlineTransparency = Library.OutlineTransparency}):Play()
 							end
-							NewHighlight.FillColor = ColorTable[Object] or Color3.fromRGB(255,255,255)
-							NewHighlight.OutlineColor = ColorTable[Object] or Color3.fromRGB(255,255,255)
+							NewHighlight.FillColor = (Library.Rainbow == true and RainbowTable.Color or ColorTable[Object] or Color3.fromRGB(255,255,255))
+
+							if Library.MatchColors == true then
+								NewHighlight.OutlineColor = NewHighlight.FillColor
+							else
+								NewHighlight.OutlineColor = Library.OutlineColor
+							end
 							NewHighlight.Parent = HighlightsFolder
 							NewHighlight.Adornee = Object
 							Highlight = NewHighlight
