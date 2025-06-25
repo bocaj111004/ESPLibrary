@@ -138,6 +138,11 @@ function Library:AddESP(Parameters)
 
 
 	Library.TransparencyEnabled[Object] = false
+	
+	if Highlights[Object] then
+		Highlights[Object]:Destroy()
+		Highlights[Object] = nil
+	end
 
 
 
@@ -172,7 +177,7 @@ function Library:AddESP(Parameters)
 
 	Labels[Object] = TextLabel
 	Objects[Object] = ObjectTable
-	TotalObjects[Object] = Object
+	table.insert(TotalObjects, Object)
 
 
 	Library.Lines[Object] = {}
@@ -318,6 +323,7 @@ end
 
 function Library:SetTracers(Value)
 	Library.Tracers = Value
+	TracersFrame.Visible = Value
 end
 
 function Library:SetTracerOrigin(Value)
@@ -338,7 +344,7 @@ function removeObjectFromTables(object)
 
 		if obj == object then
 			
-			TotalObjects[object] = nil
+			table.remove(TotalObjects, index)
 
 			break
 		end
@@ -396,8 +402,8 @@ function Library:RemoveESP(Object)
 
 	end
 
-	if Library.TracerTable[Object] ~= nil then
-		Library.TracerTable[Object]:Destroy()
+	if Library.Lines[Object][2] ~= nil then
+		TweenService:Create(Library.Lines[Object][2] ,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{Transparency = 1}):Play()
 
 	end
 
@@ -659,6 +665,7 @@ ElementsConnection = RunService.Heartbeat:Connect(function()
 							NewLine.Name = Library:GenerateRandomString()
 							NewLine.AnchorPoint = Vector2.new(.5, .5)
 							NewLine.Parent = TracersFrame
+							NewLine.BackgroundTransparency = 1
 
 
 							local Border = Instance.new("UIStroke")
@@ -667,6 +674,11 @@ ElementsConnection = RunService.Heartbeat:Connect(function()
 							Border.Thickness = Library.TracerThickness
 							Border.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 							Border.Name = Library:GenerateRandomString()
+							
+							if Library.TransparencyEnabled[Object] == false then
+								Border.Transparency = 1
+							TweenService:Create(Border,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{Transparency = 0}):Play()
+							end
 
 							Library.TracerTable[Object] = NewLine
 
@@ -792,9 +804,7 @@ ConnectionsTable.RainbowConnection = RunService.RenderStepped:Connect(function(D
 	end
 end)
 
-ConnectionsTable.TracerConnection = RunService.RenderStepped:Connect(function()
-	TracersFrame.Visible = Library.Tracers
-end)
+
 
 
 
