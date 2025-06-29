@@ -228,6 +228,7 @@ function Library:AddESP(Parameters)
 	if Object.Parent ~= nil then
 		Object.Parent:GetPropertyChangedSignal("Parent"):Connect(function()
 			Library:RemoveESP(Object)
+			
 
 		end)
 	end
@@ -470,7 +471,7 @@ function Library:RemoveESP(Object)
 					Frames[Object] = nil
 				end
 
-
+				removeObjectFromTables(Object)
 
 				if Highlight then
 					Highlight:Destroy()
@@ -478,7 +479,7 @@ function Library:RemoveESP(Object)
 
 				end
 
-				removeObjectFromTables(Object)
+		
 
 				if Library.Lines[Object] ~= nil then
 					if Library.Lines[Object][1] ~= nil  then
@@ -513,12 +514,18 @@ end
 
 local ElementsCooldown = false
 
-ElementsConnection = RunService.Heartbeat:Connect(function()
+local ConnectionType = "Heartbeat"
+
+if identifyexecutor == nil then
+	ConnectionType = "RenderStepped"
+end
+
+ElementsConnection = RunService[ConnectionType]:Connect(function()
 	RunService.Heartbeat:Wait()
 	
 		for i,Object in pairs(TotalObjects) do
-			if Objects[Object] ~= nil then
-				local pos
+			
+				local pos = Vector3.new(math.huge, math.huge, math.huge)
 
 				local TextFrame = Frames[Object] or Instance.new("Frame")
 				local TextLabel = Labels[Object] or Instance.new("TextLabel")
@@ -539,7 +546,7 @@ ElementsConnection = RunService.Heartbeat:Connect(function()
 					end
 				end
 
-				if pos ~= nil then
+			
 
 
 					local NewVector, OnScreen = game.Workspace.CurrentCamera:WorldToScreenPoint(pos)
@@ -660,7 +667,7 @@ ElementsConnection = RunService.Heartbeat:Connect(function()
 
 
 
-						if	Library.Lines[Object][1] == nil and OnScreen and Library.ElementsEnabled[Object] == true then
+						if Library.Lines[Object][1] == nil and OnScreen and Library.ElementsEnabled[Object] == true then
 							local NewLine = Instance.new("Frame")
 							NewLine.Name = Library:GenerateRandomString()
 							NewLine.AnchorPoint = Vector2.new(.5, .5)
@@ -727,13 +734,13 @@ ElementsConnection = RunService.Heartbeat:Connect(function()
 
 
 
-					end
+					
 
 
 
 
 
-					if OnScreen == true then
+				
 
 
 						if Highlight then
@@ -783,9 +790,8 @@ end
 
 					end
 				end
-			end
 			
-	end
+			
 end)
 
 ConnectionsTable.RainbowConnection = RunService.RenderStepped:Connect(function(Delta)
