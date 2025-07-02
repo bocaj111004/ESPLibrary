@@ -22,6 +22,7 @@ local Library = {
 	ConnectionsTable = {},
 	Objects = {},
 	TracerTable = {},
+	HighlightNames = {},
 	HighlightedObjects = {},
 	RemoveIfNotVisible = true,
 	Rainbow = false,
@@ -188,6 +189,8 @@ function Library:AddESP(Parameters)
 
 
 	Labels[Object] = TextLabel
+	
+	Library.HighlightNames[Object] = Library:GenerateRandomString()
 
 
 
@@ -338,6 +341,8 @@ end
 function Library:SetTracerSize(Value)
 	Library.TracerThickness = 0.85 * Value
 end
+
+
 
 
 function removeObjectFromTables(object)
@@ -516,12 +521,13 @@ local ElementsCooldown = false
 
 local ConnectionType = "Heartbeat"
 
-if identifyexecutor == nil then
-	ConnectionType = "RenderStepped"
-end
 
+local ElementConnectionCooldown = false
 ElementsConnection = RunService[ConnectionType]:Connect(function()
-	RunService.Heartbeat:Wait()
+
+	
+	if ElementsCooldown == false then
+	ElementsCooldown = true
 	
 		for i,Object in pairs(TotalObjects) do
 			
@@ -599,25 +605,6 @@ ElementsConnection = RunService[ConnectionType]:Connect(function()
 
 
 
-						local function GetLineOrigin()
-
-							if Library.TracerOrigin == "Center" then
-								local mousePos = game:GetService("UserInputService"):GetMouseLocation();
-								return Vector2.new(game.Workspace.CurrentCamera.ViewportSize.X/2,game.Workspace.CurrentCamera.ViewportSize.Y/2.25)
-
-							elseif Library.TracerOrigin == "Top" then
-								return Vector2.new(game.Workspace.CurrentCamera.ViewportSize.X/2, -game.Workspace.CurrentCamera.ViewportSize.Y/18)	
-							elseif Library.TracerOrigin == "Mouse" then
-								return Vector2.new(game.Players.LocalPlayer:GetMouse().X,game.Players.LocalPlayer:GetMouse().Y)
-
-							else
-								if game.UserInputService.TouchEnabled and not game.UserInputService.KeyboardEnabled then
-									return Vector2.new(game.Workspace.CurrentCamera.ViewportSize.X/2, game.Workspace.CurrentCamera.ViewportSize.Y*0.94)
-								else
-									return Vector2.new(game.Workspace.CurrentCamera.ViewportSize.X/2, game.Workspace.CurrentCamera.ViewportSize.Y*0.9475)
-								end
-							end
-						end
 						local function Setline(Line, Width, ColorToSet, Origin, Destination, Border)
 							if Highlight and Origin ~= nil and Line then
 								local Position = (Origin + Destination) / 2
@@ -706,7 +693,26 @@ ElementsConnection = RunService[ConnectionType]:Connect(function()
 						end
 						if TargetData ~= nil then
 							if Library.Tracers == true then
-							local LineOrigin = GetLineOrigin()
+						local LineOrigin = 0
+							
+						if Library.TracerOrigin == "Center" then
+							local mousePos = game:GetService("UserInputService"):GetMouseLocation();
+							LineOrigin = Vector2.new(game.Workspace.CurrentCamera.ViewportSize.X/2,game.Workspace.CurrentCamera.ViewportSize.Y/2.25)
+
+						elseif Library.TracerOrigin == "Top" then
+							LineOrigin = Vector2.new(game.Workspace.CurrentCamera.ViewportSize.X/2, -game.Workspace.CurrentCamera.ViewportSize.Y/18)	
+						elseif Library.TracerOrigin == "Mouse" then
+							LineOrigin = Vector2.new(game.Players.LocalPlayer:GetMouse().X,game.Players.LocalPlayer:GetMouse().Y)
+
+						else
+							if game.UserInputService.TouchEnabled and not game.UserInputService.KeyboardEnabled then
+								LineOrigin = Vector2.new(game.Workspace.CurrentCamera.ViewportSize.X/2, game.Workspace.CurrentCamera.ViewportSize.Y*0.94)
+							else
+								LineOrigin = Vector2.new(game.Workspace.CurrentCamera.ViewportSize.X/2, game.Workspace.CurrentCamera.ViewportSize.Y*0.9475)
+							end
+							
+							end
+						
 							Setline(Library.Lines[Object][1], 0, ColorTable[Object], LineOrigin, TargetData[1], Library.Lines[Object][2])
 							end
 						end
@@ -765,7 +771,7 @@ end
 							local NewHighlight = Instance.new("Highlight")
 							NewHighlight.FillTransparency = 1
 							NewHighlight.OutlineTransparency = 1
-							NewHighlight.Name = Library:GenerateRandomString()
+							NewHighlight.Name = Library.HighlightNames[Object]
 							NewHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
 							if Library.TransparencyEnabled[Object] == true then
 								NewHighlight.FillTransparency = Library.FillTransparency
@@ -789,7 +795,10 @@ end
 						end
 
 					end
-				end
+		end
+		task.wait(0.01)
+		ElementsCooldown = false
+		end
 			
 			
 end)
