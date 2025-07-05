@@ -519,15 +519,14 @@ end
 
 local ElementsCooldown = false
 
-local ConnectionType = "Heartbeat"
+local ConnectionType = "RenderStepped"
 
 
 local ElementConnectionCooldown = false
 ElementsConnection = RunService[ConnectionType]:Connect(function()
 
-	
-	if ElementsCooldown == false then
-	ElementsCooldown = true
+	task.wait()
+
 	
 		for i,Object in pairs(TotalObjects) do
 			
@@ -795,9 +794,6 @@ end
 						end
 
 					end
-		end
-		task.wait(0.01)
-		ElementsCooldown = false
 		end
 			
 			
