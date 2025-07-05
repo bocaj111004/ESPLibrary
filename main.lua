@@ -156,20 +156,20 @@ function Library:AddESP(Parameters)
 	local ObjectTable = {Object}
 	TextTable[Object] = Parameters.Text
 
-	local TextFrame = Instance.new("BillboardGui")
-	TextFrame.Enabled = false
-	TextFrame.Adornee = Object
+	local TextFrame = Instance.new("Frame")
+	TextFrame.Visible = false
+	TextFrame.BackgroundTransparency = 1
 	TextFrame.Name = Library:GenerateRandomString()
-	TextFrame.Size = UDim2.new(0,200,0,50)
+	TextFrame.Size = UDim2.new(1,0,1,0)
+	TextFrame.AnchorPoint = Vector2.new(0.5,0.5)
 	TextFrame.Parent = BillboardsFolder
-	TextFrame.AlwaysOnTop = true
 	local TextLabel = Instance.new("TextLabel")
 	TextLabel.Name = Library:GenerateRandomString()
 	TextLabel.BackgroundTransparency = 1
 	TextLabel.Text = Parameters.Text
 	TextLabel.TextTransparency = 1
 	TextLabel.TextStrokeTransparency = Library.TextOutlineTransparency
-	TextLabel.Size = UDim2.new(0,200,0,50)
+	TextLabel.Size = UDim2.new(1,0,1,0)
 	TextLabel.Font = Library.Font
 	TextLabel.TextSize = Library.TextSize
 	TextLabel.RichText = true
@@ -524,14 +524,13 @@ local ConnectionType = "RenderStepped"
 
 local ElementConnectionCooldown = false
 ElementsConnection = RunService[ConnectionType]:Connect(function()
-	
-
 
 	
 	if ElementsCooldown == false then
+	
 	ElementsCooldown = true
 	
-		task.wait(0.01)
+	task.wait()
 	
 		for i,Object in pairs(TotalObjects) do
 			
@@ -560,7 +559,7 @@ ElementsConnection = RunService[ConnectionType]:Connect(function()
 
 
 					local NewVector, OnScreen = game.Workspace.CurrentCamera:WorldToScreenPoint(pos)
-					TextFrame.Enabled = OnScreen
+					TextFrame.Visible = OnScreen
 					
 					if OnScreen == false then 
 						
@@ -585,6 +584,9 @@ ElementsConnection = RunService[ConnectionType]:Connect(function()
 
 					elseif OnScreen == true  then
 
+						
+
+						TextFrame.Position = UDim2.new(0, NewVector.X, 0, NewVector.Y)
 
 						if Library.Rainbow == true then
 							TextLabel.TextColor3 = RainbowTable.Color
@@ -797,8 +799,9 @@ end
 
 					end
 		end
-	
+		
 		ElementsCooldown = false
+		
 		end
 			
 			
