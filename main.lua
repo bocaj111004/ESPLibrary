@@ -588,11 +588,9 @@ ElementsConnection = RunService[ConnectionType]:Connect(function()
 
 						TextFrame.Position = UDim2.new(0, NewVector.X, 0, NewVector.Y)
 
-						if Library.Rainbow == true then
-							TextLabel.TextColor3 = RainbowTable.Color
-						else
-							TextLabel.TextColor3 = ColorTable[Object] or Color3.fromRGB(255,255,255)
-						end
+						
+				TextLabel.TextColor3 = (Library.Rainbow == true and RainbowTable.Color or ColorTable[Object] or Color3.fromRGB(255,255,255))
+						
 
 
 
@@ -628,16 +626,14 @@ ElementsConnection = RunService[ConnectionType]:Connect(function()
 						end
 
 
-						if Library.ShowDistance == true then
+					
 							local TextRatio = math.round(Library.TextSize * Library.DistanceSizeRatio)
 							local Distance = math.round(Players.LocalPlayer:DistanceFromCharacter(pos))
 							local DistanceText = '[' .. Distance .. ']'
 							local Text = TextTable[Object]
-							TextLabel.Text = Text .. '\n<font size="' .. TextRatio .. '">' .. DistanceText .. '</font>'
+						
 
-						else
-							TextLabel.Text = TextTable[Object]
-						end
+				TextLabel.Text = (Library.ShowDistance == true and Text .. '\n<font size="' .. TextRatio .. '">' .. DistanceText .. '</font>' or Text)
 
 						
 						local Targets = {}
@@ -647,15 +643,15 @@ ElementsConnection = RunService[ConnectionType]:Connect(function()
 
 
 						
-						if OnScreen then
-							table.insert(Targets, {Vector2.new(NewVector.X, NewVector.Y), ColorTable[Object]})
+						
+							Targets[1] = (OnScreen and {Vector2.new(NewVector.X, NewVector.Y), ColorTable[Object]} or nil)
 
 
 
-						end
+						
 
 
-
+if Library.Tracers == true then
 
 						if Library.Lines[Object][1] == nil and OnScreen and Library.ElementsEnabled[Object] == true then
 							local NewLine = Instance.new("Frame")
@@ -723,7 +719,7 @@ ElementsConnection = RunService[ConnectionType]:Connect(function()
 
 
 
-
+end
 
 
 
@@ -800,9 +796,12 @@ end
 					end
 		end
 		
+	
 		ElementsCooldown = false
 		
-		end
+	end
+	
+
 			
 			
 end)
