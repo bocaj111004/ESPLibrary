@@ -156,20 +156,20 @@ function Library:AddESP(Parameters)
 	local ObjectTable = {Object}
 	TextTable[Object] = Parameters.Text
 
-	local TextFrame = Instance.new("BillboardGui")
-	TextFrame.Enabled = false
+	local TextFrame = Instance.new("Frame")
+	TextFrame.Visible = false
+	TextFrame.BackgroundTransparency = 1
 	TextFrame.Name = Library:GenerateRandomString()
-	TextFrame.Size = UDim2.fromScale(1,1)
-	TextFrame.AlwaysOnTop = true
-	TextFrame.Adornee = Object
+	TextFrame.Size = UDim2.new(1,0,1,0)
+	TextFrame.AnchorPoint = Vector2.new(0.5,0.5)
 	TextFrame.Parent = BillboardsFolder
 	local TextLabel = Instance.new("TextLabel")
 	TextLabel.Name = Library:GenerateRandomString()
 	TextLabel.BackgroundTransparency = 1
 	TextLabel.Text = Parameters.Text
 	TextLabel.TextTransparency = 1
-	TextLabel.TextStrokeTransparency = 1
-	TextLabel.Size = UDim2.fromScale(1,1)
+	TextLabel.TextStrokeTransparency = Library.TextOutlineTransparency
+	TextLabel.Size = UDim2.new(1,0,1,0)
 	TextLabel.Font = Library.Font
 	TextLabel.TextSize = Library.TextSize
 	TextLabel.RichText = true
@@ -209,7 +209,6 @@ function Library:AddESP(Parameters)
 	ColorTable[Object] = Parameters.Color 
 
 	if TextLabel then
-		TweenService:Create(TextLabel,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{TextStrokeTransparency = Library.TextOutlineTransparency}):Play()
 		local Tween = TweenService:Create(TextLabel,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{TextTransparency = Library.TextTransparency})
 		Tween:Play()
 		Tween.Completed:Connect(function()
@@ -387,7 +386,6 @@ function Library:RemoveESP(Object)
 
 	if TextLabel then
 		TweenService:Create(TextLabel,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{TextTransparency = 1}):Play()
-		TweenService:Create(TextLabel,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{TextStrokeTransparency = 1}):Play()
 
 	end
 
@@ -519,16 +517,21 @@ function Library:RemoveESP(Object)
 	end
 end
 
-
+local ElementsCooldown = false
 
 local ConnectionType = "RenderStepped"
 
 
 local ElementConnectionCooldown = false
-local ElementsConnection = RunService.Heartbeat:Connect(function()
+ElementsConnection = RunService[ConnectionType]:Connect(function()
 
 	
-
+	if ElementsCooldown == false then
+	
+	ElementsCooldown = true
+	
+	task.wait()
+	
 		for i,Object in pairs(TotalObjects) do
 			
 				local pos = Vector3.new(math.huge, math.huge, math.huge)
@@ -556,7 +559,7 @@ local ElementsConnection = RunService.Heartbeat:Connect(function()
 
 
 					local NewVector, OnScreen = game.Workspace.CurrentCamera:WorldToScreenPoint(pos)
-					TextFrame.Enabled = OnScreen
+					TextFrame.Visible = OnScreen
 					
 					if OnScreen == false then 
 						
@@ -583,7 +586,7 @@ local ElementsConnection = RunService.Heartbeat:Connect(function()
 
 						
 
-				
+						TextFrame.Position = UDim2.new(0, NewVector.X, 0, NewVector.Y)
 
 						
 				TextLabel.TextColor3 = (Library.Rainbow == true and RainbowTable.Color or ColorTable[Object] or Color3.fromRGB(255,255,255))
@@ -793,9 +796,10 @@ end
 					end
 		end
 		
-		
-
 	
+		ElementsCooldown = false
+		
+	end
 	
 
 			
