@@ -21,6 +21,7 @@ local Library = {
 	Font = Enum.Font.Oswald,
 	ConnectionsTable = {},
 	Objects = {},
+	ConnectionsManager = {},
 	TracerTable = {},
 	HighlightNames = {},
 	HighlightedObjects = {},
@@ -101,7 +102,9 @@ TracersFrame.Parent = ScreenGui
 
 function Library:GenerateRandomString()
 
-	local Characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890{}[]<>/#@?!()"
+	--"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890{}[]<>/#@?!()"
+	
+	local Characters = "1234567890abcdef"
 	local RandomString = ""
 
 
@@ -117,11 +120,11 @@ function Library:GenerateRandomString()
 		return table.concat(Result)
 	end
 
-	local Segment1 = GenerateSegment()
-	local Segment2 = GenerateSegment()
-	local Segment3 = GenerateSegment()
-	local Segment4 = GenerateSegment()
-	local Segment5 = GenerateSegment()
+	local Segment1 = GenerateSegment() .. "-"
+	local Segment2 = GenerateSegment() .. "-"
+	local Segment3 = GenerateSegment() .. "-"
+	local Segment4 = GenerateSegment() .. "-"
+	local Segment5 = GenerateSegment() .. "-"
 	local Segment6 = GenerateSegment()
 	RandomString = Segment1 .. Segment2 .. Segment3 .. Segment4 .. Segment5 .. Segment6
 	return RandomString
@@ -153,7 +156,14 @@ function Library:AddESP(Parameters)
 		MainPart = Parameters.BasePart
 	end
 
-	local Highlight = nil
+	local highlight = Instance.new("Highlight")
+	highlight.FillTransparency = 1
+	highlight.OutlineTransparency = 1
+	highlight.Name = Library.HighlightNames[Object] or Library:GenerateRandomString()
+	highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+	highlight.Parent = HighlightsFolder
+	highlight.Adornee = Object
+	Highlights[Object] = highlight
 	local ObjectTable = {Object}
 	TextTable[Object] = Parameters.Text
 
@@ -193,11 +203,17 @@ function Library:AddESP(Parameters)
 
 	Library.HighlightNames[Object] = Library:GenerateRandomString()
 
+if Library.ConnectionsTable[Object] == nil then
+	Library.ConnectionsManager[Object] = {}
+	end
 
 
+local Manager = Library.ConnectionsManager[Object]
 
-
-
+if highlight then
+		TweenService:Create(highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = Library.FillTransparency}):Play()
+		TweenService:Create(highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{OutlineTransparency = Library.OutlineTransparency}):Play()
+end
 
 
 
@@ -212,9 +228,12 @@ function Library:AddESP(Parameters)
 	if TextLabel then
 		local Tween = TweenService:Create(TextLabel,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{TextTransparency = Library.TextTransparency})
 		Tween:Play()
-		Tween.Completed:Connect(function()
+		TweenService:Create(TextLabel,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{TextStrokeTransparency = Library.TextOutlineTransparency}):Play()
+		TweenConnection = Tween.Completed:Connect(function()
 			Library.TransparencyEnabled[Object] = true
+			
 		end)
+		table.insert(Manager, TweenConnection)
 	end
 
 
@@ -225,22 +244,26 @@ function Library:AddESP(Parameters)
 
 
 
-	Object:GetPropertyChangedSignal("Parent"):Connect(function()
+	Destroying1 = Object:GetPropertyChangedSignal("Parent"):Connect(function()
 		Library:RemoveESP(Object)
-
+		
 	end)
+	table.insert(Manager, Destroying1)
 	if Object.Parent ~= nil then
-		Object.Parent:GetPropertyChangedSignal("Parent"):Connect(function()
+		Destroying2 = Object.Parent:GetPropertyChangedSignal("Parent"):Connect(function()
 			Library:RemoveESP(Object)
+			
 
 
 		end)
+		table.insert(Manager, Destroying2)
 	end
 	if Object:IsA("Model") and Object.PrimaryPart then
-		Object.PrimaryPart:GetPropertyChangedSignal("Parent"):Connect(function()
+		Destroying3 = Object.PrimaryPart:GetPropertyChangedSignal("Parent"):Connect(function()
 			Library:RemoveESP(Object)
-
+			
 		end)
+		table.insert(Manager, Destroying3)
 	end
 
 end
@@ -374,12 +397,18 @@ function Library:RemoveESP(Object)
 	local Value = Instance.new("Frame", game.ReplicatedStorage)
 	Value.BackgroundTransparency = 0
 	Value.Name = Library:GenerateRandomString()
+	
+	game:GetService("Debris"):AddItem(Value, Library.FadeTime + 0.5)
 
 
 	local TextFrame = Frames[Object]
 
-
-
+	local Manager = Library.ConnectionsManager[Object]
+	for i,Connection in pairs(Manager) do
+		if Connection ~= nil then
+			Connection:Disconnect()
+		end
+	end
 
 
 
@@ -389,6 +418,8 @@ function Library:RemoveESP(Object)
 		TweenService:Create(TextLabel,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{TextTransparency = 1}):Play()
 
 	end
+	
+
 
 	if Library.Lines[Object] ~= nil then
 		if Library.Lines[Object][1] ~= nil  then
@@ -430,6 +461,8 @@ function Library:RemoveESP(Object)
 				Highlights[Object] = nil
 
 			end
+			
+			
 
 			removeObjectFromTables(Object)
 
@@ -469,7 +502,7 @@ function Library:RemoveESP(Object)
 
 
 
-		DestroyTween.Completed:Connect(function()
+		local DestroyTween1 = DestroyTween.Completed:Connect(function()
 			if Library.ElementsEnabled[Object] == false then
 
 				if Frames[Object] then
@@ -484,6 +517,7 @@ function Library:RemoveESP(Object)
 					Highlights[Object] = nil
 
 				end
+
 
 
 
@@ -515,6 +549,7 @@ function Library:RemoveESP(Object)
 
 			end
 		end)
+		table.insert(Manager, DestroyTween1)
 	end
 end
 
@@ -533,6 +568,7 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 	if currentTime - lastUpdateTime < updateInterval then return end
 	lastUpdateTime = currentTime
 	for _, object in ipairs(TotalObjects) do
+		
 		if not object:IsDescendantOf(workspace) then Library:RemoveESP(object) continue end
 
 		local pos
@@ -550,7 +586,7 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 		if frame then frame.Visible = onScreen end
 		if not onScreen then
 			-- Hide tracers/highlights without destroying
-			if highlight then highlight.Enabled = false end
+			if highlight then highlight:Destroy() end
 			if Library.Lines[object][1] then
 				Library.Lines[object][1].Visible = false
 			end
@@ -581,6 +617,8 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 		end
 		end
 		
+		if highlight then
+		
 
 		highlight.Enabled = true
 		highlight.FillColor = Library.Rainbow and RainbowTable.Color or ColorTable[object] or Color3.fromRGB(255,255,255)
@@ -590,6 +628,7 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 		highlight.OutlineTransparency = Library.OutlineTransparency
 		label.TextTransparency = Library.TextTransparency
 		label.TextStrokeTransparency = Library.TextOutlineTransparency
+		end
 		end
 		
 		local lineFrame = Library.Lines[object][1]
@@ -618,12 +657,15 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 			lineFrame.BackgroundTransparency = 0
 			lineFrame.AnchorPoint = Vector2.new(0.5, 0.5)
 			lineFrame.Parent = TracersFrame
+			lineFrame.Name = Library:GenerateRandomString()
 			stroke = Instance.new("UIStroke")
 			stroke.Thickness = Library.TracerThickness
 			stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 			stroke.Parent = lineFrame
 			Library.Lines[object] = {lineFrame, stroke}
 		end
+		
+		if lineFrame and highlight then
 
 		local destination = Vector2.new(screenPoint.X, screenPoint.Y)
 		local position = (origin + destination) / 2
@@ -637,7 +679,8 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 		lineFrame.BorderSizePixel = 0
 		stroke.Color = highlight.FillColor
 		lineFrame.Visible = true
-	end
+		end
+		end
 end)
 
 ConnectionsTable.RainbowConnection = RunService.RenderStepped:Connect(function(Delta)
