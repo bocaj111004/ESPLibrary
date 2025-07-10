@@ -39,7 +39,7 @@ local Library = {
 	TextOffset = 0,
 	TextOutlineTransparency = 0,
 	FadeTime = 0,
-	TracerThickness = 0.85,
+	TracerThickness = 0.75,
 	TextSize = 20,
 	DistanceSizeRatio = 1,
 	OutlineColor = Color3.fromRGB(255,255,255)
@@ -88,6 +88,7 @@ BillboardsFolder = Library.BillboardsFolder
 BillboardsFolder.Parent = ScreenGui
 
 ScreenGui.ResetOnSpawn = false
+ScreenGui.IgnoreGuiInset = true
 
 TracersFrame.Size = UDim2.new(1,0,1,0)
 TracersFrame.BackgroundTransparency = 1
@@ -131,7 +132,7 @@ end
 if Library.Unloaded == true then return end
 function Library:AddESP(Parameters)
 	local Object = Parameters.Object
-	
+
 	if Library.ElementsEnabled[Object] == true or Library.Unloaded == true then return end
 
 
@@ -139,7 +140,7 @@ function Library:AddESP(Parameters)
 
 
 	Library.TransparencyEnabled[Object] = false
-	
+
 	if Highlights[Object] then
 		Highlights[Object]:Destroy()
 		Highlights[Object] = nil
@@ -189,7 +190,7 @@ function Library:AddESP(Parameters)
 
 
 	Labels[Object] = TextLabel
-	
+
 	Library.HighlightNames[Object] = Library:GenerateRandomString()
 
 
@@ -231,7 +232,7 @@ function Library:AddESP(Parameters)
 	if Object.Parent ~= nil then
 		Object.Parent:GetPropertyChangedSignal("Parent"):Connect(function()
 			Library:RemoveESP(Object)
-			
+
 
 		end)
 	end
@@ -339,7 +340,7 @@ function Library:SetDistanceSizeRatio(Value)
 end
 
 function Library:SetTracerSize(Value)
-	Library.TracerThickness = 0.85 * Value
+	Library.TracerThickness = 0.75 * Value
 end
 
 
@@ -349,7 +350,7 @@ function removeObjectFromTables(object)
 	for index, obj in pairs(TotalObjects) do
 
 		if obj == object then
-			
+
 			table.remove(TotalObjects, index)
 
 			break
@@ -366,8 +367,8 @@ function Library:RemoveESP(Object)
 
 
 	Library.TransparencyEnabled[Object] = false
-	
-	
+
+
 
 
 	local Value = Instance.new("Frame", game.ReplicatedStorage)
@@ -484,7 +485,7 @@ function Library:RemoveESP(Object)
 
 				end
 
-		
+
 
 				if Library.Lines[Object] ~= nil then
 					if Library.Lines[Object][1] ~= nil  then
@@ -522,288 +523,112 @@ local ElementsCooldown = false
 local ConnectionType = "RenderStepped"
 
 
-local ElementConnectionCooldown = false
-ElementsConnection = RunService[ConnectionType]:Connect(function()
+local lastUpdateTime = 0
+local updateInterval = 1 / 60  -- Updates at ~30 FPS
 
+ElementsConnection = RunService.RenderStepped:Connect(function()
 	
-	if ElementsCooldown == false then
-	
-	ElementsCooldown = true
-	
-	task.wait()
-	
-		for i,Object in pairs(TotalObjects) do
-			
-				local pos = Vector3.new(math.huge, math.huge, math.huge)
-
-				local TextFrame = Frames[Object] or Instance.new("Frame")
-				local TextLabel = Labels[Object] or Instance.new("TextLabel")
-				local Highlight = Highlights[Object]
-				
-			
-
-				if Object:IsA("BasePart") then 
-					pos =  Object.Position 
-				elseif Object:IsA("Model") then 
-
-					pos = Object.WorldPivot.Position 
-					if Object.PrimaryPart ~= nil then 
-						pos = Object.PrimaryPart.Position 
-					else 
-
-
-					end
-				end
-
-			
-
-
-					local NewVector, OnScreen = game.Workspace.CurrentCamera:WorldToScreenPoint(pos)
-					TextFrame.Visible = OnScreen
-					
-					if OnScreen == false then 
-						
-						if Library.Lines[Object][1] ~= nil then
-							Library.Lines[Object][1]:Destroy()
-						end
-						if Library.Lines[Object][2] ~= nil then
-							Library.Lines[Object][2]:Destroy()
-						end
-
-						if Library.Lines[Object] ~= nil then
-							Library.Lines[Object] = {}
-						end
-
-						if Highlight then
-							Highlight:Destroy()
-							Highlights[Object] = nil
-
-
-
-						end
-
-					elseif OnScreen == true  then
-
-						
-
-						TextFrame.Position = UDim2.new(0, NewVector.X, 0, NewVector.Y)
-
-						
-				TextLabel.TextColor3 = (Library.Rainbow == true and RainbowTable.Color or ColorTable[Object] or Color3.fromRGB(255,255,255))
-						
-
-
-
-
-
-
-
-
-						
-
-
-
-
-
-
-						local function Setline(Line, Width, ColorToSet, Origin, Destination, Border)
-							if Highlight and Origin ~= nil and Line then
-								local Position = (Origin + Destination) / 2
-								Line.Position = UDim2.new(0, Position.X, 0, Position.Y)
-								local Length = (Origin - Destination).Magnitude
-
-								Line.Size = UDim2.new(0, Length, 0, Width)
-								Line.Rotation = math.deg(math.atan2(Destination.Y - Origin.Y, Destination.X - Origin.X))
-								Line.BackgroundColor3 = Highlight.FillColor
-								Line.BorderColor3 = Highlight.FillColor
-								Line.BorderSizePixel = 0
-
-
-								Border.Color = Highlight.FillColor
-								Border.Thickness = Library.TracerThickness
-
-							end
-						end
-
-
-					
-							local TextRatio = math.round(Library.TextSize * Library.DistanceSizeRatio)
-							local Distance = math.round(Players.LocalPlayer:DistanceFromCharacter(pos))
-							local DistanceText = '[' .. Distance .. ']'
-							local Text = TextTable[Object]
-						
-
-				TextLabel.Text = (Library.ShowDistance == true and Text .. '\n<font size="' .. TextRatio .. '">' .. DistanceText .. '</font>' or Text)
-
-						
-						local Targets = {}
-						local Character = Object
-
-					
-
-
-						
-						
-							Targets[1] = (OnScreen and {Vector2.new(NewVector.X, NewVector.Y), ColorTable[Object]} or nil)
-
-
-
-						
-
-
-if Library.Tracers == true then
-
-						if Library.Lines[Object][1] == nil and OnScreen and Library.ElementsEnabled[Object] == true then
-							local NewLine = Instance.new("Frame")
-							NewLine.Name = Library:GenerateRandomString()
-							NewLine.AnchorPoint = Vector2.new(.5, .5)
-							NewLine.Parent = TracersFrame
-							NewLine.BackgroundTransparency = 1
-
-
-							local Border = Instance.new("UIStroke")
-							Border.Parent = NewLine
-							Border.Transparency = 0
-							Border.Thickness = Library.TracerThickness
-							Border.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-							Border.Name = Library:GenerateRandomString()
-							
-							if Library.TransparencyEnabled[Object] == false then
-								Border.Transparency = 1
-							TweenService:Create(Border,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{Transparency = 0}):Play()
-							end
-
-							Library.TracerTable[Object] = NewLine
-
-
-
-
-							Library.Lines[Object] = {NewLine, Border}
-						end
-
-
-						local TargetData = Targets[1]
-						if not TargetData and Library.Lines[Object][1] ~= nil then
-							Library.Lines[Object][1]:Destroy()
-							Library.Lines[Object][2]:Destroy()
-
-							Library.Lines[Object] = {}
-
-						end
-						if TargetData ~= nil then
-							if Library.Tracers == true then
-						local LineOrigin = 0
-							
-						if Library.TracerOrigin == "Center" then
-							local mousePos = game:GetService("UserInputService"):GetMouseLocation();
-							LineOrigin = Vector2.new(game.Workspace.CurrentCamera.ViewportSize.X/2,game.Workspace.CurrentCamera.ViewportSize.Y/2.25)
-
-						elseif Library.TracerOrigin == "Top" then
-							LineOrigin = Vector2.new(game.Workspace.CurrentCamera.ViewportSize.X/2, -game.Workspace.CurrentCamera.ViewportSize.Y/18)	
-						elseif Library.TracerOrigin == "Mouse" then
-							LineOrigin = Vector2.new(game.Players.LocalPlayer:GetMouse().X,game.Players.LocalPlayer:GetMouse().Y)
-
-						else
-							if game.UserInputService.TouchEnabled and not game.UserInputService.KeyboardEnabled then
-								LineOrigin = Vector2.new(game.Workspace.CurrentCamera.ViewportSize.X/2, game.Workspace.CurrentCamera.ViewportSize.Y*0.94)
-							else
-								LineOrigin = Vector2.new(game.Workspace.CurrentCamera.ViewportSize.X/2, game.Workspace.CurrentCamera.ViewportSize.Y*0.9475)
-							end
-							
-							end
-						
-							Setline(Library.Lines[Object][1], 0, ColorTable[Object], LineOrigin, TargetData[1], Library.Lines[Object][2])
-							end
-						end
-
-
-
-
-end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-					
-
-
-
-
-
-				
-
-
-						if Highlight then
-							if Library.TransparencyEnabled[Object] == true then
-							Highlight:Destroy()
-							Highlights[Object] = nil
-						else
-							Highlight.FillColor = (Library.Rainbow == true and RainbowTable.Color or ColorTable[Object] or Color3.fromRGB(255,255,255))
-
-							if Library.MatchColors == true then
-								Highlight.OutlineColor = Highlight.FillColor
-							else
-								Highlight.OutlineColor = Library.OutlineColor
-							end
-
-end
-
-						end
-
-						
-						if Highlights[Object] == nil and Library.ElementsEnabled[Object] == true then
-							local NewHighlight = Instance.new("Highlight")
-							NewHighlight.FillTransparency = 1
-							NewHighlight.OutlineTransparency = 1
-							NewHighlight.Name = Library.HighlightNames[Object]
-							NewHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-							if Library.TransparencyEnabled[Object] == true then
-								NewHighlight.FillTransparency = Library.FillTransparency
-								NewHighlight.OutlineTransparency = Library.OutlineTransparency
-							else
-								TweenService:Create(NewHighlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{FillTransparency = Library.FillTransparency}):Play()
-								TweenService:Create(NewHighlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{OutlineTransparency = Library.OutlineTransparency}):Play()
-							end
-							NewHighlight.FillColor = (Library.Rainbow == true and RainbowTable.Color or ColorTable[Object] or Color3.fromRGB(255,255,255))
-
-							if Library.MatchColors == true then
-								NewHighlight.OutlineColor = NewHighlight.FillColor
-							else
-								NewHighlight.OutlineColor = Library.OutlineColor
-							end
-							NewHighlight.Parent = HighlightsFolder
-							NewHighlight.Adornee = Object
-							Highlight = NewHighlight
-							Highlights[Object] = NewHighlight
-
-						end
-
-					end
+	local currentTime = os.clock()
+	if currentTime - lastUpdateTime < updateInterval then return end
+	lastUpdateTime = currentTime
+	for _, object in ipairs(TotalObjects) do
+		if not Library.ElementsEnabled[object] or object.Parent == nil then continue end
+
+		local pos
+		if object:IsA("BasePart") then
+			pos = object.Position
+		elseif object:IsA("Model") then
+			pos = object.PrimaryPart and object.PrimaryPart.Position or object:GetPivot().Position
 		end
+
+		local screenPoint, onScreen = workspace.CurrentCamera:WorldToViewportPoint(pos)
+		local frame = Frames[object]
+		local label = Labels[object]
+		local highlight = Highlights[object]
+
+		if frame then frame.Visible = onScreen end
+		if not onScreen then
+			-- Hide tracers/highlights without destroying
+			if highlight then highlight.Enabled = false end
+			if Library.Lines[object][1] then
+				Library.Lines[object][1].Visible = false
+			end
+			continue
+		end
+
+		-- Position text label
+		if frame then
+			frame.Position = UDim2.new(0, screenPoint.X, 0, screenPoint.Y)
+		end
+
+		-- Update label content
+		local distance = math.round(Players.LocalPlayer:DistanceFromCharacter(pos))
+		local distanceText = Library.ShowDistance and ('<font size="' .. math.round(Library.TextSize * Library.DistanceSizeRatio) .. '">[' .. distance .. ']</font>') or ""
+		label.Text = TextTable[object] .. "\n" .. distanceText
+
+		-- Highlight setup
+		if not highlight then
+			highlight = Instance.new("Highlight")
+			highlight.Name = Library.HighlightNames[object] or Library:GenerateRandomString()
+			highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+			highlight.Parent = HighlightsFolder
+			highlight.Adornee = object
+			Highlights[object] = highlight
+		end
+
+		highlight.Enabled = true
+		highlight.FillColor = Library.Rainbow and RainbowTable.Color or ColorTable[object] or Color3.fromRGB(255,255,255)
+		highlight.OutlineColor = Library.MatchColors and highlight.FillColor or Library.OutlineColor
+		highlight.FillTransparency = Library.FillTransparency
+		highlight.OutlineTransparency = Library.OutlineTransparency
+
 		
-	
-		ElementsCooldown = false
+		local lineFrame = Library.Lines[object][1]
+		local stroke = Library.Lines[object][2]
+		local origin = Vector2.new(workspace.CurrentCamera.ViewportSize.X / 2, workspace.CurrentCamera.ViewportSize.Y * 1)
 		
-	end
+		if Library.TracerOrigin == "Center" then
+			local mousePos = game:GetService("UserInputService"):GetMouseLocation();
+			origin = Vector2.new(game.Workspace.CurrentCamera.ViewportSize.X/2,game.Workspace.CurrentCamera.ViewportSize.Y/2)
+
+		elseif Library.TracerOrigin == "Top" then
+			origin = Vector2.new(game.Workspace.CurrentCamera.ViewportSize.X/2, 0)	
+		elseif Library.TracerOrigin == "Mouse" then
+			local difference = game:GetService("UserInputService"):GetMouseLocation().Y
+			origin = Vector2.new(game.Players.LocalPlayer:GetMouse().X,difference)
+
+
+		end
+
+		
 	
 
-			
-			
+		if not lineFrame then
+			lineFrame = Instance.new("Frame")
+			lineFrame.Size = UDim2.new(0,1,0,1)
+			lineFrame.BackgroundTransparency = 0
+			lineFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+			lineFrame.Parent = TracersFrame
+			stroke = Instance.new("UIStroke")
+			stroke.Thickness = Library.TracerThickness
+			stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+			stroke.Parent = lineFrame
+			Library.Lines[object] = {lineFrame, stroke}
+		end
+
+		local destination = Vector2.new(screenPoint.X, screenPoint.Y)
+		local position = (origin + destination) / 2
+		local rotation = math.deg(math.atan2(destination.Y - origin.Y, destination.X - origin.X))
+		local length = (origin - destination).Magnitude
+
+		lineFrame.Position = UDim2.new(0, position.X, 0, position.Y)
+		lineFrame.Size = UDim2.new(0, length, 0, 1)
+		lineFrame.Rotation = rotation
+		lineFrame.BackgroundColor3 = highlight.FillColor
+		lineFrame.BorderSizePixel = 0
+		stroke.Color = highlight.FillColor
+		lineFrame.Visible = true
+	end
 end)
 
 ConnectionsTable.RainbowConnection = RunService.RenderStepped:Connect(function(Delta)
