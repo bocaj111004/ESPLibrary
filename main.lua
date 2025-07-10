@@ -528,11 +528,13 @@ local updateInterval = 1 / 60  -- Updates at ~30 FPS
 
 ElementsConnection = RunService.RenderStepped:Connect(function()
 	
+	print(#TotalObjects)
+	
 	local currentTime = os.clock()
 	if currentTime - lastUpdateTime < updateInterval then return end
 	lastUpdateTime = currentTime
 	for _, object in ipairs(TotalObjects) do
-		if object.Parent == nil then continue end
+		if not object:IsDescendantOf(workspace) then Library:RemoveESP(object) continue end
 
 		local pos
 		if object:IsA("BasePart") then
