@@ -532,7 +532,7 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 	if currentTime - lastUpdateTime < updateInterval then return end
 	lastUpdateTime = currentTime
 	for _, object in ipairs(TotalObjects) do
-		if not Library.ElementsEnabled[object] or object.Parent == nil then continue end
+		if object.Parent == nil then continue end
 
 		local pos
 		if object:IsA("BasePart") then
@@ -567,6 +567,7 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 		label.Text = TextTable[object] .. "\n" .. distanceText
 
 		-- Highlight setup
+		if Library.ElementsEnabled[object] == true then
 		if not highlight then
 			highlight = Instance.new("Highlight")
 			highlight.Name = Library.HighlightNames[object] or Library:GenerateRandomString()
@@ -575,13 +576,18 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 			highlight.Adornee = object
 			Highlights[object] = highlight
 		end
+		end
+		
 
 		highlight.Enabled = true
 		highlight.FillColor = Library.Rainbow and RainbowTable.Color or ColorTable[object] or Color3.fromRGB(255,255,255)
 		highlight.OutlineColor = Library.MatchColors and highlight.FillColor or Library.OutlineColor
+		if Library.TransparencyEnabled[object] == true then
 		highlight.FillTransparency = Library.FillTransparency
 		highlight.OutlineTransparency = Library.OutlineTransparency
-
+		label.TextTransparency = Library.TextTransparency
+		label.TextStrokeTransparency = Library.TextOutlineTransparency
+		end
 		
 		local lineFrame = Library.Lines[object][1]
 		local stroke = Library.Lines[object][2]
