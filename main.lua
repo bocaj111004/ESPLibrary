@@ -586,7 +586,7 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 		if frame then frame.Visible = onScreen end
 		if not onScreen then
 			-- Hide tracers/highlights without destroying
-			if highlight then highlight:Destroy() end
+			if highlight then highlight:Destroy() Highlights[object] = nil highlight = nil end
 			if Library.Lines[object][1] then
 				Library.Lines[object][1].Visible = false
 			end
@@ -602,6 +602,8 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 		local distance = math.round(Players.LocalPlayer:DistanceFromCharacter(pos))
 		local distanceText = Library.ShowDistance and ('<font size="' .. math.round(Library.TextSize * Library.DistanceSizeRatio) .. '">[' .. distance .. ']</font>') or ""
 		label.Text = TextTable[object] .. "\n" .. distanceText
+		
+	
 
 		-- Highlight setup
 		if Library.ElementsEnabled[object] == true then
