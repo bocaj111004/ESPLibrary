@@ -571,6 +571,8 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 		if Library.ElementsEnabled[object] == true then
 		if not highlight then
 			highlight = Instance.new("Highlight")
+			highlight.FillTransparency = 1
+			highlight.OutlineTransparency = 1
 			highlight.Name = Library.HighlightNames[object] or Library:GenerateRandomString()
 			highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
 			highlight.Parent = HighlightsFolder
