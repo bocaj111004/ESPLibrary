@@ -559,7 +559,7 @@ local ConnectionType = "RenderStepped"
 
 
 local lastUpdateTime = 0
-local updateInterval = 1 / 60  -- Updates at ~30 FPS
+local updateInterval = 1 / 75  -- Updates at ~30 FPS
 
 ElementsConnection = RunService.RenderStepped:Connect(function()
 	
@@ -625,6 +625,7 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 		highlight.Enabled = true
 		highlight.FillColor = Library.Rainbow and RainbowTable.Color or ColorTable[object] or Color3.fromRGB(255,255,255)
 		highlight.OutlineColor = Library.MatchColors and highlight.FillColor or Library.OutlineColor
+		label.TextColor3 = highlight.FillColor
 		if Library.TransparencyEnabled[object] == true then
 		highlight.FillTransparency = Library.FillTransparency
 		highlight.OutlineTransparency = Library.OutlineTransparency
