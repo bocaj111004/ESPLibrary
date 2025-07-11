@@ -625,7 +625,7 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 		highlight.Enabled = true
 		highlight.FillColor = Library.Rainbow and RainbowTable.Color or ColorTable[object] or Color3.fromRGB(255,255,255)
 		highlight.OutlineColor = Library.MatchColors and highlight.FillColor or Library.OutlineColor
-		label.TextColor3 = highlight.FillColor
+			label.TextColor3 = Library.Rainbow and RainbowTable.Color or ColorTable[object] or Color3.fromRGB(255,255,255)
 		if Library.TransparencyEnabled[object] == true then
 		highlight.FillTransparency = Library.FillTransparency
 		highlight.OutlineTransparency = Library.OutlineTransparency
