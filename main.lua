@@ -600,8 +600,8 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 
 		-- Update label content
 		local distance = math.round(Players.LocalPlayer:DistanceFromCharacter(pos))
-		local distanceText = Library.ShowDistance and ('<font size="' .. math.round(Library.TextSize * Library.DistanceSizeRatio) .. '">[' .. distance .. ']</font>') or ""
-		label.Text = TextTable[object] .. "\n" .. distanceText
+		local distanceText = Library.ShowDistance and ("\n" .. '<font size="' .. math.round(Library.TextSize * Library.DistanceSizeRatio) .. '">[' .. distance .. ']</font>') or ""
+		label.Text = TextTable[object] .. distanceText
 		
 	
 
