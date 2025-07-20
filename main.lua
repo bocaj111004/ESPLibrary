@@ -143,6 +143,8 @@ function Library:AddESP(Parameters)
 
 
 	Library.TransparencyEnabled[Object] = false
+	
+	
 
 	if Highlights[Object] then
 		Highlights[Object]:Destroy()
@@ -189,10 +191,10 @@ function Library:AddESP(Parameters)
 
 	Labels[Object] = TextLabel
 	Objects[Object] = ObjectTable
-	table.insert(TotalObjects, Object)
 
 
-	Library.Lines[Object] = {}
+
+
 	Library.ElementsEnabled[Object] = true
 
 
@@ -215,6 +217,8 @@ if highlight then
 		TweenService:Create(highlight,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{OutlineTransparency = Library.OutlineTransparency}):Play()
 end
 
+	
+
 
 
 
@@ -224,6 +228,28 @@ end
 
 	Objects[Object] = Object
 	ColorTable[Object] = Parameters.Color 
+	
+	lineFrame = Instance.new("Frame")
+	lineFrame.Size = UDim2.new(0,0,0,0)
+	lineFrame.BackgroundTransparency = 1
+	lineFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+	lineFrame.Parent = TracersFrame
+	lineFrame.Name = Library:GenerateRandomString()
+	stroke = Instance.new("UIStroke")
+	stroke.Thickness = Library.TracerThickness
+	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+	stroke.Parent = lineFrame
+	stroke.Transparency = 1
+	
+	TweenService:Create(lineFrame,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{BackgroundTransparency = 0}):Play()
+
+
+	TweenService:Create(stroke,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{Transparency = 0}):Play()
+	
+	Library.Lines[Object] = {lineFrame, stroke}
+
+
+	
 
 	if TextLabel then
 		local Tween = TweenService:Create(TextLabel,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{TextTransparency = Library.TextTransparency})
@@ -242,6 +268,7 @@ end
 
 
 	table.insert(Elements,TextFrame)
+	table.insert(TotalObjects, Object)
 
 
 
@@ -661,7 +688,7 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 		if not lineFrame then
 			lineFrame = Instance.new("Frame")
 			lineFrame.Size = UDim2.new(0,1,0,1)
-			lineFrame.BackgroundTransparency = (Library.TransparencyEnabled[object] == true and 0 or 1)
+			lineFrame.BackgroundTransparency = 0
 			lineFrame.AnchorPoint = Vector2.new(0.5, 0.5)
 			lineFrame.Parent = TracersFrame
 			lineFrame.Name = Library:GenerateRandomString()
@@ -669,18 +696,8 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 			stroke.Thickness = Library.TracerThickness
 			stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 			stroke.Parent = lineFrame
-			stroke.Transparency = (Library.TransparencyEnabled[object] == true and 0 or 1)
+			stroke.Transparency =  0
 			Library.Lines[object] = {lineFrame, stroke}
-			
-			if Library.TransparencyEnabled[object] ~= true then
-			
-			
-				TweenService:Create(lineFrame,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{BackgroundTransparency = 0}):Play()
-		
-		
-				TweenService:Create(stroke,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{Transparency = 0}):Play()
-				
-				end
 			
 		end
 		
