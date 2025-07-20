@@ -236,15 +236,7 @@ end
 		table.insert(Manager, TweenConnection)
 	end
 	
-	if Library.Lines[Object] ~= nil then
-		if Library.Lines[Object][1] ~= nil  then
-			TweenService:Create(Library.Lines[Object][1],TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{BackgroundTransparency = 1}):Play()
-		end
-		if Library.Lines[Object][2] ~= nil  then
-			TweenService:Create(Library.Lines[Object][2],TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{Transparency = 1}):Play()
-		end
-
-	end
+	
 
 
 
@@ -275,6 +267,10 @@ end
 		end)
 		table.insert(Manager, Destroying3)
 	end
+	
+	
+	
+	
 
 end
 
@@ -675,6 +671,17 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 			stroke.Parent = lineFrame
 			stroke.Transparency = (Library.TransparencyEnabled[object] == true and 0 or 1)
 			Library.Lines[object] = {lineFrame, stroke}
+			
+			if Library.TransparencyEnabled[object] ~= true then
+			
+			
+				TweenService:Create(lineFrame,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{BackgroundTransparency = 0}):Play()
+		
+		
+				TweenService:Create(stroke,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{Transparency = 0}):Play()
+				
+				end
+			
 		end
 		
 		if lineFrame and highlight then
