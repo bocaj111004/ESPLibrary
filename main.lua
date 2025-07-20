@@ -558,15 +558,13 @@ local ElementsCooldown = false
 local ConnectionType = "RenderStepped"
 
 
-local lastUpdateTime = 0
-local updateInterval = 1 / 75  -- Updates at ~30 FPS
+
 
 ElementsConnection = RunService.RenderStepped:Connect(function()
 	
 	
-	local currentTime = os.clock()
-	if currentTime - lastUpdateTime < updateInterval then return end
-	lastUpdateTime = currentTime
+
+
 	for _, object in ipairs(TotalObjects) do
 		
 		if not object:IsDescendantOf(workspace) then Library:RemoveESP(object) continue end
@@ -657,7 +655,7 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 		if not lineFrame then
 			lineFrame = Instance.new("Frame")
 			lineFrame.Size = UDim2.new(0,1,0,1)
-			lineFrame.BackgroundTransparency = 0
+			lineFrame.BackgroundTransparency = (Library.TransparencyEnabled[object] == true and 0 or 1)
 			lineFrame.AnchorPoint = Vector2.new(0.5, 0.5)
 			lineFrame.Parent = TracersFrame
 			lineFrame.Name = Library:GenerateRandomString()
