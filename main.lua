@@ -91,6 +91,21 @@ function Library:AddESP(params)
 	Objects[obj] = obj
 	Texts[obj] = params.Text
 	Colors[obj] = params.Color
+	
+	local lineFrame = Library:GetFromPool("Tracers", "Frame")
+	lineFrame.Size = UDim2.new(0, 0, 0, 0)
+	lineFrame.BackgroundTransparency = 0
+	lineFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+	lineFrame.Parent = TracersFrame
+	lineFrame.BorderSizePixel = 0
+
+	local stroke = Library:GetFromPool("Strokes", "UIStroke")
+	stroke.Thickness = Library.TracerThickness
+	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+	stroke.Transparency = 0
+	stroke.Parent = lineFrame
+
+	Lines[obj] = {lineFrame, stroke}
 
 	local highlight = Library:GetFromPool("Highlights", "Highlight")
 	highlight.Adornee = obj
@@ -122,20 +137,7 @@ function Library:AddESP(params)
 	Labels[obj] = label
 
 	
-		local lineFrame = Library:GetFromPool("Tracers", "Frame")
-		lineFrame.Size = UDim2.new(0, 0, 0, 0)
-		lineFrame.BackgroundTransparency = 0
-		lineFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-		lineFrame.Parent = TracersFrame
-	lineFrame.BorderSizePixel = 0
-
-		local stroke = Library:GetFromPool("Strokes", "UIStroke")
-		stroke.Thickness = Library.TracerThickness
-		stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-		stroke.Transparency = 0
-		stroke.Parent = lineFrame
-
-		Lines[obj] = {lineFrame, stroke}
+		
 	
 
 	-- Fade in
