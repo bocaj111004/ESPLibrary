@@ -127,6 +127,7 @@ function Library:AddESP(params)
 		lineFrame.BackgroundTransparency = 0
 		lineFrame.AnchorPoint = Vector2.new(0.5, 0.5)
 		lineFrame.Parent = TracersFrame
+	lineFrame.BorderSizePixel = 0
 
 		local stroke = Library:GetFromPool("Strokes", "UIStroke")
 		stroke.Thickness = Library.TracerThickness
@@ -209,7 +210,7 @@ RunService.RenderStepped:Connect(function()
 
 		if frame then frame.Visible = onScreen end
 		if not onScreen then
-			if highlight then highlight.Enabled = false end
+			if highlight then highlight:Destroy() Highlights[obj] = nil end
 			if Lines[obj] and Lines[obj][1] then Lines[obj][1].Visible = false end
 			continue
 		end
@@ -220,6 +221,7 @@ RunService.RenderStepped:Connect(function()
 		local distText = Library.ShowDistance and ("\n<font size=\"" .. math.round(Library.TextSize * Library.DistanceSizeRatio) .. "\">[" .. dist .. "]</font>") or ""
 		if label then label.Text = Texts[obj] .. distText end
 
+		if highlight then
 		if Library.Rainbow then
 			highlight.FillColor = RainbowTable.Color
 			label.TextColor3 = RainbowTable.Color
@@ -236,6 +238,15 @@ RunService.RenderStepped:Connect(function()
 			highlight.OutlineTransparency = Library.OutlineTransparency
 			label.TextTransparency = Library.TextTransparency
 			label.TextStrokeTransparency = Library.TextOutlineTransparency
+		end
+		else
+			highlight = Library:GetFromPool("Highlights", "Highlight")
+			highlight.Adornee = obj
+			highlight.FillTransparency = 1
+			highlight.OutlineTransparency = 1
+			highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+			highlight.Parent = HighlightsFolder
+			Highlights[obj] = highlight
 		end
 
 		if Library.Tracers and Lines[obj] then
