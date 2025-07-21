@@ -596,7 +596,11 @@ local ConnectionType = "RenderStepped"
 ElementsConnection = RunService.RenderStepped:Connect(function()
 	
 	
+if ElementsCooldown == true then
+	return
+end
 
+ElementsCooldown = true
 
 	for _, object in ipairs(TotalObjects) do
 		
@@ -701,7 +705,7 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 			
 		end
 		
-		if lineFrame and highlight then
+		if lineFrame and highlight and Library.Tracers == true then
 
 		local destination = Vector2.new(screenPoint.X, screenPoint.Y)
 		local position = (origin + destination) / 2
@@ -716,7 +720,11 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 		stroke.Color = highlight.FillColor
 		lineFrame.Visible = true
 		end
-		end
+	end
+	
+	task.wait(0.01)
+	
+	ElementsCooldown = false
 end)
 
 ConnectionsTable.RainbowConnection = RunService.RenderStepped:Connect(function(Delta)
