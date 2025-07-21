@@ -249,7 +249,7 @@ RunService.RenderStepped:Connect(function()
 			Highlights[obj] = highlight
 		end
 
-		if Library.Tracers and Lines[obj] then
+		if Library.Tracers and Lines[obj] and highlight then
 			local origin
 			if Library.TracerOrigin == "Center" then
 				origin = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
