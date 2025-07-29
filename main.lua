@@ -2,7 +2,6 @@ local Library = {
 
 	ObjectsFolder = Instance.new("Folder"),
 	ScreenGui = Instance.new("ScreenGui"),
-	OtherGui = Instance.new("ScreenGui"),
 	HighlightsFolder = Instance.new("Folder"),
 	BillboardsFolder = Instance.new("Folder"),
 	TracersFrame = Instance.new("Frame"),
@@ -71,7 +70,6 @@ ScreenGui = Library.ScreenGui
 HighlightsFolder = Library.HighlightsFolder
 Labels = Library.Labels
 Connections = Library.Connections
-OtherGui = Library.OtherGui 
 Elements = Library.Elements
 TextTable = Library.TextTable
 Players = game:GetService("Players")
@@ -82,7 +80,6 @@ TweenService = game:GetService("TweenService")
 GetHUI = (CoreGui:FindFirstChild("RobloxGui") or CoreGui);
 ColorTable = Library.ColorTable
 ScreenGui.Parent = GetHUI
-OtherGui.Parent = ScreenGui
 TracersFrame = Library.TracersFrame
 HighlightsFolder.Parent = ScreenGui
 BillboardsFolder = Library.BillboardsFolder
@@ -594,7 +591,7 @@ local ConnectionType = "RenderStepped"
 
 
 ElementsConnection = RunService.RenderStepped:Connect(function()
-	
+	task.wait()
 	
 
 
@@ -637,10 +634,13 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 		label.Text = TextTable[object] .. distanceText
 		
 	
-
+		
+		
+		
 		-- Highlight setup
 		if Library.ElementsEnabled[object] == true then
-		if not highlight then
+			if not highlight then
+			
 			highlight = Instance.new("Highlight")
 			highlight.FillTransparency = 1
 			highlight.OutlineTransparency = 1
@@ -649,7 +649,7 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 			highlight.Parent = HighlightsFolder
 			highlight.Adornee = object
 			Highlights[object] = highlight
-		end
+			end
 		end
 		
 		if highlight then
@@ -766,7 +766,6 @@ end
 
 ObjectsFolder.Name = Library:GenerateRandomString()
 ScreenGui.Name = Library:GenerateRandomString()
-OtherGui.Name = Library:GenerateRandomString()
 HighlightsFolder.Name = Library:GenerateRandomString()
 TracersFrame.Name = Library:GenerateRandomString()
 BillboardsFolder.Name = Library:GenerateRandomString()
