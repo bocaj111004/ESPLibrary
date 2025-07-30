@@ -39,7 +39,7 @@ local Library = {
 	TextOffset = 0,
 	TextOutlineTransparency = 0,
 	FadeTime = 0,
-	TracerThickness = 0.75,
+	TracerThickness = 0.5,
 	TextSize = 20,
 	DistanceSizeRatio = 1,
 	OutlineColor = Color3.fromRGB(255,255,255)
@@ -393,7 +393,7 @@ function Library:SetDistanceSizeRatio(Value)
 end
 
 function Library:SetTracerSize(Value)
-	Library.TracerThickness = 0.75 * Value
+	Library.TracerThickness = 0.5 * Value
 end
 
 
@@ -607,6 +607,8 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 		elseif object:IsA("Model") then
 			pos = object.PrimaryPart and object.PrimaryPart.Position or object:GetPivot().Position
 		end
+		
+		if pos then
 
 		local screenPoint, onScreen = workspace.CurrentCamera:WorldToViewportPoint(pos)
 		local frame = Frames[object]
@@ -719,7 +721,7 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 		lineFrame.Visible = true
 		end
 	end
-
+end
 end)
 
 ConnectionsTable.RainbowConnection = RunService.RenderStepped:Connect(function(Delta)
