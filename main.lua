@@ -42,7 +42,8 @@ local Library = {
 	TracerThickness = 0.5,
 	TextSize = 20,
 	DistanceSizeRatio = 1,
-	OutlineColor = Color3.fromRGB(255,255,255)
+	OutlineColor = Color3.fromRGB(255,255,255),
+	RemoveHighlights = true,
 }
 
 local RainbowTable = {
@@ -396,6 +397,9 @@ function Library:SetTracerSize(Value)
 	Library.TracerThickness = 0.5 * Value
 end
 
+function Library:SetSaveHighlights(Value)
+	Library.RemoveHighlights = Value
+end
 
 
 
@@ -615,13 +619,16 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 		local label = Labels[object]
 		local highlight = Highlights[object]
 
-		if frame then frame.Visible = onScreen end
-		if not onScreen then
+			if Library.Lines[object][1] then
+				Library.Lines[object][1].Visible = (onScreen)
+			end
+			
+			if frame then frame.Visible = (Library.RemoveHighlights and onScreen or true) end
+			if not onScreen and Library.RemoveHighlights then
 			-- Hide tracers/highlights without destroying
 			if highlight then highlight:Destroy() Highlights[object] = nil highlight = nil end
-			if Library.Lines[object][1] then
-				Library.Lines[object][1].Visible = false
-			end
+			
+			
 			continue
 		end
 
@@ -705,7 +712,7 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 			
 		end
 		
-		if lineFrame and highlight and Library.Tracers == true then
+		if lineFrame and highlight and Library.Tracers == true and onScreen then
 
 		local destination = Vector2.new(screenPoint.X, screenPoint.Y)
 		local position = (origin + destination) / 2
