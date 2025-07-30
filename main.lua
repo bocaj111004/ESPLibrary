@@ -591,7 +591,7 @@ local ConnectionType = "RenderStepped"
 
 
 ElementsConnection = RunService.RenderStepped:Connect(function()
-	task.wait()
+	RunService.RenderStepped:Wait()
 	
 
 
