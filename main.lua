@@ -5,6 +5,7 @@ local Library = {
 	HighlightsFolder = Instance.new("Folder"),
 	BillboardsFolder = Instance.new("Folder"),
 	TracersFrame = Instance.new("Frame"),
+	TracerGui = Instance.new("ScreenGui"),
 	Highlights = {},
 	Labels = {},
 	Elements = {},
@@ -67,6 +68,7 @@ TotalObjects = Library.TotalObjects
 Billboards = Library.Billboards
 Frames = Library.Frames
 ScreenGui = Library.ScreenGui
+TracerGui = Library.TracerGui
 HighlightsFolder = Library.HighlightsFolder
 Labels = Library.Labels
 Connections = Library.Connections
@@ -91,7 +93,10 @@ ScreenGui.IgnoreGuiInset = false
 TracersFrame.Size = UDim2.new(1,0,1,0)
 TracersFrame.BackgroundTransparency = 1
 
-TracersFrame.Parent = ScreenGui
+TracersFrame.Parent = TracerGui
+
+TracerGui.Parent = GetHUI
+TracerGui.IgnoreGuiInset = true
 
 
 
@@ -611,6 +616,7 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 		if pos then
 
 		local screenPoint, onScreen = workspace.CurrentCamera:WorldToScreenPoint(pos)
+			local screenPoint2, onScreen2 = workspace.CurrentCamera:WorldToViewportPoint(pos)
 		local frame = Frames[object]
 		local label = Labels[object]
 		local highlight = Highlights[object]
@@ -684,7 +690,7 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 			origin = Vector2.new(game.Workspace.CurrentCamera.ViewportSize.X/2, 0)	
 		elseif Library.TracerOrigin == "Mouse" then
 			
-				origin = Vector2.new(game.Players.LocalPlayer:GetMouse().X,game.Players.LocalPlayer:GetMouse().Y)
+				origin = Vector2.new(game.Players.LocalPlayer:GetMouse().X,game:GetService("UserInputService"):GetMouseLocation().Y)
 
 
 		end
@@ -708,9 +714,9 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 			
 		end
 		
-		if lineFrame and highlight and Library.Tracers == true and onScreen then
+		if lineFrame and highlight and Library.Tracers == true and onScreen2 then
 
-		local destination = Vector2.new(screenPoint.X, screenPoint.Y)
+		local destination = Vector2.new(screenPoint2.X, screenPoint2.Y)
 		local position = (origin + destination) / 2
 		local rotation = math.deg(math.atan2(destination.Y - origin.Y, destination.X - origin.X))
 		local length = (origin - destination).Magnitude
@@ -771,6 +777,7 @@ end
 
 ObjectsFolder.Name = Library:GenerateRandomString()
 ScreenGui.Name = Library:GenerateRandomString()
+TracerGui.Name = Library:GenerateRandomString()
 HighlightsFolder.Name = Library:GenerateRandomString()
 TracersFrame.Name = Library:GenerateRandomString()
 BillboardsFolder.Name = Library:GenerateRandomString()
