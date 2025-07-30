@@ -43,7 +43,6 @@ local Library = {
 	TextSize = 20,
 	DistanceSizeRatio = 1,
 	OutlineColor = Color3.fromRGB(255,255,255),
-	RemoveHighlights = true,
 }
 
 local RainbowTable = {
@@ -87,7 +86,7 @@ BillboardsFolder = Library.BillboardsFolder
 BillboardsFolder.Parent = ScreenGui
 
 ScreenGui.ResetOnSpawn = false
-ScreenGui.IgnoreGuiInset = true
+ScreenGui.IgnoreGuiInset = false
 
 TracersFrame.Size = UDim2.new(1,0,1,0)
 TracersFrame.BackgroundTransparency = 1
@@ -397,9 +396,6 @@ function Library:SetTracerSize(Value)
 	Library.TracerThickness = 0.5 * Value
 end
 
-function Library:SetSaveHighlights(Value)
-	Library.RemoveHighlights = Value
-end
 
 
 
@@ -614,7 +610,7 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 		
 		if pos then
 
-		local screenPoint, onScreen = workspace.CurrentCamera:WorldToViewportPoint(pos)
+		local screenPoint, onScreen = workspace.CurrentCamera:WorldToScreenPoint(pos)
 		local frame = Frames[object]
 		local label = Labels[object]
 		local highlight = Highlights[object]
@@ -623,8 +619,8 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 				Library.Lines[object][1].Visible = (onScreen)
 			end
 			
-			if frame then frame.Visible = (Library.RemoveHighlights and onScreen or true) end
-			if not onScreen and Library.RemoveHighlights then
+			if frame then frame.Visible = onScreen end
+			if not onScreen then
 			-- Hide tracers/highlights without destroying
 			if highlight then highlight:Destroy() Highlights[object] = nil highlight = nil end
 			
@@ -687,8 +683,8 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 		elseif Library.TracerOrigin == "Top" then
 			origin = Vector2.new(game.Workspace.CurrentCamera.ViewportSize.X/2, 0)	
 		elseif Library.TracerOrigin == "Mouse" then
-			local difference = game:GetService("UserInputService"):GetMouseLocation().Y
-			origin = Vector2.new(game.Players.LocalPlayer:GetMouse().X,difference)
+			
+				origin = Vector2.new(game.Players.LocalPlayer:GetMouse().X,game.Players.LocalPlayer:GetMouse().Y)
 
 
 		end
