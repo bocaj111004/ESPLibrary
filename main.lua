@@ -135,6 +135,10 @@ function Library:AddESP(Parameters)
 	local Object = Parameters.Object
 
 	if Library.ElementsEnabled[Object] == true or Library.Unloaded == true then return end
+	
+	if not Object:IsA("BasePart") and not Object:IsA("Model") then
+		return
+	end
 
 
 
@@ -586,17 +590,12 @@ end
 
 
 
-local ElementsCooldown = false
+
 
 
 ElementsConnection = RunService.RenderStepped:Connect(function()
 	
-	
-	if ElementsCooldown == false then
-		
-	ElementsCooldown = true
-	
-	RunService.RenderStepped:Wait()
+
 
 
 
@@ -606,11 +605,9 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 		if not object:IsDescendantOf(workspace) then Library:RemoveESP(object) continue end
 
 		local pos
-		if object:IsA("BasePart") then
-			pos = object.Position
-		elseif object:IsA("Model") then
-			pos = object.PrimaryPart and object.PrimaryPart.Position or object:GetPivot().Position
-		end
+	
+				pos = object:GetPivot().Position
+		
 		
 		if pos then
 
@@ -729,8 +726,6 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 		lineFrame.Visible = true
 		end
 		end
-	end
-	ElementsCooldown = false
 	end
 end)
 
