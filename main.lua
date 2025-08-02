@@ -586,13 +586,18 @@ end
 
 
 
+local ElementsCooldown = false
 
 
-
-ElementsConnection = RunService.Heartbeat:Connect(function()
+ElementsConnection = RunService.RenderStepped:Connect(function()
 	
 	
-	task.wait()
+	if ElementsCooldown == false then
+		
+	ElementsCooldown = true
+	
+	RunService.RenderStepped:Wait()
+
 
 
 
@@ -723,288 +728,12 @@ ElementsConnection = RunService.Heartbeat:Connect(function()
 		stroke.Color = highlight.FillColor
 		lineFrame.Visible = true
 		end
+		end
 	end
-end
-end)
-
-ElementsConnection2 = workspace.CurrentCamera:GetPropertyChangedSignal("CFrame"):Connect(function()
-
-	task.wait()
-
-
-
-
-	for _, object in ipairs(TotalObjects) do
-
-		if not object:IsDescendantOf(workspace) then Library:RemoveESP(object) continue end
-
-		local pos
-		if object:IsA("BasePart") then
-			pos = object.Position
-		elseif object:IsA("Model") then
-			pos = object.PrimaryPart and object.PrimaryPart.Position or object:GetPivot().Position
-		end
-
-		if pos then
-
-			local screenPoint, onScreen = workspace.CurrentCamera:WorldToViewportPoint(pos)
-
-			local frame = Frames[object]
-			local label = Labels[object]
-			local highlight = Highlights[object]
-
-			if Library.Lines[object][1] then
-				Library.Lines[object][1].Visible = (onScreen)
-			end
-
-			if frame then frame.Visible = onScreen end
-			if not onScreen then
-				-- Hide tracers/highlights without destroying
-				if highlight then highlight:Destroy() Highlights[object] = nil highlight = nil end
-
-
-				continue
-			end
-
-			-- Position text label
-			if frame then
-				frame.Position = UDim2.new(0, screenPoint.X, 0, screenPoint.Y)
-			end
-
-			-- Update label content
-			local distance = math.round(Players.LocalPlayer:DistanceFromCharacter(pos))
-			local distanceText = Library.ShowDistance and ("\n" .. '<font size="' .. math.round(Library.TextSize * Library.DistanceSizeRatio) .. '">[' .. distance .. ']</font>') or ""
-			label.Text = TextTable[object] .. distanceText
-
-
-
-
-
-			-- Highlight setup
-			if Library.ElementsEnabled[object] == true then
-				if not highlight then
-
-					highlight = Instance.new("Highlight")
-					highlight.FillTransparency = 1
-					highlight.OutlineTransparency = 1
-					highlight.Name = Library.HighlightNames[object] or Library:GenerateRandomString()
-					highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-					highlight.Parent = HighlightsFolder
-					highlight.Adornee = object
-					Highlights[object] = highlight
-				end
-			end
-
-			if highlight then
-
-
-				highlight.Enabled = true
-				highlight.FillColor = Library.Rainbow and RainbowTable.Color or ColorTable[object] or Color3.fromRGB(255,255,255)
-				highlight.OutlineColor = Library.MatchColors and highlight.FillColor or Library.OutlineColor
-				label.TextColor3 = Library.Rainbow and RainbowTable.Color or ColorTable[object] or Color3.fromRGB(255,255,255)
-				if Library.TransparencyEnabled[object] == true then
-					highlight.FillTransparency = Library.FillTransparency
-					highlight.OutlineTransparency = Library.OutlineTransparency
-					label.TextTransparency = Library.TextTransparency
-					label.TextStrokeTransparency = Library.TextOutlineTransparency
-				end
-			end
-
-			local lineFrame = Library.Lines[object][1]
-			local stroke = Library.Lines[object][2]
-			local origin = Vector2.new(workspace.CurrentCamera.ViewportSize.X / 2, workspace.CurrentCamera.ViewportSize.Y * 1)
-
-			if Library.TracerOrigin == "Center" then
-				local mousePos = game:GetService("UserInputService"):GetMouseLocation();
-				origin = Vector2.new(game.Workspace.CurrentCamera.ViewportSize.X/2,game.Workspace.CurrentCamera.ViewportSize.Y/2)
-
-			elseif Library.TracerOrigin == "Top" then
-				origin = Vector2.new(game.Workspace.CurrentCamera.ViewportSize.X/2, 0)	
-			elseif Library.TracerOrigin == "Mouse" then
-
-				origin = Vector2.new(game.Players.LocalPlayer:GetMouse().X,game:GetService("UserInputService"):GetMouseLocation().Y)
-
-
-			end
-
-
-
-
-			if not lineFrame then
-				lineFrame = Instance.new("Frame")
-				lineFrame.Size = UDim2.new(0,1,0,1)
-				lineFrame.BackgroundTransparency = 0
-				lineFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-				lineFrame.Parent = TracersFrame
-				lineFrame.Name = Library:GenerateRandomString()
-				stroke = Instance.new("UIStroke")
-				stroke.Thickness = Library.TracerThickness
-				stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-				stroke.Parent = lineFrame
-				stroke.Transparency =  0
-				Library.Lines[object] = {lineFrame, stroke}
-
-			end
-
-			if lineFrame and highlight and Library.Tracers == true and onScreen then
-
-				local destination = Vector2.new(screenPoint.X, screenPoint.Y)
-				local position = (origin + destination) / 2
-				local rotation = math.deg(math.atan2(destination.Y - origin.Y, destination.X - origin.X))
-				local length = (origin - destination).Magnitude
-
-				lineFrame.Position = UDim2.new(0, position.X, 0, position.Y)
-				lineFrame.Size = UDim2.new(0, length, 0, 1)
-				lineFrame.Rotation = rotation
-				lineFrame.BackgroundColor3 = highlight.FillColor
-				lineFrame.BorderSizePixel = 0
-				stroke.Color = highlight.FillColor
-				lineFrame.Visible = true
-			end
-		end
+	ElementsCooldown = false
 	end
 end)
 
-ElementsConnection3 = game.Workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()
-	ElementsConnection2:Disconnect()
-	ElementsConnection2 = workspace.CurrentCamera:GetPropertyChangedSignal("CFrame"):Connect(function()
-		task.wait()
-
-
-
-
-
-		for _, object in ipairs(TotalObjects) do
-
-			if not object:IsDescendantOf(workspace) then Library:RemoveESP(object) continue end
-
-			local pos
-			if object:IsA("BasePart") then
-				pos = object.Position
-			elseif object:IsA("Model") then
-				pos = object.PrimaryPart and object.PrimaryPart.Position or object:GetPivot().Position
-			end
-
-			if pos then
-
-				local screenPoint, onScreen = workspace.CurrentCamera:WorldToViewportPoint(pos)
-
-				local frame = Frames[object]
-				local label = Labels[object]
-				local highlight = Highlights[object]
-
-				if Library.Lines[object][1] then
-					Library.Lines[object][1].Visible = (onScreen)
-				end
-
-				if frame then frame.Visible = onScreen end
-				if not onScreen then
-					-- Hide tracers/highlights without destroying
-					if highlight then highlight:Destroy() Highlights[object] = nil highlight = nil end
-
-
-					continue
-				end
-
-				-- Position text label
-				if frame then
-					frame.Position = UDim2.new(0, screenPoint.X, 0, screenPoint.Y)
-				end
-
-				-- Update label content
-				local distance = math.round(Players.LocalPlayer:DistanceFromCharacter(pos))
-				local distanceText = Library.ShowDistance and ("\n" .. '<font size="' .. math.round(Library.TextSize * Library.DistanceSizeRatio) .. '">[' .. distance .. ']</font>') or ""
-				label.Text = TextTable[object] .. distanceText
-
-
-
-
-
-				-- Highlight setup
-				if Library.ElementsEnabled[object] == true then
-					if not highlight then
-
-						highlight = Instance.new("Highlight")
-						highlight.FillTransparency = 1
-						highlight.OutlineTransparency = 1
-						highlight.Name = Library.HighlightNames[object] or Library:GenerateRandomString()
-						highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-						highlight.Parent = HighlightsFolder
-						highlight.Adornee = object
-						Highlights[object] = highlight
-					end
-				end
-
-				if highlight then
-
-
-					highlight.Enabled = true
-					highlight.FillColor = Library.Rainbow and RainbowTable.Color or ColorTable[object] or Color3.fromRGB(255,255,255)
-					highlight.OutlineColor = Library.MatchColors and highlight.FillColor or Library.OutlineColor
-					label.TextColor3 = Library.Rainbow and RainbowTable.Color or ColorTable[object] or Color3.fromRGB(255,255,255)
-					if Library.TransparencyEnabled[object] == true then
-						highlight.FillTransparency = Library.FillTransparency
-						highlight.OutlineTransparency = Library.OutlineTransparency
-						label.TextTransparency = Library.TextTransparency
-						label.TextStrokeTransparency = Library.TextOutlineTransparency
-					end
-				end
-
-				local lineFrame = Library.Lines[object][1]
-				local stroke = Library.Lines[object][2]
-				local origin = Vector2.new(workspace.CurrentCamera.ViewportSize.X / 2, workspace.CurrentCamera.ViewportSize.Y * 1)
-
-				if Library.TracerOrigin == "Center" then
-					local mousePos = game:GetService("UserInputService"):GetMouseLocation();
-					origin = Vector2.new(game.Workspace.CurrentCamera.ViewportSize.X/2,game.Workspace.CurrentCamera.ViewportSize.Y/2)
-
-				elseif Library.TracerOrigin == "Top" then
-					origin = Vector2.new(game.Workspace.CurrentCamera.ViewportSize.X/2, 0)	
-				elseif Library.TracerOrigin == "Mouse" then
-
-					origin = Vector2.new(game.Players.LocalPlayer:GetMouse().X,game:GetService("UserInputService"):GetMouseLocation().Y)
-
-
-				end
-
-
-
-
-				if not lineFrame then
-					lineFrame = Instance.new("Frame")
-					lineFrame.Size = UDim2.new(0,1,0,1)
-					lineFrame.BackgroundTransparency = 0
-					lineFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-					lineFrame.Parent = TracersFrame
-					lineFrame.Name = Library:GenerateRandomString()
-					stroke = Instance.new("UIStroke")
-					stroke.Thickness = Library.TracerThickness
-					stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-					stroke.Parent = lineFrame
-					stroke.Transparency =  0
-					Library.Lines[object] = {lineFrame, stroke}
-
-				end
-
-				if lineFrame and highlight and Library.Tracers == true and onScreen then
-
-					local destination = Vector2.new(screenPoint.X, screenPoint.Y)
-					local position = (origin + destination) / 2
-					local rotation = math.deg(math.atan2(destination.Y - origin.Y, destination.X - origin.X))
-					local length = (origin - destination).Magnitude
-
-					lineFrame.Position = UDim2.new(0, position.X, 0, position.Y)
-					lineFrame.Size = UDim2.new(0, length, 0, 1)
-					lineFrame.Rotation = rotation
-					lineFrame.BackgroundColor3 = highlight.FillColor
-					lineFrame.BorderSizePixel = 0
-					stroke.Color = highlight.FillColor
-					lineFrame.Visible = true
-				end
-			end
-		end
-	end)
-end)
 
 
 
