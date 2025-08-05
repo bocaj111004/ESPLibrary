@@ -735,7 +735,45 @@ Players.LocalPlayer.CharacterAdded:Connect(function()
 		Library:RemoveESP(Object)
 	end
 	
-	task.wait(0.5)
+	Library.ObjectsFolder:Destroy()
+	Library.ScreenGui:Destroy()
+	Library.HighlightsFolder:Destroy()
+	Library.BillboardsFolder:Destroy()
+	Library.TracersFrame:Destroy()
+	
+	task.wait(0.25)
+	Library.ObjectsFolder = Instance.new("Folder")
+	Library.ScreenGui = Instance.new("ScreenGui")
+	Library.HighlightsFolder = Instance.new("Folder")
+	Library.BillboardsFolder = Instance.new("Folder")
+	Library.TracersFrame = Instance.new("Frame")
+	ScreenGui = Library.ScreenGui
+	TracersFrame = Library.TracersFrame
+	BillboardsFolder = Library.BillboardsFolder
+	HighlightsFolder = Library.HighlightsFolder
+
+	task.wait(0.25)
+	HighlightsFolder.Parent = ScreenGui
+
+	BillboardsFolder.Parent = ScreenGui
+	ScreenGui.Parent = GetHUI
+
+	
+
+
+	ScreenGui.ResetOnSpawn = false
+	ScreenGui.IgnoreGuiInset = true
+
+	TracersFrame.Size = UDim2.new(1,0,1,0)
+	TracersFrame.BackgroundTransparency = 1
+
+	TracersFrame.Parent = ScreenGui
+	
+	ObjectsFolder.Name = Library:GenerateRandomString()
+	ScreenGui.Name = Library:GenerateRandomString()
+	HighlightsFolder.Name = Library:GenerateRandomString()
+	TracersFrame.Name = Library:GenerateRandomString()
+	BillboardsFolder.Name = Library:GenerateRandomString()
 	for i,Object in pairs(TotalObjects) do
 		Library:AddESP({
 			Object = Object,
