@@ -731,7 +731,18 @@ end)
 
 Players.LocalPlayer.CharacterAdded:Connect(function()
 	ElementsConnection:Disconnect()
-	task.wait(1)
+	for i,Object in pairs(TotalObjects) do
+		Library:RemoveESP(Object)
+	end
+	
+	task.wait(0.5)
+	for i,Object in pairs(TotalObjects) do
+		Library:AddESP({
+			Object = Object,
+			Text = TextTable[Object],
+			Color = ColorTable[Object]
+		})
+	end
 	ElementsConnection = RunService.RenderStepped:Connect(function()
 
 
