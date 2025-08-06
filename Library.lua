@@ -786,7 +786,7 @@ Players.LocalPlayer.CharacterAdded:Connect(function()
 
 
 
-
+task.wait()
 
 		for _, object in ipairs(TotalObjects) do
 
@@ -880,8 +880,6 @@ Players.LocalPlayer.CharacterAdded:Connect(function()
 				end
 
 
-
-
 				if not lineFrame then
 					lineFrame = Instance.new("Frame")
 					lineFrame.Size = UDim2.new(0,1,0,1)
@@ -894,8 +892,8 @@ Players.LocalPlayer.CharacterAdded:Connect(function()
 					stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 					stroke.Parent = lineFrame
 					stroke.Transparency =  0
+					stroke.Name = Library:GenerateRandomString()
 					Library.Lines[object] = {lineFrame, stroke}
-
 				end
 
 				if lineFrame and highlight and Library.Tracers == true and onScreen then
