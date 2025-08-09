@@ -3,7 +3,7 @@ This is a system which allows you to highlight any object within the workspace.
 List of functions:
 
 ```
-local ESPLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/bocaj111004/ESPLibrary/refs/heads/main/main.lua"))() -- Loading the library
+local ESPLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/bocaj111004/ESPLibrary/refs/heads/main/Library.lua"))() -- Loading the library
 
 ESPLibrary:AddESP({
 Object = Instance, -- The object you want to highlight
@@ -53,7 +53,7 @@ ESPLibrary:Unload() -- Unloads the library, removing all highlights and preventi
 Example Usage:
 
 ```
-local ESPLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/bocaj111004/ESPLibrary/refs/heads/main/main.lua"))()
+local ESPLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/bocaj111004/ESPLibrary/refs/heads/main/Library.lua"))()
 local Character = game.Players.LocalPlayer.Character
 
 ESPLibrary:SetTextSize(22)
@@ -75,7 +75,7 @@ task.wait(5)
 ESPLibrary:RemoveESP(Character) -- Removes esp from the player's character after 10 seconds.
 ```
 
-You can also edit the settings of the esp even if the script you are using doesn't have esp settings built-in:
+You can also edit the settings of the esp with your executor:
 
 ```
 local ESPLibrary = getgenv().ESPLibrary
