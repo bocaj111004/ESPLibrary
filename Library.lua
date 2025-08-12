@@ -238,10 +238,11 @@ end
 	lineFrame.Parent = TracersFrame
 	lineFrame.Name = Library:GenerateRandomString()
 	stroke = Instance.new("UIStroke")
-	stroke.Thickness = Library.TracerThickness / 2
+	stroke.Thickness = Library.TracerThickness
 	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 	stroke.Parent = lineFrame
 	stroke.Transparency = 1
+    stroke.Name = ESPLibrary:GenerateRandomString()
 	
 	TweenService:Create(lineFrame,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{BackgroundTransparency = 0}):Play()
 
@@ -700,7 +701,7 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 			lineFrame.Parent = TracersFrame
 			lineFrame.Name = Library:GenerateRandomString()
 			stroke = Instance.new("UIStroke")
-			stroke.Thickness = Library.TracerThickness / 2
+			stroke.Thickness = Library.TracerThickness
 			stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 			stroke.Parent = lineFrame
 			stroke.Transparency =  0
@@ -721,6 +722,7 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 		lineFrame.BackgroundColor3 = highlight.FillColor
 		lineFrame.BorderSizePixel = 0
 		stroke.Color = highlight.FillColor
+        stroke.Thickness = Library.TracerThickness
 		lineFrame.Visible = true
 		end
 		end
@@ -886,7 +888,7 @@ task.wait()
 					lineFrame.Parent = TracersFrame
 					lineFrame.Name = Library:GenerateRandomString()
 					stroke = Instance.new("UIStroke")
-					stroke.Thickness = Library.TracerThickness / 2
+					stroke.Thickness = Library.TracerThickness
 					stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 					stroke.Parent = lineFrame
 					stroke.Transparency =  0
