@@ -39,7 +39,7 @@ local Library = {
 	TextOffset = 0,
 	TextOutlineTransparency = 0,
 	FadeTime = 0,
-	TracerThickness = 0.5,
+	TracerThickness = 1,
 	TextSize = 20,
 	DistanceSizeRatio = 1,
 	OutlineColor = Color3.fromRGB(255,255,255),
@@ -238,7 +238,7 @@ end
 	lineFrame.Parent = TracersFrame
 	lineFrame.Name = Library:GenerateRandomString()
 	stroke = Instance.new("UIStroke")
-	stroke.Thickness = Library.TracerThickness
+	stroke.Thickness = Library.TracerThickness / 2
 	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 	stroke.Parent = lineFrame
 	stroke.Transparency = 1
@@ -398,7 +398,7 @@ function Library:SetDistanceSizeRatio(Value)
 end
 
 function Library:SetTracerSize(Value)
-	Library.TracerThickness = Value * 0.5
+	Library.TracerThickness = Value
 end
 
 
@@ -700,7 +700,7 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 			lineFrame.Parent = TracersFrame
 			lineFrame.Name = Library:GenerateRandomString()
 			stroke = Instance.new("UIStroke")
-			stroke.Thickness = Library.TracerThickness
+			stroke.Thickness = Library.TracerThickness / 2
 			stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 			stroke.Parent = lineFrame
 			stroke.Transparency =  0
@@ -886,7 +886,7 @@ task.wait()
 					lineFrame.Parent = TracersFrame
 					lineFrame.Name = Library:GenerateRandomString()
 					stroke = Instance.new("UIStroke")
-					stroke.Thickness = Library.TracerThickness
+					stroke.Thickness = Library.TracerThickness / 2
 					stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 					stroke.Parent = lineFrame
 					stroke.Transparency =  0
