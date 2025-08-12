@@ -398,10 +398,8 @@ function Library:SetDistanceSizeRatio(Value)
 end
 
 function Library:SetTracerSize(Value)
-	Library.TracerThickness = 0.5 * Value
+	Library.TracerThickness = Value * 0.5
 end
-
-
 
 
 function removeObjectFromTables(object)
