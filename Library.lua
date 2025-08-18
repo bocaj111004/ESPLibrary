@@ -39,10 +39,11 @@ local Library = {
 	TextOffset = 0,
 	TextOutlineTransparency = 0,
 	FadeTime = 0,
-	TracerThickness = 0.75,
+	TracerThickness = 0.5,
 	TextSize = 20,
 	DistanceSizeRatio = 1,
 	OutlineColor = Color3.fromRGB(255,255,255),
+	RainbowColor = Color3.fromRGB(255,255,255)
 }
 
 local RainbowTable = {
@@ -67,6 +68,8 @@ TotalObjects = Library.TotalObjects
 Billboards = Library.Billboards
 Frames = Library.Frames
 ScreenGui = Library.ScreenGui
+
+if protectgui
 HighlightsFolder = Library.HighlightsFolder
 Labels = Library.Labels
 Connections = Library.Connections
@@ -242,7 +245,6 @@ end
 	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 	stroke.Parent = lineFrame
 	stroke.Transparency = 1
-    stroke.Name = ESPLibrary:GenerateRandomString()
 	
 	TweenService:Create(lineFrame,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{BackgroundTransparency = 0}):Play()
 
@@ -399,8 +401,10 @@ function Library:SetDistanceSizeRatio(Value)
 end
 
 function Library:SetTracerSize(Value)
-	Library.TracerThickness = Value
+	Library.TracerThickness = 0.5 * Value
 end
+
+
 
 
 function removeObjectFromTables(object)
@@ -722,7 +726,6 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 		lineFrame.BackgroundColor3 = highlight.FillColor
 		lineFrame.BorderSizePixel = 0
 		stroke.Color = highlight.FillColor
-        stroke.Thickness = Library.TracerThickness
 		lineFrame.Visible = true
 		end
 		end
@@ -930,7 +933,7 @@ ConnectionsTable.RainbowConnection = RunService.RenderStepped:Connect(function(D
 		if RainbowTable.HueSetup > 1 then RainbowTable.HueSetup = 0; end;
 		RainbowTable.Hue = RainbowTable.HueSetup;
 		RainbowTable.Color = Color3.fromHSV(RainbowTable.Hue, 0.8, 1);
-
+			Library.RainbowColor = Color3.fromHSV(RainbowTable.Hue, 0.8, 1);
 
 	end
 end)
