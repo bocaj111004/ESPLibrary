@@ -69,7 +69,6 @@ Billboards = Library.Billboards
 Frames = Library.Frames
 ScreenGui = Library.ScreenGui
 
-if protectgui
 HighlightsFolder = Library.HighlightsFolder
 Labels = Library.Labels
 Connections = Library.Connections
