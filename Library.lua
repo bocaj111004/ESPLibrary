@@ -95,6 +95,8 @@ TracersFrame.BackgroundTransparency = 1
 
 TracersFrame.Parent = ScreenGui
 
+Camera = workspace.CurrentCamera
+
 
 
 
@@ -613,7 +615,7 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 		
 		if pos then
 
-		local screenPoint, onScreen = workspace.CurrentCamera:WorldToViewportPoint(pos)
+		local screenPoint, onScreen = Camera:WorldToViewportPoint(pos)
 			
 		local frame = Frames[object]
 		local label = Labels[object]
@@ -678,14 +680,14 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 		
 		local lineFrame = Library.Lines[object][1]
 		local stroke = Library.Lines[object][2]
-		local origin = Vector2.new(workspace.CurrentCamera.ViewportSize.X / 2, workspace.CurrentCamera.ViewportSize.Y * 1)
+		local origin = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y * 1)
 		
 		if Library.TracerOrigin == "Center" then
 			local mousePos = game:GetService("UserInputService"):GetMouseLocation();
-			origin = Vector2.new(game.Workspace.CurrentCamera.ViewportSize.X/2,game.Workspace.CurrentCamera.ViewportSize.Y/2)
+			origin = Vector2.new(Camera.ViewportSize.X/2,Camera.ViewportSize.Y/2)
 
 		elseif Library.TracerOrigin == "Top" then
-			origin = Vector2.new(game.Workspace.CurrentCamera.ViewportSize.X/2, 0)	
+			origin = Vector2.new(Camera.ViewportSize.X/2, 0)	
 		elseif Library.TracerOrigin == "Mouse" then
 			
 				origin = Vector2.new(game.Players.LocalPlayer:GetMouse().X,game:GetService("UserInputService"):GetMouseLocation().Y)
@@ -752,6 +754,10 @@ ConnectionsTable.RainbowConnection = RunService.RenderStepped:Connect(function(D
 	end
 end)
 
+CameraConnection = workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()
+	Camera = workspace.CurrentCamera
+end)
+
 
 
 
@@ -768,6 +774,7 @@ function Library:Unload()
 	end
 
 	ElementsConnection:Disconnect()
+	CameraConnection:Disconnect()
 
 
 
