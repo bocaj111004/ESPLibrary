@@ -39,7 +39,7 @@ local Library = {
 	TextOffset = 0,
 	TextOutlineTransparency = 0,
 	FadeTime = 0,
-	TracerThickness = 0.5,
+	TracerSize = 0.5,
 	TextSize = 20,
 	DistanceSizeRatio = 1,
 	OutlineColor = Color3.fromRGB(255,255,255),
@@ -235,14 +235,14 @@ end
 	Objects[Object] = Object
 	ColorTable[Object] = Parameters.Color 
 	
-	lineFrame = Instance.new("Frame")
+	local lineFrame = Instance.new("Frame")
 	lineFrame.Size = UDim2.new(0,0,0,0)
 	lineFrame.BackgroundTransparency = 1
 	lineFrame.AnchorPoint = Vector2.new(0.5, 0.5)
 	lineFrame.Parent = TracersFrame
 	lineFrame.Name = Library:GenerateRandomString()
-	stroke = Instance.new("UIStroke")
-	stroke.Thickness = Library.TracerThickness
+	local stroke = Instance.new("UIStroke")
+	stroke.Thickness = Library.TracerSize
 	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 	stroke.Parent = lineFrame
 	stroke.Transparency = 1
@@ -261,7 +261,7 @@ end
 		local Tween = TweenService:Create(TextLabel,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{TextTransparency = Library.TextTransparency})
 		Tween:Play()
 		TweenService:Create(TextLabel,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{TextStrokeTransparency = Library.TextOutlineTransparency}):Play()
-		TweenConnection = Tween.Completed:Connect(function()
+		local TweenConnection = Tween.Completed:Connect(function()
 			Library.TransparencyEnabled[Object] = true
 			
 		end)
@@ -279,13 +279,13 @@ end
 
 
 
-	Destroying1 = Object:GetPropertyChangedSignal("Parent"):Connect(function()
+	local Destroying1 = Object:GetPropertyChangedSignal("Parent"):Connect(function()
 		Library:RemoveESP(Object)
 		
 	end)
 	table.insert(Manager, Destroying1)
 	if Object.Parent ~= nil then
-		Destroying2 = Object.Parent:GetPropertyChangedSignal("Parent"):Connect(function()
+		local Destroying2 = Object.Parent:GetPropertyChangedSignal("Parent"):Connect(function()
 			Library:RemoveESP(Object)
 			
 
@@ -294,7 +294,7 @@ end
 		table.insert(Manager, Destroying2)
 	end
 	if Object:IsA("Model") and Object.PrimaryPart then
-		Destroying3 = Object.PrimaryPart:GetPropertyChangedSignal("Parent"):Connect(function()
+		local Destroying3 = Object.PrimaryPart:GetPropertyChangedSignal("Parent"):Connect(function()
 			Library:RemoveESP(Object)
 			
 		end)
@@ -402,7 +402,7 @@ function Library:SetDistanceSizeRatio(Value)
 end
 
 function Library:SetTracerSize(Value)
-	Library.TracerThickness = 0.5 * Value
+	Library.TracerSize = 0.5 * Value
 end
 
 
@@ -706,7 +706,7 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 			lineFrame.Parent = TracersFrame
 			lineFrame.Name = Library:GenerateRandomString()
 			stroke = Instance.new("UIStroke")
-			stroke.Thickness = Library.TracerThickness
+			stroke.Thickness = Library.TracerSize
 			stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 			stroke.Parent = lineFrame
 			stroke.Transparency =  0
