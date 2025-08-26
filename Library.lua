@@ -46,6 +46,8 @@ local Library = {
 	RainbowColor = Color3.fromRGB(255,255,255)
 }
 
+
+
 local RainbowTable = {
 	HueSetup = 0,
 	Hue = 0,
@@ -706,7 +708,7 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 			lineFrame.Parent = TracersFrame
 			lineFrame.Name = Library:GenerateRandomString()
 			stroke = Instance.new("UIStroke")
-			stroke.Thickness = Library.TracerSize
+			
 			stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 			stroke.Parent = lineFrame
 			stroke.Transparency =  0
@@ -727,6 +729,7 @@ ElementsConnection = RunService.RenderStepped:Connect(function()
 		lineFrame.BackgroundColor3 = highlight.FillColor
 		lineFrame.BorderSizePixel = 0
 		stroke.Color = highlight.FillColor
+				stroke.Thickness = Library.TracerSize
 		lineFrame.Visible = true
 		end
 		end
