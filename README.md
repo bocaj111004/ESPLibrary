@@ -35,9 +35,9 @@ ESPlibrary:SetMatchColors(Boolean) -- Sets whether the fill color and outline co
 
 ESPLibrary:SetOutlineColor(Color3) -- Sets the outline color for if MatchColors is false
 
-ESPLibrary:UpdateObjectText(Instance, Text) -- Changed the text of an object if it is already highlighted
+ESPLibrary:UpdateObjectText(Instance, Text) -- Changes the text of an object if it is already highlighted
 
-ESPLibrary:UpdateObjectColor(Instance, Color3) -- Changed the color of an object if it is already highlighted
+ESPLibrary:UpdateObjectColor(Instance, Color3) -- Changes the color of an object if it is already highlighted
 
 ESPLibrary:SetTracers(Boolean) -- Sets whether tracers are currently visible
 
@@ -68,11 +68,11 @@ Color = Color3.fromRGB(0,255,0)
 task.wait(5)
 
 ESPLibrary:UpdateObjectColor(Character, Color3.fromRGB(255,0,0))
-ESPLibrary:UpdateObjectText(Character, Character.Name .. " [Removing Soon]") -- Change the text of the highlight
+ESPLibrary:UpdateObjectText(Character, Character.Name .. " [Removing Soon]") -- Changes the text of the highlight
 
 task.wait(5)
 
-ESPLibrary:RemoveESP(Character) -- Removes esp from the player's character after 10 seconds.
+ESPLibrary:RemoveESP(Character) -- Removes esp from the player's character.
 ```
 
 You can also edit the settings of the esp with your executor:
