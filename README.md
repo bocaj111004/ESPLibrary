@@ -49,7 +49,7 @@ ESPLibrary:SetDistanceSizeRatio(number) -- Sets how big the distance text should
 
 ESPLibrary:SetArrows(Boolean) - Sets whether arrows will appear, showing highlighted objects that are off screen.
 
-ESPLibrary:SetArrowRadius(Number) - Sets how far the arrows will be from the center of the screen.
+ESPLibrary:SetArrowRadius(Number) - Sets how far the arrows will be from the center of the screen. (default is 200)
 
 ESPLibrary:Unload() -- Unloads the library, removing all highlights and preventing any more objects being highlighted
 ```
