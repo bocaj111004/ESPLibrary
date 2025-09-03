@@ -897,7 +897,7 @@ local ArrowsConnection = RunService.Heartbeat:Connect(function()
 				TweenService:Create(arrow ,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{ImageTransparency = 0}):Play()
 
 
-			end
+			else
 			local screenPos, visible = Camera:WorldToViewportPoint(obj:GetPivot().Position)
 			if visible and screenPos.Z > 0 then
 				ArrowsTable[obj].Visible = false
@@ -914,10 +914,10 @@ local ArrowsConnection = RunService.Heartbeat:Connect(function()
 				
 				
 			end
-		else
-			ArrowsTable[obj].Visible = false
 		end
 	end
+	end
+		
 end)
 
 -- Setup
