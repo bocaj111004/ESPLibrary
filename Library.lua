@@ -329,8 +329,7 @@ end
 	end
 	
 	
-	Connections[Object] = RunService.RenderStepped:Connect(function()
-RunService.Heartbeat:Wait()
+	Connections[Object] = RunService.Heartbeat:Connect(function()
 
 
 		if Camera ~= workspace.CurrentCamera then
