@@ -330,7 +330,7 @@ end
 	
 	
 	Connections[Object] = RunService.RenderStepped:Connect(function()
-task.wait()
+RunService.RenderStepped:Wait()
 
 
 		if Camera ~= workspace.CurrentCamera then
