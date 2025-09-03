@@ -686,12 +686,15 @@ function Library:RemoveESP(Object)
 
 			end
 			
+			
+
+			removeObjectFromTables(Object)
+			
 			if ArrowsTable[Object] then
 				ArrowsTable[Object]:Destroy()
 				ArrowsTable[Object] = nil
 			end
-
-			removeObjectFromTables(Object)
+			
 			if Connections[Object] then
 				Connections[Object]:Disconnect()
 			end
@@ -885,7 +888,7 @@ local ArrowsConnection = RunService.Heartbeat:Connect(function()
 	for i, obj in ipairs(TotalObjects) do
 		if obj and obj:IsDescendantOf(workspace) then
 			local arrow = ArrowsTable[obj] or nil
-			if arrow == nil then
+			if arrow == nil and Library.ElementsEnabled[obj] == true then
 				arrow = arrowTemplate:Clone()
 				arrow.Parent = ArrowsFrame
 				arrow.Name = Library:GenerateRandomString()
@@ -897,7 +900,7 @@ local ArrowsConnection = RunService.Heartbeat:Connect(function()
 				TweenService:Create(arrow ,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{ImageTransparency = 0}):Play()
 
 
-			else
+			elseif Library.ElementsEnabled[obj] == true then
 			local screenPos, visible = Camera:WorldToViewportPoint(obj:GetPivot().Position)
 			if visible and screenPos.Z > 0 then
 				ArrowsTable[obj].Visible = false
