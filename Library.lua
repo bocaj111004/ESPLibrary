@@ -43,7 +43,7 @@ local Library = {
 	TextOutlineTransparency = 0,
 	FadeTime = 0,
 	TracerSize = 0.5,
-	ArrowRadius = 250,
+	ArrowRadius = 200,
 	TextSize = 20,
 	DistanceSizeRatio = 1,
 	OutlineColor = Color3.fromRGB(255,255,255),
@@ -903,7 +903,13 @@ local ArrowsConnection = RunService.Heartbeat:Connect(function()
 				ArrowsTable[obj].Position = UDim2.new(0, arrowPos.X, 0, arrowPos.Y)
 				ArrowsTable[obj].Rotation = angle
 				ArrowsTable[obj].Visible = true
-				ArrowsTable[obj].ImageColor3 = Labels[obj].TextColor3
+				if Library.Rainbow == true then
+					ArrowsTable[obj].ImageColor3 = Library.RainbowColor
+				else
+					ArrowsTable[obj].ImageColor3 = ColorTable[obj]
+				end
+				
+				
 			end
 		else
 			ArrowsTable[obj].Visible = false
