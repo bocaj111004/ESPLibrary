@@ -106,6 +106,9 @@ ArrowsFrame.Size = UDim2.new(1,0,1,0)
 ArrowsFrame.BackgroundTransparency = 1
 ArrowsFrame.Parent = ScreenGui
 
+TracersFrame.Visible = false
+ArrowsFrame.Visible = false
+
 Camera = workspace.CurrentCamera
 
 local arrowTemplate = Instance.new("ImageLabel")
