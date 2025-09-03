@@ -47,6 +47,10 @@ ESPLibrary:SetTracerSize(number) -- Sets the multiplier of how big the tracers a
 
 ESPLibrary:SetDistanceSizeRatio(number) -- Sets how big the distance text should be compared to the main text (default is '1')
 
+ESPLibrary:SetArrows(Boolean) - Sets whether arrows will appear, showing highlighted objects that are off screen.
+
+ESPLibrary:SetArrowRadius(Number) - Sets how far the arrows will be from the center of the screen.
+
 ESPLibrary:Unload() -- Unloads the library, removing all highlights and preventing any more objects being highlighted
 ```
 
