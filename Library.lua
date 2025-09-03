@@ -329,7 +329,8 @@ end
 	end
 	
 	
-	Connections[Object] = RunService.Heartbeat:Connect(function()
+	Connections[Object] = RunService.RenderStepped:Connect(function()
+task.wait()
 
 
 		if Camera ~= workspace.CurrentCamera then
@@ -466,6 +467,65 @@ end
 					stroke.Thickness = Library.TracerSize
 					lineFrame.Visible = true
 				end
+				
+			local function getArrowData(objPos)
+				local screenSize = Camera.ViewportSize
+				local screenCenter = Vector2.new(screenSize.X / 2, screenSize.Y / 2)
+				local screenPos, onScreen = Camera:WorldToViewportPoint(objPos)
+
+				local toObj = (objPos - Camera.CFrame.Position).Unit
+				local camForward = Camera.CFrame.LookVector
+				local dot = camForward:Dot(toObj)
+
+				local dir = Vector2.new(screenPos.X, screenPos.Y) - screenCenter
+
+				if dot < 0 then
+					dir = -dir
+					screenPos = screenCenter + dir
+				end
+
+				local angle = math.atan2(dir.Y, dir.X)
+				local radius = math.min(screenSize.X, screenSize.Y) / 2 - (400 - Library.ArrowRadius)
+				local arrowPos = screenCenter + dir.Unit * radius
+
+				return arrowPos, math.deg(angle)
+			end
+			
+			local obj = Object
+			
+			if obj and obj:IsDescendantOf(workspace) then
+				local arrow = ArrowsTable[obj] or nil
+				if arrow == nil and Library.ElementsEnabled[obj] == true then
+					arrow = arrowTemplate:Clone()
+					arrow.Parent = ArrowsFrame
+					arrow.Name = Library:GenerateRandomString()
+
+
+					ArrowsTable[obj] = arrow
+
+
+					TweenService:Create(arrow ,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{ImageTransparency = 0}):Play()
+
+
+				elseif Library.ElementsEnabled[obj] == true then
+					local screenPos, visible = Camera:WorldToViewportPoint(obj:GetPivot().Position)
+					if visible and screenPos.Z > 0 then
+						ArrowsTable[obj].Visible = false
+					else
+						local arrowPos, angle = getArrowData(obj:GetPivot().Position)
+						ArrowsTable[obj].Position = UDim2.new(0, arrowPos.X, 0, arrowPos.Y)
+						ArrowsTable[obj].Rotation = angle
+						ArrowsTable[obj].Visible = true
+						if Library.Rainbow == true then
+							ArrowsTable[obj].ImageColor3 = Library.RainbowColor
+						else
+							ArrowsTable[obj].ImageColor3 = ColorTable[obj]
+						end
+
+
+					end
+				end
+			end
 			end
 		
 	end)
@@ -859,68 +919,10 @@ end
 
 
 
-local function getArrowData(objPos)
-	local screenSize = Camera.ViewportSize
-	local screenCenter = Vector2.new(screenSize.X / 2, screenSize.Y / 2)
-	local screenPos, onScreen = Camera:WorldToViewportPoint(objPos)
 
-	local toObj = (objPos - Camera.CFrame.Position).Unit
-	local camForward = Camera.CFrame.LookVector
-	local dot = camForward:Dot(toObj)
-
-	local dir = Vector2.new(screenPos.X, screenPos.Y) - screenCenter
-
-	if dot < 0 then
-		dir = -dir
-		screenPos = screenCenter + dir
-	end
-
-	local angle = math.atan2(dir.Y, dir.X)
-	local radius = math.min(screenSize.X, screenSize.Y) / 2 - (400 - Library.ArrowRadius)
-	local arrowPos = screenCenter + dir.Unit * radius
-
-	return arrowPos, math.deg(angle)
-end
 
 -- Update loop
-local ArrowsConnection = RunService.Heartbeat:Connect(function()
-	for i, obj in ipairs(TotalObjects) do
-		if obj and obj:IsDescendantOf(workspace) then
-			local arrow = ArrowsTable[obj] or nil
-			if arrow == nil and Library.ElementsEnabled[obj] == true then
-				arrow = arrowTemplate:Clone()
-				arrow.Parent = ArrowsFrame
-				arrow.Name = Library:GenerateRandomString()
 
-				
-				ArrowsTable[obj] = arrow
-
-
-				TweenService:Create(arrow ,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{ImageTransparency = 0}):Play()
-
-
-			elseif Library.ElementsEnabled[obj] == true then
-			local screenPos, visible = Camera:WorldToViewportPoint(obj:GetPivot().Position)
-			if visible and screenPos.Z > 0 then
-				ArrowsTable[obj].Visible = false
-			else
-				local arrowPos, angle = getArrowData(obj:GetPivot().Position)
-				ArrowsTable[obj].Position = UDim2.new(0, arrowPos.X, 0, arrowPos.Y)
-				ArrowsTable[obj].Rotation = angle
-				ArrowsTable[obj].Visible = true
-				if Library.Rainbow == true then
-					ArrowsTable[obj].ImageColor3 = Library.RainbowColor
-				else
-					ArrowsTable[obj].ImageColor3 = ColorTable[obj]
-				end
-				
-				
-			end
-		end
-	end
-	end
-		
-end)
 
 -- Setup
 
