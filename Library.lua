@@ -327,7 +327,7 @@ end
 	
 	
 	Connections[Object] = RunService.RenderStepped:Connect(function()
-
+task.wait()
 
 
 		if Camera ~= workspace.CurrentCamera then
@@ -685,6 +685,7 @@ function Library:RemoveESP(Object)
 			
 			if ArrowsTable[Object] then
 				ArrowsTable[Object]:Destroy()
+				ArrowsTable[Object] = nil
 			end
 
 			removeObjectFromTables(Object)
@@ -743,7 +744,10 @@ function Library:RemoveESP(Object)
 				
 				if ArrowsTable[Object] then
 					ArrowsTable[Object]:Destroy()
+					ArrowsTable[Object] = nil
 				end
+				
+				
 
 				if Highlight then
 					Highlight:Destroy()
@@ -874,7 +878,7 @@ local function getArrowData(objPos)
 end
 
 -- Update loop
-local ArrowsConnection = RunService.RenderStepped:Connect(function()
+local ArrowsConnection = RunService.Heartbeat:Connect(function()
 	for i, obj in ipairs(TotalObjects) do
 		if obj and obj:IsDescendantOf(workspace) then
 			local arrow = ArrowsTable[obj] or nil
@@ -883,7 +887,7 @@ local ArrowsConnection = RunService.RenderStepped:Connect(function()
 				arrow.Parent = ArrowsFrame
 				arrow.Name = Library:GenerateRandomString()
 
-				arrow.ImageColor3 = Labels[obj].TextColor3
+				
 				ArrowsTable[obj] = arrow
 
 
@@ -899,6 +903,7 @@ local ArrowsConnection = RunService.RenderStepped:Connect(function()
 				ArrowsTable[obj].Position = UDim2.new(0, arrowPos.X, 0, arrowPos.Y)
 				ArrowsTable[obj].Rotation = angle
 				ArrowsTable[obj].Visible = true
+				ArrowsTable[obj].ImageColor3 = Labels[obj].TextColor3
 			end
 		else
 			ArrowsTable[obj].Visible = false
