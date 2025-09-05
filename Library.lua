@@ -373,7 +373,7 @@ task.wait()
 				end
 
 				-- Update label content
-				local distance = math.round(Players.LocalPlayer:DistanceFromCharacter(pos))
+				local distance = math.round((Camera.CFrame.Position - pos).Magnitude)
 				local distanceText = Library.ShowDistance and ("\n" .. '<font size="' .. math.round(Library.TextSize * Library.DistanceSizeRatio) .. '">[' .. distance .. ']</font>') or ""
 				label.Text = TextTable[object] .. distanceText
 
