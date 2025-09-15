@@ -82,7 +82,7 @@ Elements = Library.Elements
 TextTable = Library.TextTable
 Players = game:GetService("Players")
 CoreGui = (identifyexecutor ~= nil and game:GetService("CoreGui") or Players.LocalPlayer.PlayerGui)
-
+HttpService = game:GetService("HttpService")
 RunService = game:GetService("RunService")
 TweenService = game:GetService("TweenService")
 GetHUI = (CoreGui:FindFirstChild("RobloxGui") or CoreGui);
@@ -128,34 +128,7 @@ Constraint.AspectRatio = 0.65
 -- Functions --
 
 function Library:GenerateRandomString()
-
-	--"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890{}[]<>/#@?!()"
-	
-	local Characters = "1234567890abcdef"
-	local RandomString = ""
-
-
-	local function GenerateSegment()
-
-		local Result = {}
-		local RandomNumber = math.random(4,9)
-		for i = 1, RandomNumber do
-
-			local RandomIndex = math.random(1, #Characters)
-			table.insert(Result, Characters:sub(RandomIndex, RandomIndex))
-		end
-		return table.concat(Result)
-	end
-
-	local Segment1 = GenerateSegment() .. "-"
-	local Segment2 = GenerateSegment() .. "-"
-	local Segment3 = GenerateSegment() .. "-"
-	local Segment4 = GenerateSegment() .. "-"
-	local Segment5 = GenerateSegment() .. "-"
-	local Segment6 = GenerateSegment()
-	RandomString = Segment1 .. Segment2 .. Segment3 .. Segment4 .. Segment5 .. Segment6
-	return RandomString
-
+return HttpService:GenerateGUID(false)
 end
 
 
