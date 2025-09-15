@@ -423,6 +423,7 @@ task.wait()
 					stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 					stroke.Parent = lineFrame
 					stroke.Transparency =  0
+					stroke.Name = Library:GenerateRandomString()
 					Library.Lines[object] = {lineFrame, stroke}
 
 				end
