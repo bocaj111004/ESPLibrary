@@ -85,7 +85,7 @@ CoreGui = (identifyexecutor ~= nil and game:GetService("CoreGui") or Players.Loc
 HttpService = game:GetService("HttpService")
 RunService = game:GetService("RunService")
 TweenService = game:GetService("TweenService")
-GetHUI = (CoreGui:FindFirstChild("RobloxGui") or CoreGui);
+GetHUI = (gethui and gethui() or CoreGui);
 ColorTable = Library.ColorTable
 ScreenGui.Parent = GetHUI
 TracersFrame = Library.TracersFrame
@@ -121,6 +121,7 @@ arrowTemplate.ImageTransparency = 1
 local Constraint = Instance.new("UIAspectRatioConstraint")
 Constraint.Parent = arrowTemplate
 Constraint.AspectRatio = 0.65
+
 
 
 
@@ -244,6 +245,7 @@ end
 	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 	stroke.Parent = lineFrame
 	stroke.Transparency = 1
+	stroke.Name = Library:GenerateRandomString()
 	
 	TweenService:Create(lineFrame,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad),{BackgroundTransparency = 0}):Play()
 
@@ -472,6 +474,9 @@ task.wait()
 					arrow = arrowTemplate:Clone()
 					arrow.Parent = ArrowsFrame
 					arrow.Name = Library:GenerateRandomString()
+						if arrow:FindFirstChild("Constraint").Name then
+						arrow:FindFirstChild("Constraint").Name = Library:GenerateRandomString()
+					end
 
 
 					ArrowsTable[obj] = arrow
