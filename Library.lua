@@ -121,6 +121,7 @@ arrowTemplate.ImageTransparency = 1
 local Constraint = Instance.new("UIAspectRatioConstraint")
 Constraint.Parent = arrowTemplate
 Constraint.AspectRatio = 0.65
+Constraint.Name = "Constraint"
 
 
 
@@ -474,9 +475,11 @@ task.wait()
 					arrow = arrowTemplate:Clone()
 					arrow.Parent = ArrowsFrame
 					arrow.Name = Library:GenerateRandomString()
-						if arrow:FindFirstChild("Constraint").Name then
+
+						if arrow:FindFirstChild("Constraint") then
 						arrow:FindFirstChild("Constraint").Name = Library:GenerateRandomString()
 					end
+						
 
 
 					ArrowsTable[obj] = arrow
