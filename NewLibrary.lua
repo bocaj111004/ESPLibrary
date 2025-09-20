@@ -728,7 +728,8 @@ end)
 
 Library.ConnectionName = Library:GenerateRandomString()
 
-	RunService:BindToRenderStep(Library.ConnectionName, 900, function()
+task.spawn(function()
+	RunService:BindToRenderStep(Library.ConnectionName, Enum.RenderPriority.Last.Value, function()
 
 		if Library.Unloaded or Camera ~= workspace.CurrentCamera then
 			return
@@ -924,7 +925,7 @@ Library.ConnectionName = Library:GenerateRandomString()
 
 		end
 	end)
-
+end)
 
 
 
