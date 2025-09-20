@@ -49,7 +49,6 @@ local Library = {
 	DistanceSizeRatio = 1,
 	OutlineColor = Color3.fromRGB(255,255,255),
 	RainbowColor = Color3.fromRGB(255,255,255),
-	ConnectionName = "ConnectionName"
 }
 
 
@@ -726,10 +725,9 @@ end)
 
 
 
-Library.ConnectionName = Library:GenerateRandomString()
 
-task.spawn(function()
-	RunService:BindToRenderStep(Library.ConnectionName, Enum.RenderPriority.Last.Value, function()
+
+local RenderConnection = RunService.Heartbeat:Connect(function()
 
 		if Library.Unloaded or Camera ~= workspace.CurrentCamera then
 			return
@@ -925,7 +923,6 @@ task.spawn(function()
 
 		end
 	end)
-end)
 
 
 
@@ -945,7 +942,7 @@ function Library:Unload()
 
 	CameraConnection:Disconnect()
 
-	RunService:UnbindFromRenderStep(Library.ConnectionName)
+RenderConnection:Disconnect()
 
 
 
