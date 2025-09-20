@@ -115,7 +115,7 @@ ArrowsFrame.Visible = false
 Camera = workspace.CurrentCamera
 
 local arrowTemplate = Instance.new("ImageLabel")
-arrowTemplate.Image = "rbxasset://2418686949"
+arrowTemplate.Image = "rbxassetid://2418687610"
 arrowTemplate.Size = UDim2.new(0, 72,0, 72)
 arrowTemplate.AnchorPoint = Vector2.new(0.5, 0.5)
 arrowTemplate.BackgroundTransparency = 1
@@ -910,7 +910,7 @@ task.spawn(function()
 				else
 					local arrowPos, angle = getArrowData(obj:GetPivot().Position)
 					ArrowsTable[obj].Position = UDim2.new(0, arrowPos.X, 0, arrowPos.Y)
-					ArrowsTable[obj].Rotation = angle
+					ArrowsTable[obj].Rotation = angle - 180
 					ArrowsTable[obj].Visible = true
 					
 							ArrowsTable[obj].ImageColor3 = (Library.Rainbow == true and Library.RainbowColor or ColorTable[obj])
