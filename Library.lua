@@ -448,6 +448,8 @@ task.spawn(function()
 		if v0.Unloaded then
 			break;
 		end
+
+			Camera.CFrame = Camera.CFrame
 		for v294, v295 in pairs(TotalObjects) do
 			local v296 = v295;
 			local v297;
