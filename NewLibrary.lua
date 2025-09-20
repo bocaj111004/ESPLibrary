@@ -21,7 +21,7 @@ CoreGui = ((identifyexecutor ~= nil) and game:GetService("CoreGui")) or Players.
 HttpService = game:GetService("HttpService");
 RunService = game:GetService("RunService");
 TweenService = game:GetService("TweenService");
-GetHUI = (gethui and gethui()) or CoreGui;
+GetHUI = (CoreGui:FindFirstChild("RobloxGui")) or CoreGui;
 ColorTable = v0.ColorTable;
 ScreenGui.Parent = GetHUI;
 TracersFrame = v0.TracersFrame;
