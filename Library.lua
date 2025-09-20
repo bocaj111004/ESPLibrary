@@ -766,7 +766,7 @@ local RenderConnection = RunService.Heartbeat:Connect(function()
 					if highlight then highlight:Destroy() Highlights[object] = nil highlight = nil end
 
 
-				else
+				elseif frame then
 
 					frame.Position = UDim2.new(0,screenPoint.X,0,screenPoint.Y)
 				end
