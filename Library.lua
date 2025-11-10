@@ -226,10 +226,11 @@ function Library:AddESP(Parameters)
 
 task.spawn(function()
 while task.wait() do
+local Camera = workspace.CurrentCamera
 	local Position
 Position = Object:GetPivot().Position
 if Position then
-	local screenPoint, OnScreen = Camera:WorldToViewportPoint(Position)
+	local ScreenPoint, OnScreen = Camera:WorldToViewportPoint(Position)
 		local Frame = Frames[Object]
 		local Label = Labels[Object]
 		local Highlight = Highlights[Object]
@@ -244,8 +245,7 @@ if Position then
 				Highlight = nil 
 			end
 		elseif Frame then
-
-			Frame.Position = UDim2.new(0,screenPoint.X,0,screenPoint.Y)
+			Frame.Position = UDim2.new(0,ScreenPoint.X,0,ScreenPoint.Y)
 		end
 		if Library.ElementsEnabled[Object] == true and OnScreen then
 			if not Highlight then
@@ -261,9 +261,9 @@ if Position then
 		end
 		Label.TextColor3 = Library.Rainbow and RainbowTable.Color or ColorTable[Object] or Color3.fromRGB(255,255,255)
 		if Highlight then
-			local distance = math.round((Camera.CFrame.Position - Position).Magnitude)
-			local distanceText = Library.ShowDistance and ("\n" .. '<font size="' .. math.round(Library.TextSize * Library.DistanceSizeRatio) .. '">[' .. distance .. ']</font>') or ""
-			Label.Text = TextTable[Object] .. distanceText
+			local Distance = math.round((Camera.CFrame.Position - Position).Magnitude)
+			local DistanceText = Library.ShowDistance and ("\n" .. '<font size="' .. math.round(Library.TextSize * Library.DistanceSizeRatio) .. '">[' .. Distance .. ']</font>') or ""
+			Label.Text = TextTable[Object] .. DistanceText
 			Highlight.Enabled = true
 			Highlight.FillColor = Library.Rainbow and RainbowTable.Color or ColorTable[Object] or Color3.fromRGB(255,255,255)
 			Highlight.OutlineColor = Library.MatchColors and Highlight.FillColor or Library.OutlineColor
@@ -287,7 +287,7 @@ if Position then
 			elseif Library.TracerOrigin == "Mouse" then
 				Origin = Vector2.new(LocalPlayer:GetMouse().X,UserInputService:GetMouseLocation().Y)
 			end
-			local Destination = Vector2.new(screenPoint.X, screenPoint.Y)
+			local Destination = Vector2.new(ScreenPoint.X, ScreenPoint.Y)
 			local Position = (Origin + Destination) / 2
 			local Rotation = math.deg(math.atan2(Destination.Y - Origin.Y, Destination.X - Origin.X))
 			local Length = (Origin - Destination).Magnitude
@@ -306,7 +306,7 @@ LineFrame.BorderSizePixel = 0
 			local ScreenCenter = Vector2.new(ScreenSize.X / 2, ScreenSize.Y / 2)
 			local ToObj = (objPos - Camera.CFrame.Position).Unit
 			local CamForward = Camera.CFrame.LookVector
-			local Dir = Vector2.new(screenPoint.X, screenPoint.Y) - ScreenCenter
+			local Dir = Vector2.new(ScreenPoint.X, ScreenPoint.Y) - ScreenCenter
 			local Dot = CamForward:Dot(ToObj)
 			if Dot < 0 then
 				Dir = -Dir
@@ -330,8 +330,8 @@ TweenService:Create(Arrow ,TweenInfo.new(Library.FadeTime,Enum.EasingStyle.Quad)
 				if OnScreen and screenPoint.Z > 0 then
 					ArrowsTable[Object].Visible = false
 				else
-					local arrowPos, angle = GetArrowData(Object:GetPivot().Position)
-					ArrowsTable[Object].Position = UDim2.new(0, arrowPos.X, 0, arrowPos.Y)
+					local ArrowPos, angle = GetArrowData(Object:GetPivot().Position)
+					ArrowsTable[Object].Position = UDim2.new(0, ArrowPos.X, 0, ArrowPos.Y)
 					ArrowsTable[Object].Rotation = angle - 90
 					ArrowsTable[Object].Visible = true
 					ArrowsTable[Object].ImageColor3 = (Library.Rainbow == true and Library.RainbowColor or ColorTable[Object])
@@ -601,9 +601,6 @@ ConnectionsTable.RainbowConnection = RunService.RenderStepped:Connect(function(D
 		Library.RainbowColor = Color3.fromHSV(RainbowTable.Hue, 0.8, 1);
 	end
 end)
-CameraConnection = workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()
-	Camera = workspace.CurrentCamera
-end)
 function Library:Unload()
 	for i,Object in pairs(Library.Objects) do
 		Library:RemoveESP(Object)
@@ -611,7 +608,6 @@ function Library:Unload()
 	for i,Connection in pairs(ConnectionsTable) do
 		Connection:Disconnect()
 	end
-	CameraConnection:Disconnect()
 	ScreenGui.Enabled = false
 	Library.Unloaded = true
 end
