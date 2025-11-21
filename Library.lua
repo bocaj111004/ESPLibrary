@@ -60,7 +60,7 @@ function Library:GenerateRandomString()
 		local Character = CharacterList:sub(RandomIndex,RandomIndex)
 		return Character
 	end
-	for i = 1,21,1 do
+	for i = 1,24,1 do
 		local NewCharacter = GenerateSegment()
 		table.insert(FinishedString, NewCharacter)
 	end
@@ -346,7 +346,7 @@ function Library:AddESP(Parameters)
 				end
 			end
 		end
-		local Connection = RunService.PreAnimation:Connect(function()
+		local Connection = RunService.PreRender:Connect(function()
 			Render()
 		end)
 		ConnectionsTable[Object] = Connection
