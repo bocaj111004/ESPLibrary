@@ -37,6 +37,7 @@ local Library = {
 	TextOffset = 0,
 	TextOutlineTransparency = 0,
 	FadeTime = 0,
+	RenderLimit = 240,
 	TracerSize = 0.5,
 	ArrowRadius = 200,
 	TextSize = 20,
@@ -346,8 +347,12 @@ function Library:AddESP(Parameters)
 				end
 			end
 		end
-		local Connection = RunService.PreRender:Connect(function()
-			Render()
+		local Last = tick()
+		local Connection = RunService.Heartbeat:Connect(function()
+			if tick() - Last > 1 / Library.RenderLimit then
+				Render()
+				Last = tick()
+			end
 		end)
 		ConnectionsTable[Object] = Connection
 	end)
@@ -359,6 +364,10 @@ end
 
 function Library:SetFadeTime(Number)
 	Library.FadeTime = Number
+end
+
+function Library:SetRenderLimit(Number)
+	Library.RenderLimit = Number
 end
 
 function Library:SetTextTransparency(Number)
