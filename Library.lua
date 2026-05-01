@@ -217,22 +217,14 @@ function Library:AddESP(Parameters)
 	end
 	table.insert(Elements,TextFrame)
 	table.insert(TotalObjects, Object)
-	local Destroying1 = Object:GetPropertyChangedSignal("Parent"):Once(function()
-		Library:RemoveESP(Object)
-	end)
-	if Object.Parent ~= nil then
-		local Destroying2 = Object.Parent:GetPropertyChangedSignal("Parent"):Once(function()
-			Library:RemoveESP(Object)
-		end)
-	end
-	if Object:IsA("Model") and Object.PrimaryPart then
-		local Destroying3 = Object.PrimaryPart:GetPropertyChangedSignal("Parent"):Once(function()
-			Library:RemoveESP(Object)
-		end)
-	end
 
 	task.spawn(function()
 		local function Render()
+            if not Object or not Object.Parent then
+                Library:RemoveESP(Object)
+                return
+            end
+
 			local Position
 			Position = Object:GetPivot().Position
 			if Position then
