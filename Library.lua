@@ -413,7 +413,7 @@ function Library:UpdateObjectText(Object,Text)
 end
 function Library:UpdateObjectColor(Object,Color)
 	ColorTable[Object] = Color
-	if Labels[Object] then
+	if Labels[Object] and Library.Rainbow ~= true then
 		Labels[Object].TextColor3 = Color
 	end
 end
